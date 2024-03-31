@@ -1,0 +1,186 @@
+package br.com.fenix.controller;
+
+
+import java.io.BufferedReader;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import br.com.fenix.abstrato.ControleAbstratoRest;
+import br.com.fenix.abstrato.IControleRest;
+import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
+import br.com.fenix.dominio.dto.CategoriaDTO;
+import br.com.fenix.dominio.dto.UploadDTO;
+import br.com.fenix.dominio.enumerado.TipoConta;
+import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.dominio.modelo.Lancamento;
+import br.com.fenix.dominio.modelo.LancamentoDTO;
+import br.com.fenix.dominio.modelo.DadoBasico.Automacao;
+import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
+import br.com.fenix.dominio.modelo.DadoBasico.FormaPgto;
+import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
+import br.com.fenix.dominio.repositorio.LancamentoDTORepositorio;
+import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
+import br.com.fenix.dominio.repositorio.dadosBasico.AutomacaoRepositorio;
+import br.com.fenix.dominio.repositorio.dadosBasico.ContaRepositorio;
+import br.com.fenix.dominio.repositorio.dadosBasico.FavorecidoRepositorio;
+import br.com.fenix.dominio.repositorio.dadosBasico.FormaPgtoRepositorio;
+import br.com.fenix.dominio.servico.CategoriaServico;
+import br.com.fenix.dominio.servico.LancamentoDTOServico;
+import br.com.fenix.dominio.servico.LancamentoServico;
+import br.com.fenix.icontroller.IControleCategoriaRest;
+import br.com.fenix.icontroller.IControleLancamentoRest;
+import br.com.fenix.util.Coletor;
+
+@PreAuthorize("hasRole('USER')") 
+@Controller
+@RequestMapping("/upload")
+public class UploadControllerRest  { 
+
+	@Autowired	
+	ContaRepositorio contaRP;
+	@Autowired
+	FormaPgtoRepositorio formaRP; 
+	@Autowired
+	FavorecidoRepositorio favorecidoRP;
+	@Autowired
+	CategoriaServico categoriaSC;
+
+	@Autowired
+	LancamentoServico lancSC;
+	@Autowired
+	LancamentoDTOServico lancDTOSC;
+	@Autowired
+	LancamentoRepositorio lancRP; 
+	
+	@Autowired
+	LancamentoDTORepositorio lancDTORP; 
+	
+	@ModelAttribute("formaPgtos")
+	public List<FormaPgto> listaDeFormaPgto() {
+		return formaRP.findByOrderByNomeAsc();
+	}	
+    
+	@ModelAttribute("favorecidos")
+	public Iterable<Favorecido> listaDeFavorecido() {		
+	 return favorecidoRP.findAll();  
+	}
+	@ModelAttribute("contas")
+	public List<Conta> listaDeContas() {		
+		return contaRP.findByOrderByApelidoAsc();
+	}	
+  
+    @GetMapping
+	public ModelAndView listarUploadView() {
+    	UploadDTO dado = new UploadDTO();		
+		return new ModelAndView("upload/upload","upload",dado) ;		  			  
+	}	
+    @GetMapping("/CSV")
+	public ModelAndView listarUploadCSVView() {
+    	UploadDTO dado = new UploadDTO();		
+		return new ModelAndView("upload/uploadCSV","upload",dado) ;		  			  
+	}	
+    @GetMapping("/confirmar")
+	public ModelAndView listarUploadViewConf(LancamentoDTO entidade) {
+    	
+		Iterable<LancamentoDTO> dados = lancDTORP.findAll();		
+		return new ModelAndView("upload/listar_lancamento","lancamentosDTO",dados) ;		  			  
+	}	
+    
+    @GetMapping("/gerar")
+	public ModelAndView salvarUpload() {
+   	
+    	ArrayList<LancamentoDTO> dados = lancDTORP.findAll();
+		lancSC.gerarLancamento(dados );
+		return new ModelAndView("upload/listar_lancamento","lancamentosDTO",dados) ;		  			  
+	}	
+ 	
+      @Transactional
+	  @PostMapping  	  
+	  public String FileUpload(@RequestParam("conta") long  conta, @RequestParam("file") MultipartFile file ) throws IOException {
+
+//	  public ResponseEntity<?> handleFileUpload(@RequestParam("conta") conta, @RequestParam("file") MultipartFile file ) throws IOException {
+            
+    	   System.out.println("handleFileUpload");
+		    String fileName = file.getOriginalFilename();
+		    List<String> conteudo =  readAll(file.getInputStream()); 
+		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(conta).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
+		    
+		    Coletor lancamento = lancDTOSC.processInput(contaImp.get(),conteudo ) ; 
+		    
+//		    for (LancamentoDTO lanc :lancamento.getLancamentosDTO() ) {
+//		    	System.out.println(lanc);
+//		    }
+		 
+		    lancDTOSC.excluiSalvaTodos(lancamento.getLancamentosDTO())	;
+		         
+		    return "redirect:/upload/confirmar";
+	  }
+      
+      @Transactional
+	  @PostMapping("/csv")  	  
+	  public String FileUploadCSV(@RequestParam("conta") long  conta, @RequestParam("file") MultipartFile file ) throws IOException {
+
+          
+    	   System.out.println("handleFileUploadCSV");
+		    String fileName = file.getOriginalFilename();
+		    List<String> conteudo =  readAll(file.getInputStream()); 
+		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(conta).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
+		    
+		    Coletor lancamento = lancDTOSC.processInputCSV(contaImp.get(),conteudo ) ; 
+		    
+//		    for (LancamentoDTO lanc :lancamento.getLancamentosDTO() ) {
+//		    	System.out.println(lanc);
+//		    }
+		 
+		    lancDTOSC.excluiSalvaTodos(lancamento.getLancamentosDTO())	;
+		         
+		    return "redirect:/upload/confirmar";
+	  }
+
+		private List<String> readAll(InputStream is) throws IOException {
+			List<String> conteudo = new ArrayList<String>();
+		    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		    String line = null;
+//		    StringBuilder stringBuilder = new StringBuilder();
+		    String ls = System.getProperty("line.separator");
+		    try{
+		        while((line=reader.readLine())!=null){
+		        	conteudo.add(line);
+//		            stringBuilder.append(line);
+//		            System.out.println(line);
+//		            stringBuilder.append(ls);
+		        }
+		        return conteudo;
+		    }finally{
+		        reader.close();
+		    }
+		}
+}

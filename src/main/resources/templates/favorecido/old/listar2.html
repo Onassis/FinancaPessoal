@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmls:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="/webjars/open-iconic/font/css/open-iconic-bootstrap.min.css"
+	rel="stylesheet" />
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="card">
+			<table class="table table-hover tb_lista">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Nome</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="f : ${favorecido}">
+						<td th:text="${f.id}">1</td>
+						<td th:text="${f.nome}">nome</td>
+						<td colspan="2">
+							<a class="btn btn-info btn-sm btn_Editar"
+								th:href="@{/favorecido/editar/{id} (id=${f.id}) }"
+								role="button"  th:onclick="return showModal(this, event);"> 
+								<span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
+							</a>
+							<button
+								th:id="${#strings.concat('btn_cargos/excluir/', f.id)  }"
+								type="button" class="btn btn-danger btn-sm"
+								data-toggle="modal" data-target="#myModal">
+								<span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
+							</button>
+						</td>						 
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="myModal" 
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content"> </div>
+		</div>
+</div>
+<script>
+function showModal(self, e){
+  			 console.log("Show Modal");
+// -------------------- não chama o href -------------  			 
+			 e.preventDefault();
+
+// -------------------- busca o href -------------			 
+		 var href = $(self).attr("href");
+		 console.log(href);
+//		 
+   	     $("#myModal").modal("show").find(".modal-content").load(href);
+	 		 
+	     return false;
+	     
+//			console.log($("#tb_lista .btn_Editar").attr("href"));
+//			event.stopPropagation();
+		//	e.preventDefault();
+			//ev.preventDefault();
+		//	this.preventDefault();		 
+}; 
+function formToJson (self, ev) {			 
+	 ev.preventDefault();
+
+	const myForm = ev.target;
+	var myData = new FormData(myForm);
+	const formJSON = Object.fromEntries(myData.entries());
+	var myJon =  JSON.stringify(formJSON, null, 2);
+
+	const xhr = new XMLHttpRequest();
+
+	console.log("teste");
+	if (document.getElementById('id').value == "") 
+			xhr.open("post","/conta")
+	else
+	 	xhr.open("put","/conta");
+	 
+xhr.setRequestHeader("Content-Type", "application/json");
+xhr.send(myJon);
+}	
+
+/*			
+ *
+ Substituicao no thymeleaf
+ 
+ th:onclick="'showModal(\'' + '/favorecido/editar/' + ${f.id} + '\');'"
+
+ $(document).ready(
+					function() {
+						console.log("inicio btnEditar")
+						$('.btn_Editar').on("click"), function(e) {
+							console.log("click btnEditar")
+								console.log($(this).attr("href"));
+							e.preventDefault();
+							$("#myModal").modal("show").find(".modal-content")
+									.load($(this).attr("href"));
+						};
+					});
+ */			
+		</script>
+</body>
+</html>

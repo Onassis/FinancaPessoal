@@ -1,0 +1,80 @@
+﻿ <div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Automação</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="row">
+	<div class="modal-body">
+		<div class="card">
+        	 <div class="card-body">
+				  <h5 class="card-title">Cadastro de Automação</h5>
+	           	<form id="editForm" th:object="${automacao}" class="row g-3 needs-validation"   method="POST">
+			    	<div class="col-md-12">
+        	          	<label for="validationCustom01" class="form-label">Criterio</label>
+					  	<input type="text" class="form-control" id="nome" placeholder="Criterio" 
+	                        		 th:field="*{criterio}" required />                  
+	            		   <div class="invalid-feedback">
+                    			Por favor, Inserir o criterio!
+                  			</div>
+                	</div>
+			    	<div class="col-md-12">
+        	          	<label for="validationCustom01" class="form-label">Prioridade</label>
+					  	<input type="text" class="form-control" id="ordem" placeholder="Criterio" 
+	                        		 th:field="*{ordem}" required />                  
+	            		   <div class="invalid-feedback">
+                    			Por favor, Inserir o criterio!
+                  			</div>
+                	</div>                	
+	                <div class="col-md-12">
+						<label for="validationCustom01" class="form-label">Tipo Operação</label>
+						<select id="id_tipoOperacao" class="form-control"  
+							th:field="*{tipoOperacao}" autofocus="autofocus">
+							<option
+								th:each="tipoOperacao: ${T(br.com.fenix.dominio.enumerado.TipoOperacao).values()}"
+								th:value="${tipoOperacao}" th:text="${tipoOperacao.descricao}">
+							</option>
+						</select>
+				   </div>                   	
+					<div class="col-md-12">
+	                      <label for="categoria">Favorecido</label>
+	                        <select id="id_favorecido" class="form-control" th:field="*{favorecido}" 	>
+	                            <option value="">Selecione</option>
+	                            <option th:each="f : ${favorecidos}" 
+	                                    th:value="${f.id}" th:text="${f.nome}">favorecido</option>
+	                        </select>
+	                   </div>
+	                 <div class="col-md-12">
+		         		<label for="categoria">Categoria</label>
+		    	     	<select id="id_categoria" class="form-control" th:field="*{subCategoria}" 	>
+		                   <option value="">Selecione</option>
+		                    <option th:each="c : ${categoriasDTO}" 
+		                     th:value="${c?.id}" th:text="${c?.descricao}">categoria</option>
+		              </select>
+		      		 </div>
+	                    
+					<div class="col-md-12">
+	                  	<label for="validationCustom01" class="form-label">Conta Destino</label>
+						<select id="id_conta"  th:field="*{contaTransferencia}" class="form-control" required>
+							 <option value="">Selecione</option>
+		                    <option th:each="c : ${contas}"
+		                        		 th:value="${c.id}" th:text="${c?.apelido}">Conta
+		                     </option>	                             
+		                 </select>     
+		                 <div class="valid-feedback">
+	                    	 Ok!
+	                  	</div>
+	                </div>
+                
+	         	    <div class="col-md-6">
+		                <input type="hidden" id="id" th:field="*{id}"/>
+	         	    </div>
+		   			<input type="hidden" id="versao" th:field="*{versao}" />	
+		         </form>
+			</div>
+		</div>
+</div>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" id="btnSalvar" class="btn btn-primary" th:href="@{/automacao}" >Salvar</button>
+</div>

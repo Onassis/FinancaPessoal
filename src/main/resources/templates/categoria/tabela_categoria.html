@@ -1,0 +1,61 @@
+<div id="div-categoria" th:fragment="categoria">
+<table class="table table-striped table-advance table-hover">
+	<thead>
+		<tr>
+			<th><i class="icon_profile"></i> Categoria</th>
+			<th><i class="money-check-alt"></i> Débito/Credito</th>
+			<th><i class="money-check-alt"></i> Despesa fixa</th>	
+			<th><i class="money-check-alt"></i> Imposto renda</th>		
+			<th><i class="icon_cogs"></i> Ação</th>
+		</tr>
+	</thead>
+	<div th:switch="${categoriaDTO}">
+		<h2 th:case="null">Nenhuma categoria foi encontrada</h2>
+		<div th:case="*">
+			<tbody>
+				<tr th:each="c : ${categoriaDTO}">
+					<h2 th:case="null">Nenhuma Categoria foi encontrada</h2>
+					<td th:text="${c.descricao}">Auxiliar Contábil</td>
+					<td th:text="${c?.tipoLancamento?.getDescricao()}">Auxiliar	Contábil</td>
+					<td >
+			              <div class="custom-control custom-checkbox">
+							   <input align="center" class="form-check-input" type="checkbox"  id="desp_fixa"  th:checked="${c.desp_fixa}" placeholder="Despesa fixa" disabled="disabled">
+			              </div>	
+	               </td>
+	               		<td>
+			              <div class="custom-control custom-checkbox">
+							   <input class="form-check-input" type="checkbox"  id="imp_renda"  th:checked="${c.imp_renda}" placeholder="Imposto de renda" disabled="disabled">
+			              </div>	
+	               </td>				
+					<td colspan="3">
+						<a th:if="${c.tipoCategoria == 'CT'}" class="btn btn-info btn-sm btnadd" id="btnadd"
+							th:href="@{/categoria/{id}/subcategoria/cadastrar (id=${c.id}) }" role="button"> 
+							<span class="oi oi-plus" title="Adicionar SubCategoria" aria-hidden="true"></span> 
+						</a> 
+					   <a th:if="${c.tipoCategoria == 'SC'}" class="btn btn-info btn-sm btnadd" id="btnadd"
+						  th:href="@{/categoria/{id}/subcategoria/lancamento/{id2} (id=${c.idCategoria}, id2=${c.id}) }" role="button"> 
+						  <span class="oi oi-calculator" title="Lançamento" aria-hidden="true"></span>
+					   </a>
+					  <a th:if="${c.tipoCategoria == 'CT'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
+					     th:href="@{/categoria/editar/{id} (id=${c.id}) }" 	role="button"> 
+					     <span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
+					  </a>					    
+					  <a th:if="${c.tipoCategoria == 'SC'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
+					     th:href="@{/categoria/{id}/subcategoria/editar/{id2}  (id=${c.idCategoria}, id2=${c.id}) }" 	role="button"> 
+					     <span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
+					  </a>
+					  <a th:if="${c.tipoCategoria == 'CT'}" class="btn btn-danger btn-sm" id="btn_deletar" 	
+					  	 th:href="@{/categoria/{id} (id=${c.id}) }"> 
+						 <span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
+				 	  </a>
+					  <a th:if="${c.tipoCategoria == 'SC'}" class="btn btn-danger btn-sm" id="btn_deletar" 
+					     th:href="@{/categoria/{id}/subcategoria/{id2} (id=${c.idCategoria}, id2=${c.id}) }"> 
+					     <span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
+					  </a>								
+					</td>						
+			</tbody>
+		</div>
+	</div>
+</table>
+
+</div>

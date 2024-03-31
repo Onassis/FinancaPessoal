@@ -1,0 +1,69 @@
+﻿ <div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Conta</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="modal-body">
+           <form id="editForm" th:object="${conta}" class="form validity" method="POST">
+	                <div class="form-group">	       
+	                	<label for="TipoConta">Tipo de Conta</label>  
+	                	<select id="id_tipoConta" class="form-control" th:field="*{tipoConta}" autofocus="autofocus" required>       
+	               			<option th:each="tipoConta : ${T(br.com.fenix.dominio.modelo.DadoBasico.TipoConta).values()}" 
+        							th:value="${tipoConta}" th:text="${tipoConta.descricao}">
+        					</option>
+        				 </select>	
+                    </div> 
+	                 <div class="form-group">
+	                        <label for="apelido">Apelido</label>
+	                        <input type="text" class="form-control" id="apelido" placeholder="apelido" 
+	                        		 th:field="*{apelido}" required />
+	                 </div>                           
+	                 <div class="form-group">
+	                        <label for="nome">Instituição</label>
+	                        <input type="text" class="form-control" id="instituicao" placeholder="instituição bancaria" 
+	                        		 th:field="*{instituicao}" required/>
+	                 </div>
+                     <div class="form-group">
+	                        <label for="nome">Agência</label>
+	                        <input type="text" class="form-control" id="agencia" placeholder="agência" 
+	                        		 th:field="*{agencia}" />
+	                    </div>	
+	                    <div class="form-group">
+	                        <label for="nome">Número Conta/Cartão</label>
+	                        <input type="text" class="form-control" id="numero" placeholder="Número do cartão de credito" 
+	                        		 th:field="*{numero}"/>
+	                    </div>	   
+	                    <div class="form-group">
+	                        <label for="nome">Dia Vencimento Cartão</label>
+	                        <input type="text" class="form-control" id="diaVencimento" placeholder="diaVencimento" 
+	                        		 th:field="*{diaVencimento}"/>
+	                    </div>	
+	                    <div class="form-group">
+	                        <label for="moeda">Moedas</label>
+	                        <select id="id_moeda"  th:field="*{moeda}" class="form-control" required>
+	                            <option value="">Selecione</option>
+	                            <option th:each="m : ${moedas}" 
+	                                    th:value="${m.codigo}" th:text="${m.moeda}">Moedas</option>
+	                        </select>
+	                    </div>
+                  		 <div class="form-group">
+	                        <label for="Saldo">Saldo</label>
+	                        <input type="text" class="form-control" id="Saldo" 
+	                           	data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '€ ', 'placeholder': '0'"
+                                autocomplete="off" data-mask-reverse="true" th:field="*{saldo}"/>
+	                        <div class="invalid-feedback">
+	                    </div>
+	                   <div class="form-group">	       
+	                		<label for="Inativo">Conta Inativa</label>
+                	  		<input type="checkbox" name="inativo" th:checked="*{inativo}" />	               	
+        	           </div>
+	                 </div>
+	                <input type="hidden" id="id" th:field="*{id}"/>
+	   
+	         </form>
+
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" id="btnSalvar" class="btn btn-primary" th:href="@{/conta}" >Salvar</button>
+</div>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head><meta charset="UTF-8"></head>	
+
+<!-------------------------------------------main content start ---------------------->
+ <main id="main" class="main" layout:fragment="corpo">
+        <div class="row">
+          <div class="col-lg-12">
+  <!--           <h3 class="page-header"><i class="fa fa fa-bars"></i> Pages</h3>  -->
+            <ol class="breadcrumb">
+              <li><i class="fa fa-home"></i><a href="home.html">Home </a></li>
+              <li><i class="fa fa-bars"></i>Favorecido </li>
+              <li><i class="fa fa-square-o"></i>Listar </li>
+            </ol>
+          </div>
+        </div>		
+<!-------------------------------------------------- Lista ---------------------------------------------------------->	
+		<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><i class="oi oi-caret-right"></i>
+						<span>Lista de Favorecido</span></li>
+				</ul>
+			</div>
+			<a id="btnadd" class="btn btn-primary btn-md"
+				th:href="@{/favorecido/cadastrar}" role="button"> <span
+				class="oi oi-plus" title="Cadastro" aria-hidden="true"></span> <span>Novo
+					Favorecido</span>
+			</a>
+		</nav>	
+<body>
+<div class="row">
+	<div class="modal-body">
+		<div class="card">
+        	 <div class="card-body">
+				  <h5 class="card-title">Cadastro de Favorecido</h5>
+             
+
+           	<form id="editForm" th:object="${upload}" class="row g-3 needs-validation"  enctype="multipart/form-data"   method="POST">
+				<div class="col-md-12">
+                  	<label for="validationCustom01" class="form-label">Conta</label>
+					<select id="id_conta"  th:field="*{conta}" class="form-control" required>
+						 <option value="">Selecione</option>
+	                    <option th:each="c : ${contas}"
+	                        		 th:value="${c.id}" th:text="${c?.apelido}">Conta
+	                     </option>	                             
+	                 </select>     
+	                 <div class="valid-feedback">
+                    	 Ok!
+                  	</div>
+                </div>    
+  				<div class="col-md-12">
+<!-- HTML5 Input Form Elements -->
+					<input id="fileupload" type="file" name="file" /> 
+	
+					<button  id="upload-button"  onclick="uploadFile"> Upload </button>
+  				</div>
+           	</form>
+		</div>
+</div>
+ </div>
+</div>     
+</body>              				
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<!-- Ajax JavaScript File Upload to Spring Boot Logic -->
+<script>
+function upload2()
+{
+    console.log("ajaxPost");
+    let formData = new FormData(); 
+ 
+    formData.append("file", fileupload.files[0]);
+	$.ajax(
+		{
+	   	    type:'POST',			
+			contentType : "application/json; charset=utf-8",
+			url : 'upload',
+			body: formData,
+			cache : false,
+		    success : function(result) {
+            	    	 location.reload();
+                	 	console.log(result);
+               		},
+              error : function(e) {
+                alert("Error!")
+                console.log("ERROR: ", e);
+              }
+        }
+       ) 	
+}
+async function uploadFile() {
+  let formData = new FormData();
+
+  formData.append("file", fileupload.files[0]);
+  
+  let response = await fetch('upload', {
+    method: "POST", 
+    body: formData
+  }); 
+
+  if (response.status == 200) {
+    alert("File successfully uploaded.");
+  }
+}
+</script>
+
+</body> 
+</html>

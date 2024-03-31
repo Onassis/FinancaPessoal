@@ -1,0 +1,14 @@
+CREATE OR REPLACE  VIEW GastoCategoria  AS
+
+  SELECT criado_por_id, categoria_id , data_lancamento, sum(valor)
+  FROM lancamento a 
+  inner join detalheLancamento b on b.lancamento_id = a.id 
+  group by criado_por_id, categoria_id 
+  
+
+CREATE OR REPLACE  VIEW TotalConta  AS
+
+  SELECT criado_por_id, conta_lancamento_id , data_compensacao, sum(valor)
+  FROM lancamento a 
+  inner join detalheLancamento b on b.lancamento_id = a.id 
+  group by criado_por_id, conta_lancamento_id

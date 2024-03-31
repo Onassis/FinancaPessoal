@@ -1,0 +1,54 @@
+﻿ <div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Favorecido</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="row">
+	<div class="modal-body">
+		<div class="card">
+        	 <div class="card-body">
+				  <h5 class="card-title">Cadastro de Favorecido</h5>
+             
+
+           	<form id="editForm" th:object="${favorecido}" class="row g-3 needs-validation"   method="POST">
+		    	<div class="col-md-12">
+                  	<label for="validationCustom01" class="form-label">Nome</label>
+				  	<input type="text" class="form-control" id="nome" placeholder="nome" 
+	                        		 th:field="*{nome}" required />                  
+	            	   <div class="invalid-feedback">
+                    		Por favor, Inserir o nome do favorecido!
+                  		</div>
+                </div>
+				<div class="col-md-12">
+                  	<label for="validationCustom01" class="form-label">Conta</label>
+					<select id="id_conta"  th:field="*{conta}" class="form-control" required>
+						 <option value="">Selecione</option>
+	                    <option th:each="c : ${contas}"
+	                        		 th:value="${c.id}" th:text="${c?.apelido}">Conta
+	                     </option>	                             
+	                 </select>     
+	                 <div class="valid-feedback">
+                    	 Ok!
+                  	</div>
+                </div>    
+              	     <div class="form-group">
+	         <label for="categoria">Categoria</label>
+	    	     <select id="id_categoria" class="form-control" th:field="*{subCategoria}" 	>
+	                   <option value="">Selecione</option>
+	                    <option th:each="c : ${categoriasDTO}" 
+	                     th:value="${c?.id}" th:text="${c?.descricao}">categoria</option>
+	              </select>
+	       </div>
+         	    <div class="col-md-6">
+	                <input type="hidden" id="id" th:field="*{id}"/>
+         	    </div>
+	   			<input type="hidden" id="versao" th:field="*{versao}" />	
+	         </form>
+		</div>
+	</div>
+</div>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" id="btnSalvar" class="btn btn-primary" th:href="@{/favorecido}" >Salvar</button>
+</div>

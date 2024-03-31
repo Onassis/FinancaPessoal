@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head><meta charset="UTF-8"></head>
+ <main id="main" class="main" layout:fragment="corpo">
+     <div class="row">
+          <div class="col-lg-12">
+  <!--           <h3 class="page-header"><i class="fa fa fa-bars"></i> Pages</h3>  -->
+            <ol class="breadcrumb">
+              <li><i class="fa fa-home"></i><a href="home.html">Home </a></li>
+              <li><i class="fa fa-bars"></i> Conta </li>
+              <li><i class="fa fa-square-o"></i> Listar </li>
+            </ol>
+          </div>
+     </div>		
+	<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="oi oi-caret-right"></i>
+						<span>Lista de Contas</span>
+					</li>
+				</ul>
+			</div>
+			<a id="btnadd" class="btn btn-primary btn-md" rel="modal:open" th:href="@{/conta/cadastrar}" role="button"> 
+			 	<span 	class="oi oi-plus" title="Cadastro" aria-hidden="true"></span> 
+			 	<span>Nova Conta</span>
+			</a>
+	</nav>
+	
+<!-- --------------------------------------- alerta ---------------------------------------------------->				
+			<div class="alert alert-dismissible  fade show" style="display: none;" 	role="alert">
+				<strong>Alerta!</strong>
+				<p>Favor verificar o suporte.</p>
+				<button type="button" class="btn-close" data-bs-dismiss="alert"
+					aria-label="Close"></button>
+			</div>
+<!-------------------------------------------------- Lista ------------------------------------------------>	
+  	<div class="row">
+			<div class="card">
+				<div class="table-responsive">				
+						<table class="table table-striped table-hover table-sm">
+							<thead>
+								<tr>
+									<th pages:sort="conta">Conta</th>
+						 			<th pages:sort="apelido">Apelido</th>
+									<th pages:sort="tipoConta.descricao">Tipo</th>
+									<th pages:sort="instituicao">Instituição</th>
+									<th pages:sort="agencia">Agência</th>
+									<th pages:sort="numero">Número</th>
+									<th pages:sort="diaVencimento">diaVencimento</th>
+									<th pages:sort="moedas?.codigo">moeda</th>
+									<th pages:sort="saldo">Saldo</th>
+									<th pages:sort="inativo">Inativo</th>
+									<th><i class="icon_cogs"></i> Ação</th>
+								</tr>
+								</thead>
+							 	  <tbody th:remove="all-but-first">>
+									 <tr th:each="c : ${conta}">
+										<td th:text="${c.id}">1</td>
+										<td th:text="${c.apelido}"></td>
+										<td th:text="${c.tipoConta.descricao}">Auxiliar Contábil</td>
+										<td th:text="${c.instituicao}">Contabilidade</td>
+										<td th:text="${c.agencia}">Contabilidade</td>
+										<td th:text="${c.numero}">Contabilidade</td>
+										<td th:text="${c.diaVencimento}">Contabilidade</td>
+										<td th:text="${c?.moeda?.codigo}">Moeda</td>
+										<td id="saldo" th:text="|R$ ${{c.saldo}}|">saldo</td>									
+										<td th:text="${c.inativo}">Contabilidade</td>
+										<td colspan="2">
+											<a id="btn_editar" 	class="btn btn-info btn-sm"	th:href="@{/conta/editar/{id} (id=${c.id}) }"> 
+												<span	class="oi oi-brush" title="Editar" aria-hidden="true">	</span>
+											</a> 
+											<a id="btn_deletar" class="btn btn-danger btn-sm"	th:href="@{/conta/{id} (id=${c.id}) }"> 
+												<span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
+												</a>
+										</td>
+									</tr>
+								</tbody>
+						</table>
+				 	</div>							
+			</div>
+		</div>
+
+		
+	</main>  
+
+</html>

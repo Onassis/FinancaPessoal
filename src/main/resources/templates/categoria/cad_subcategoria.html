@@ -1,0 +1,54 @@
+<div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">SubCategoria</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="modal-body">
+	<form id="editForm" th:object="${subCategoria}" method="POST">
+		<div class="form-group">
+			<select id="id_tipoLancamento" class="form-control"  disabled="True"
+				th:field="*{tipoLancamento}" autofocus="autofocus">
+				<option
+					th:each="tipoLancamento: ${T(br.com.fenix.dominio.enumerado.TipoLancamento).values()}"
+					th:value="${tipoLancamento}" th:text="${tipoLancamento.descricao}">
+				</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="nome">Descrição</label> 
+			<input type="text" 	class="form-control" id="descricao" placeholder="descrição"
+				th:field="*{categoria.descricao}" readonly />
+		</div>
+		<div class="form-group">
+			<label for="nome">SubCategoria</label> 
+			<input type="text"
+				class="form-control" id="descricao" placeholder="descrição"
+				th:field="*{descricao}" />
+		</div>
+
+	    
+		<div class="form-check"  >
+ 			 <input class="form-check-input" type="checkbox" value="" id="desp_fixa" 
+ 			 		th:field="*{desp_fixa}" placeholder="Despesa fixa" th:disabled="*{credito}"  >
+  			 <label class="form-check-label" for="flexCheckDefault">
+   				 Despesa fixa
+  			</label>
+		</div>
+			<div class="form-check">
+ 			 <input class="form-check-input" type="checkbox" value="" id="imp_renda" th:field="*{imp_renda}" placeholder="Despesa fixa">
+  			 <label class="form-check-label" for="flexCheckDefault">
+   				 Imposto de renda
+  			</label>
+		</div>
+		<input type="hidden" id="versao" th:field="*{versao}" />		
+		<input type="hidden" id="idCategoria" th:field="*{categoria.id}" />
+		<input type="hidden" id="id" th:field="*{id}" />
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+	<button type="button" id="btnSalvar" class="btn btn-primary"
+		th:href="@{/categoria/{id}/subcategoria/{idSub} (id=${subCategoria.categoria.id},idSub=${subCategoria.id}) }">Salvar</button>
+</div>
+
+

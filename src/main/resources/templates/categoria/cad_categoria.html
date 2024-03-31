@@ -1,0 +1,44 @@
+﻿ <div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Cadastro de Categoria</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="row">
+	<div class="modal-body">
+		<div class="card">
+        	 <div class="card-body">
+
+					<form id="editForm" th:object="${categoria}" class="row g-3 needs-validation"  method="POST">
+						  <div class="col-md-12">
+                			  <label for="validationCustom01" class="form-label">Tipo de lançamento</label>
+                			  	<select id="id_tipoLancamento" class="form-control"  th:disabled="${id != null}"
+										th:field="*{tipoLancamento}" autofocus="autofocus">
+									<option
+										th:each="tipoLancamento: ${T(br.com.fenix.dominio.enumerado.TipoLancamento).values()}"
+										th:value="${tipoLancamento}" th:text="${tipoLancamento.descricao}">
+									</option>
+								</select>
+               			  		<div class="valid-feedback">
+                     					Ok!
+                 				</div>
+                			</div>
+					        <div class="col-md-12">
+                  				<label for="validationCustom01" class="form-label">Descrição</label>
+				  				<input type="text" class="form-control" id="Descrição da Categoria" placeholder="apelido" 
+	                        			 th:field="*{descricao}" required />                  
+	               				<div class="invalid-feedback"> Por favor, Inserir o descricao! </div>
+                			</div>
+							<input type="hidden" id="versao" th:field="*{versao}" />	
+							<input type="hidden" id="id" th:field="*{id}" />
+					</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" id="btnSalvar" class="btn btn-primary" th:href="@{/categoria}" >Salvar</button>
+</div>
+
+
+

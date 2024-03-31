@@ -1,0 +1,12 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "https://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+   <bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+        <property name="dialects">
+            <set>
+                <bean class="org.thymeleaf.spring3.dialect.SpringStandardDialect" />
+                <bean class="net.sourceforge.pagesdialect.PagesDialect" />
+            </set>
+        </property>
+    </bean>
+ </beans>

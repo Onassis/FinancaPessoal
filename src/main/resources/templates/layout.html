@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="PT" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head  th:replace="~{/fragments/head :: head}"> </head>
+
+
+<body>
+
+	    <!--header start-->
+	    <header th:replace="~{/fragments/header :: cabecalho}" ></header> 
+	    <!--sidebar start-->
+	    <aside th:replace="~{/fragments/sidebar :: menulateral}" >   </aside>
+	    <!--sidebar end-->
+	    <!-- ****************************** Inicio Corpo ********************************************* -->
+
+	    	<main layout:fragment="corpo" >   
+			
+  			</main>
+  			
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"></div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="deleteForm" method="DELETE">
+  				<div class="modal-header">
+  		  			<h5 class="modal-title" id="titulo">Excluir Registro</h5>
+    				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  				</div>
+  				<div class="modal-body">
+    				Deseja excluir o registro ? 
+  				</div>	
+  				<div class="modal-footer">
+    				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+    				<button type="button" class="btn btn-danger"  id="btnExcluirModal">Excluir</button>
+  				</div>
+  			</form>
+		</div>
+	</div>
+</div>	
+<!-------------------------------------------- Fim Modal de exclusão -------------------------------------------------------->
+  
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer"  th:replace="~{/fragments/footer :: rodape}"  >
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script th:src="@{/vendor/apexcharts/apexcharts.min.js}"></script>
+  <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/vendor/chart.js/chart.umd.js}"></script>
+  <script th:src="@{/vendor/echarts/echarts.min.js}"></script>
+  <script th:src="@{/vendor/quill/quill.min.js}"></script>
+  <script th:src="@{/vendor/simple-datatables/simple-datatables.js}"></script>
+  <script th:src="@{/vendor/tinymce/tinymce.min.js}"></script>
+  <script th:src="@{/vendor/php-email-form/validate.js}"></script>
+
+  <!-- Template Main JS File -->
+  <script th:src="@{/js/main.js}"></script>
+  <script th:src="@{/js/modalCadastro.js}"></script>
+</body>
+
+</html>

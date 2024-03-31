@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head><meta charset="UTF-8"/></head>
+<body>
+<section class="layout-content" layout:fragment="corpo">
+<div class="container" id="cadastro">
+  <div th:replace="fragments/alert"></div>
+  <div class="secao-principal row-fluid sem-coluna"> 
+	 <div class="conteudo span9">
+    	<div class="minha-conta">      
+		<ul class="abas-conta borda-alpha">
+  			<li class="active">
+		    	<a href="https://www.construcaoelazer.com.br/conta/index" class="titulo ">
+		      		<i class="icon-user"></i> 
+		      		<span>Minha</span> Conta Corrente
+    			</a>
+  			</li>
+  			<li class="">
+    			<a href="https://www.construcaoelazer.com.br/conta/pedido/listar" class="titulo cor-secundaria">
+      					<i class="icon-list-alt"></i> 
+      					<span>Meus</span> Pedidos
+    			</a>
+  			</li>
+  			<li class=" hidden-phone">
+    			<a href="https://www.construcaoelazer.com.br/conta/favorito/listar" class="titulo cor-secundaria">
+      				<i class="icon-star"></i> Lista de Desejos
+    			</a>
+  			</li>
+		</ul>
+
+  </div>
+	       <form id="editForm"  th:object="${lancamentoDTO}"  	 method="POST">
+	                  <div class="form-group col-md-4">
+	                        <label for="Data">Data </label>
+	                        <input type="date" class="form-control" id="dataCompra" placeholder="Data Compra " 
+	                        	 th:field="*{lancamentoDataCompra}" autofocus="autofocus"/>
+	                 </div>		                       
+	                  <div class="form-group col-md-4">
+	                        <label for="Valor">Valor</label>
+	                        <input type="text" class="form-control"  id="Valor" placeholder="Valor " 
+	                        	 th:field="*{valor}" />
+	                 </div>	                  
+	                  <div class="form-group col-md-4">
+	                      <label for="conta">Conta Corrente</label>
+	                        <select id="id_conta" class="form-control" th:field="*{contaLancamento}" 	>
+	                            <option value="">Selecione</option>
+	                            <option th:each="c : ${contas}" 
+	                                    th:value="${c.id}" th:text="${c.apelido}">conta</option>
+	                        </select>
+	                   </div>
+	                  <div class="form-group col-md-4">
+	                        <label for="nome">Informação</label>
+	                        <input type="text" class="form-control" id="Nome" placeholder="Informação"  
+	                        	 th:field="*{lancamentoInformacao}"/>
+	                 </div>		                   
+	                  <div class="form-group col-md-4">
+	                      <label for="categoria">Favorecido</label>
+	                        <select id="id_favorecido" class="form-control" th:field="*{favorecido}" 	>
+	                            <option value="">Selecione</option>
+	                            <option th:each="f : ${favorecidos}" 
+	                                    th:value="${f.id}" th:text="${f.nome}">favorecido</option>
+	                        </select>
+	                   </div>
+	                  <div class="form-group col-md-4">
+	                      <label for="categoria">Categoria</label>
+	                        <select id="id_categoria" class="form-control" th:field="*{categoria}" 	>
+	                            <option value="">Selecione</option>
+	                            <option th:each="c : ${categoriasDTO}" 
+	                                    th:value="${c.id}" th:text="${c.descricao}">categoria</option>
+	                        </select>
+	                   </div>	                   
+	                  <div class="form-group col-md-4">
+	                        <label for="lancamentoObservacao">Observação</label>
+	                        <input type="text" class="form-control" id="lancamentoObservacao" placeholder="Observação"  
+	                        	 th:field="*{lancamentoObservacao}"/>
+	                 </div>	                   
+
+                  <div class="form-group col-md-4">
+   					<input type="hidden" id="lancamentoid" th:field="*{lancamentoId}"/>
+	                <input type="hidden" id="id" th:field="*{id}"/>
+    			</div>
+    			    <div>			                
+	                <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+	                   </div>	                   
+	                
+	            </form>
+	</div>           	                    
+  </div> 
+</div>   
+
+<script>
+  function formToJon (ev) {
+	 
+	 ev.preventDefault();
+	 
+	 const myForm = ev.target;
+	 var myData = new FormData(myForm);
+	 const formJSON = Object.fromEntries(myData.entries());
+	 var myJon =  JSON.stringify(formJSON, null, 2);
+ 
+	 const xhr = new XMLHttpRequest();
+	 
+	 console.log("teste");
+     if (document.getElementById('id').value == "" || document.getElementById('id').value == "0") 
+	 	xhr.open("post","/lancamento")
+	 else
+		 	xhr.open("put","/lancamento");
+		 
+	 xhr.setRequestHeader("Content-Type", "application/json");
+	 xhr.send(myJon);
+ }
+ 
+ document.addEventListener('DOMContentLoaded', () => {
+	 document
+	 .getElementById('editForm')
+	 .addEventListener('submit',formToJon);	 
+   } );	  
+ </script>
+	    </section>
+</body>
+</html>		

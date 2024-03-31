@@ -1,0 +1,23 @@
+<div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Recurso</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="modal-body">
+	<form id="editForm" th:object="${dados}" method="POST">
+<!-- ************************************************************************************************** -->	
+		
+		<div class="form-group">
+			<label for="nome" class="col-form-label">Nome</label> <input
+				type="text" class="form-control" id="Nome" placeholder="Nome"
+				 th:field="*{nome}" />
+		</div>
+		
+<!-- ************************************************************************************************** -->			
+		<input type="hidden" id="id" th:field="*{id}"/>
+	</form>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="button" id="btnSalvar" class="btn btn-primary" th:href="@{/recurso}" >Salvar</button>
+</div>

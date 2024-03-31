@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+
+	
+<!-------------------------------------------------- Lista -------------------------------------------------------------->	
+		<a id="btnadd" class="openPopup btn btn-primary btn-md" rel="modal:open" th:href="@{/conta/cadastrar}" th:data-href="@{/conta/cadastrar}" role="button"> 
+			 	<span 	class="oi oi-plus" title="Cadastro" aria-hidden="true"></span> <span>Nova Conta</span>
+			</a>
+	
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content"></div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    $('.openPopup').on('click',function(){
+        var dataURL = $(this).attr('data-href');
+        $("#myModal").modal("show").find(".modal-content").load( dataURL);
+      
+    }); 
+});
+</script>
+
+
+</script>
+</html>   

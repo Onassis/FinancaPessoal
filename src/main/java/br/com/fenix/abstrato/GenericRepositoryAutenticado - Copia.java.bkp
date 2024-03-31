@@ -1,0 +1,30 @@
+package br.com.fenix.abstrato;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.NoRepositoryBean;
+
+import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.seguranca.modelo.Usuario;
+
+@NoRepositoryBean
+public interface GenericRepositoryAutenticado<T, ID> extends CrudRepository<T, ID>  {
+	
+	public Iterable<T> findByCriadoPor(Usuario usuario);
+	
+	@Override
+	@Query("select u from #{#entityName} u where u.id = ?1  and u.criadoPor.id = ?#{ principal.id}")
+	Optional<T> findById(ID id);
+	
+	@Override
+	@Query("from  u from #{#entityName} u  where u.criadoPor.id = ?#{ principal.id}")
+	public List<T> findAll();  
+	
+	@Override
+	@Query("from  u from #{#entityName} u  where u.criadoPor.id = ?#{ principal.id}")
+	Iterable<T> findAllById(Iterable<ID> ids);
+}

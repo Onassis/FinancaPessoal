@@ -1,0 +1,43 @@
+package br.com.fenix.dominio.repositorio;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import br.com.fenix.abstrato.GenericRepository;
+import br.com.fenix.dominio.enumerado.TipoConta;
+import br.com.fenix.dominio.modelo.DetalheLancamento;
+import br.com.fenix.dominio.modelo.Lancamento;
+import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+
+
+@Repository
+public interface DetalheLancamentoRepositorio extends GenericRepository<DetalheLancamento> {
+	
+
+	@Query("from DetalheLancamento l where l.dataLanc between ?1 and ?2 and l.criadoPor.id = ?#{ principal.id} order by l.dataLanc ")
+	List <DetalheLancamento> findAllBydataLancamentoBetween( LocalDate dataInicio, LocalDate dataFim);
+
+//	@Query("from DetalheLancamento l where l.dataCompensacao is null and l.criadoPor.id = ?#{ principal.id} order by l.dataLancamento ")
+//	List <DetalheLancamento> findAllBydataCompensacaoIsNull();
+	
+	@Query("from DetalheLancamento l where l.contaLancamento = ?1 and  l.dataLanc >= ?2 and"
+			+ " l.valor = ?3 and l.criadoPor.id = ?#{ principal.id} order by l.dataLanc ")
+	public List<DetalheLancamento> findbyContaAndByDataLancamentoandByValor(Conta conta, LocalDate dataVenc, BigDecimal valor); 
+	
+	
+	
+/*	@Query("select COALESCE(sum(l.valor),0) DetalheLancamento l "
+			+ "where l.contaLancamento = ?1 and  l.dataPgto >= ?2 and "
+			+ "l.dataPgto < ?3 and l.criadoPor.id = ?#{ principal.id} ")
+	double totalLancamento(Conta conta, LocalDate saldoAnterio, LocalDate saldoAtual);
+*/	
+	@Query("select COALESCE(sum(l.valor),0) from DetalheLancamento l "
+			+ "where l.contaLancamento = ?1 and  l.dataLanc >= ?2 and "
+			+ "l.criadoPor.id = ?#{ principal.id} " )		
+	double TotalConta(Conta conta, LocalDate data);
+	
+}

@@ -1,0 +1,123 @@
+package br.com.fenix.dominio.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.BooleanDeserializer;
+
+import br.com.fenix.dominio.converter.ContaDeserializer;
+import br.com.fenix.dominio.converter.FavorecidoDeserializer;
+import br.com.fenix.dominio.converter.MoedaDeserializer;
+import br.com.fenix.dominio.converter.MoneyDeserializer;
+import br.com.fenix.dominio.converter.NumericBooleanDeserializer;
+import br.com.fenix.dominio.converter.NumericBooleanSerializer;
+import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
+import br.com.fenix.dominio.converter.UsuarioDeserializer;
+import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
+import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
+import br.com.fenix.seguranca.modelo.Usuario;
+import jakarta.persistence.Transient;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+public class LancamentoDTO implements Comparable<LancamentoDTO> {
+	
+    @JsonDeserialize(using = UsuarioDeserializer.class)
+	private Usuario criadoPor;
+	
+	private Long  lancAuxId;
+	private Long  detalheId;
+	private Long  lancamentoId;
+		
+	  
+	private String lancamentoInformacao;
+	
+    private String lancamentoObservacao;	
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate lancamentoDataDoc;
+    
+    private TipoLancamento tipoLancamento;
+    
+	private TipoOperacao lancamentoTipoOperacao;
+	
+	@JsonDeserialize(using = FavorecidoDeserializer.class) 
+    private Favorecido lancamentoFavorecido;
+	
+    @JsonDeserialize(using = ContaDeserializer.class)
+    private Conta contaLancamento ;
+    
+    private String idBanco; 
+
+    @JsonDeserialize(using = ContaDeserializer.class)
+    private Conta contaDestino ;
+
+    @JsonDeserialize(using = SubCategoriaDeserializer.class)    
+    private SubCategoria lancamentoSubCategoria;
+    
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataVenc;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dataComp;
+    
+    private int lancamentoNroPrestacao;
+    private int lancamentoNroInicialPrestacao ;
+    /**
+     * Prestação atual do parcelamento
+     */
+    private int prestacao;
+
+    @JsonDeserialize(using = MoneyDeserializer.class) 
+	private BigDecimal valor;
+    @JsonDeserialize(using = MoneyDeserializer.class) 
+	private BigDecimal saldo;
+    
+    @Transient
+    @JsonDeserialize(using = MoneyDeserializer.class) 
+	private BigDecimal credito;
+    @JsonDeserialize(using = MoneyDeserializer.class) 
+    @Transient
+	private BigDecimal debito;
+    
+   
+    @JsonDeserialize(using = NumericBooleanDeserializer.class)
+	private boolean conciliado =  false;
+	
+	@Override
+	public int compareTo(LancamentoDTO o) {
+		
+		return this.lancAuxId.compareTo(o.lancAuxId);
+	}
+    public LancamentoDTO() {
+    	super();
+    	this.conciliado =  false;
+    	this.valor = BigDecimal.ZERO; 
+    	this.credito = BigDecimal.ZERO; 
+    	this.debito = BigDecimal.ZERO; 
+        this.lancamentoNroPrestacao = 1;
+        this.lancamentoNroInicialPrestacao = 1;
+    	
+    }
+	public LancamentoDTO(Conta conta) {
+		this.contaLancamento = conta ;
+		this.saldo = conta.getSaldo();
+		
+	}
+	public void setValor ( BigDecimal valor) {		
+		this.valor = valor.abs(); 
+	}
+	
+	public void setLancamentoSubCategoria(SubCategoria  subCategoria) { 
+		this.lancamentoSubCategoria = subCategoria; 
+		this.tipoLancamento = subCategoria.getTipoLancamento();
+	}
+}

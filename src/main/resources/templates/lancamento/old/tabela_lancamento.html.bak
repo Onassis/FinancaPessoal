@@ -1,0 +1,50 @@
+<div id="div-categoria" th:fragment="lancamento">
+<table class="table table-striped table-advance table-hover">
+	<div th:switch="${lancamentosDTO}">
+		<h2 th:case="null">Nenhuma lançamento foi encontrada</h2>
+		<div th:case="*">
+			<div class="table-responsive">				
+				<table class="table table-striped table-hover table-sm">		
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Descrição</th>
+							<th>Categoria</th>
+							<th>Tipo Lancamento</th>
+							<th>Favorecido</th>
+							<th>Conta</th>
+							<th>Dt.Documento</th>
+							<th>Dt.Venc</th>
+							<th>Dt.Comensação</th>
+							<th>Valor</th>
+							<th><i class="icon_cogs"></i> Ação</th>
+						</tr>		
+			<tbody>
+				<tr th:each="l : ${lancamentosDTO}">
+					<td th:text="${l.detalheId}">1</td>
+					<td th:text="${l.lancamentoInformacao}">Informação</td> 					
+					<td th:text="${l?.lancamentoSubCategoria?.getDescricao()}">Categorial</td>
+					
+					<td th:text="${l?.lancamentoFavorecido?.getNome()}">Favorecido</td>
+					<td th:text="${l?.contaLancamento?.getApelido()}">Conta lancamento</td>	
+					<td th:text="${#temporals.format(l.lancamentoDataDoc, 'dd/MM/yyyy')}">2017/08/14</td>					 			
+					<td th:text="${#temporals.format(l.dataVenc, 'dd/MM/yyyy')}">2017/08/14</td>					 			
+					<td th:text="${#temporals.format(l.dataComp, 'dd/MM/yyyy')}">2017/08/14</td>					 			
+				    <td th:text="|R$ ${#numbers.formatDecimal(l.Valor, 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	
+				    <td colspan="2" align="center">
+						 <a id="btn_editar" th:href="@{/lancamento/editar/{id} (id=${l.detalheId}) }" title="Editar"	 
+							    class="fa-regular fa-pen-to-square icon-dark"></a>           
+          				 <a id="btn_deletar" th:href="@{/lancamentolancamentoI{id} (id=${l.detalheId}) }" title="Excluir"          										     
+            					class="fa-regular fa-trash-can icon-dark btn-delete"></a>
+        			</td>
+				 </tr>
+				 <tr>  
+				    <td colspan="6"> </td> 
+					<td colspan="6" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO.![valor]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
+				 </tr>  					    								
+			</tbody>
+		</div>
+	</div>
+</table>
+
+</div>

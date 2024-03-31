@@ -1,0 +1,101 @@
+
+ <div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Cadastro de Contas</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="row">
+	<div class="modal-body">
+		<div class="card">
+        	 <div class="card-body">
+	      			<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST">
+	                 	 <div class="form-group">
+	                	        <label for="Data">Data Vencimento</label>
+	                	        <input type="date" class="form-control" id="dataDoc" placeholder="Data Compra " 
+	                 	 	      	 th:field="*{lancamentoDataDoc}" autofocus="autofocus"/>
+	                 	</div>		                       
+	             	     <div class="form-group">
+	              	          <label for="Valor">Valor</label>
+	              	          <input type="text" class="form-control"  id="Valor" data-mask="#.##0,00" placeholder="Valor " 
+	               		         	 th:field="*{valor}" />
+	             	    </div>	                  
+	                      <div class="form-group">
+	                     	 <label for="conta">Conta Corrente</label>
+	                       	 <select id="id_conta" class="form-control" th:field="*{contaLancamento}" 	>
+	                         	   <option value="">Selecione</option>
+	                         	   <option th:each="c : ${contas}" 
+	                                    th:value="${c.id}" th:text="${c.apelido}">conta</option>
+	                        	</select>
+	                   		</div>
+	                   		
+	                   	<div class="col-md-12">
+        	          		<label for="validationCustom01" class="form-label">Tipo de Conta</label>
+            		    	<select id="id_lancamentoTipoOperacao" class="form-control" th:field="*{lancamentoTipoOperacao}" autofocus="autofocus" required>       
+	               				<option th:each="lancamentoTipoOperacao : ${T(br.com.fenix.dominio.enumerado.TipoOperacao).values()}" 
+        							th:value="${lancamentoTipoOperacao}" th:text="${lancamentoTipoOperacao.descricao}">
+        						</option>
+        				 	</select>	
+                  			<div class="valid-feedback">
+                    	 		Ok!
+                  			</div>
+                		</div>
+	                   		
+	                   		
+	                   		 <div  class="col-md-6"> 
+	                     	      <label for="conta">Prestação</label>
+	 							  <input type="text" class="form-control"  id="nroInicialPrestacao" placeholder="Número de Prestacao Inicial "
+		                            		 th:field="*{lancamentoNroInicialPrestacao}" />	
+		                     </div>
+	   	                      <div class="col-md-6">
+ 	                     	        <label for="conta">Nro de Prestação</label> 	 	                     	   
+	 								<input type="text" class="form-control"  id="lancamentoNroPrestacao" placeholder="Número de Prestacao "
+		                           		 th:field="*{lancamentoNroPrestacao}" />
+		                       </div>	
+ 					<div  class="col-md-6"> 		                       
+		                  <div class="form-group">
+		                        <label for="nome">Informação</label>
+		                        <input type="text" class="form-control" id="Nome" placeholder="Informação"  
+		                        	 th:field="*{lancamentoInformacao}"/>
+		                 </div>		                   
+		              </div>   
+		              <div  class="col-md-6"> 	
+	                  <div class="form-group">
+	                      <label for="categoria">Favorecido</label>
+	                        <select id="id_favorecido" class="form-control" th:field="*{lancamentoFavorecido}" 	>
+	                            <option value="">Selecione</option>
+	                            <option th:each="f : ${favorecidos}" 
+	                                    th:value="${f.id}" th:text="${f.nome}">favorecido</option>
+	                        </select>
+	                   </div>        
+		              </div>
+		              <div  class="col-md-6"> 	 
+          			 <div class="form-group">
+	                      <label for="categoria">Categoria</label>
+	                        <select id="id_categoria" class="form-control" th:field="*{lancamentoSubCategoria}" 	>
+	                            <option value="">Selecione</option>
+	                            <option th:each="c : ${categoriasDTO}" 
+	                                    th:value="${c.id}" th:text="${c.descricao}">categoria</option>
+	                        </select>
+	                   </div>	  
+		              </div>    
+		              <div  class="col-md-6"> 	                       
+	                  <div class="form-group">
+	                        <label for="lancamentoObservacao">Observação</label>
+	                        <input type="text" class="form-control" id="lancamentoObservacao" placeholder="Observação"  
+	                        	 th:field="*{lancamentoObservacao}"/>
+	                 </div>
+	                 </div>	                   
+
+            	      <div class="form-group">
+   						<input type="hidden" id="lancamentoid" th:field="*{lancamentoId}"/>   					
+	        	        <input type="hidden" id="id" th:field="*{lancAuxId}"/>
+    				</div>             	                
+	    		 </form>
+			</div>           	                    
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" id="btnSalvar" class="btn btn-primary" th:href="@{/lancamento}">Salvar</button>
+	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+</div>

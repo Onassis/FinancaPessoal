@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <div th:fragment="inputRow(object, field)" th:with="type=${type} ?: 'text', required=${required}, inputClass=${inputClass}" th:object="${__${object}__}">
+            <div th:if="${type == 'checkbox'}">
+                <div>
+                    <input th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" />
+                    <label th:for="${#ids.prev(field)}">
+                        <span th:text="#{__${object}__.__${field}__.label}" />
+                    </label>
+                </div>
+                <div th:replace="~{:: fieldErrors(${object}, ${field})}" />
+            </div>
+            <label th:if="${type != 'checkbox'}" th:for="${field}">
+                <span th:text="#{__${object}__.__${field}__.label}" />
+            </label>
+            <div th:if="${type != 'checkbox'}">
+                <input th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
+                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" />
+                <!-- ... -->
+            </div>
+        </div>
+        <!-- ... -->
+    </body>
+</html>

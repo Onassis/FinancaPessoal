@@ -1,0 +1,33 @@
+﻿<div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Categoria</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
+<div class="modal-body">
+	<form id="editForm" th:object="${categoria}" method="POST">
+		<div class="form-group">
+			<select id="id_tipoLancamento" class="form-control"
+				th:field="*{tipoLancamento}" autofocus="autofocus">
+				<option
+					th:each="tipoLancamento: ${T(br.com.fenix.dominio.modelo.DadoBasico.TipoLancamento).values()}"
+					th:value="${tipoLancamento}" th:text="${tipoLancamento.descricao}">
+				</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="nome">Descrição</label> 
+			<input type="text"
+				class="form-control" id="descricao" placeholder="descrição"
+				th:field="*{descricao}" />
+		</div>
+
+		<input type="hidden" id="id" th:field="*{id}" />
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+	<button type="button" id="btnSalvar" class="btn btn-primary"
+		th:href="@{/categoria}">Salvar</button>
+</div>
+
+

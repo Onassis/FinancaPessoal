@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmls:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="/webjars/open-iconic/font/css/open-iconic-bootstrap.min.css"
+	rel="stylesheet" />
+<script src="/webjars/jquery/jquery.min.js" type="text/javascript"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"
+	type="text/javascript"></script>
+<script type="text/javascript">
+function ShowAlert(msg_title, msg_body, msg_type) {
+    var AlertMsg = $('div[role="alert"]');
+    $(AlertMsg).find('strong').html(msg_title);
+    $(AlertMsg).find('p').html(msg_body);
+    $(AlertMsg).removeAttr('class');
+    $(AlertMsg).addClass('alert alert-' + msg_type);
+    $(AlertMsg).show();
+  }
+
+
+ajaxPost = function (tipo, recurso, dados, id) {
+	console.log("ajaxPost");
+	$.ajax(
+		{
+			type : tipo,			
+			contentType : "application/json; charset=utf-8",
+			url : recurso,
+			data : dados,
+			cache : false,
+		    success: function(data, textStatus, xhr) 
+		    {   
+		    	console.log(data);
+		    	console.log(textStatus);
+		    	console.log(xhr);
+		    	
+				$("#myModal").modal("hide"); 
+//				window.setTimeout(function() {	location.reload()},	10000);
+		    	if ( xhr.status = 201 ) 
+		    	{		 
+		    		    $("#myModal").modal("hide");
+	            		 ShowAlert("success", 'Favorecido incluido com sucesso', "success");
+						 window.setTimeout(function() {	location.reload()},	1000);
+			             console.log(xhr.status);
+			    } else ( xhr.status = 200 ) 
+			    {
+					if (tipo = 'PUT' ) {
+						$("#myModal").modal("hide");
+						 ShowAlert("success", 'Favorecido alterado com sucesso', "success");
+					} else { 
+						$("#deleteModal").modal("hide");
+						
+						 ShowAlert("check", 'Favorecido excluído com sucesso', "check");						
+					}           						 
+						 window.setTimeout(function() {	location.reload()},	1000);
+			             console.log(xhr.status);
+			             
+	            	}
+		    },	            	
+		    complete: function(xhr, textStatus) {
+		        console.log(xhr.status);
+		    },
+//		success : function(result) {
+//			console.log( "success");
+//			$("#myModal").modal("hide"); 
+//			window.setTimeout(function() {	location.reload()},	10000);
+//				 ShowAlert("success", 'Favorecido incluido com sucesso', "success");
+//				$("#msg").html("<span style='color: green'>Company added successfully</span>");
+				
+//			},
+			error : function(err)  {
+				console.log("ERROR");
+				console.log(err);
+				// Status 401: não autorizado, 403 - proibido, 404 - não encontrado
+				 $("#myModal").modal("hide");
+				 $("#deleteModal").modal("hide");
+				 ShowAlert("danger", 'Atenção: Houve um erro -  ' + err.status , "danger");	
+				 window.setTimeout(function() {	location.reload()},	1000);
+			}
+		});
+//    request.done(function (response, textStatus, jqXHR){
+        // Log a message to the console
+//        console.log (     "OK: "+            textStatus, errorThrown       );        
+ //       console.log("Hooray, it worked!");
+ //   	});
+
+    // Callback handler that will be called on failure
+//    request.fail(function (jqXHR, textStatus, errorThrown){
+        // Log the error to the console
+  //      console.log(       "The following error occurred: "+            textStatus, errorThrown       );
+//	});
+   
+/*		.done(function( xhr, textStatus, errorThrown ) {
+			  switch (xhr.status) {
+		        case 201:
+			 		ShowAlert("success", 'Favorecido incluido com sucesso', "success");
+			 		window.setTimeout(function() {	location.reload()},	1000);
+			 		break;
+		        case 410:
+			 		ShowAlert("success", 'Favorecido excluido com sucesso', "success");
+			 		window.setTimeout(function() {	location.reload()},	1000);
+			 		break;
+			 		
+				}
+			})
+		 .fail(function( xhr, textStatus, errorThrown ) {
+		        alert( "error" );
+		    });
+        */	
+			  
+}
+	
+$(document).ready(function() 
+	{
+		 console.log("inicio btnEditar")
+	 	 $(document).delegate('#btn_editar','click',function(event) 
+	 		{
+				console.log("click btnEditar")
+				console.log($(this).attr("href"));
+				event.preventDefault();
+				$("#myModal").modal("show").find(".modal-content").load( $(this).attr("href"));
+			});
+	 	 $(document).delegate('#btn_deletar','click',function(event) 
+	 	 		{
+	 				console.log("click deleteModal")
+	 				event.preventDefault();
+	 				$("#deleteModal .modal-header .modal-title").text("Excluir Favorecido");
+	 				//$("#deleteModal #deleteForm").attr('action', $(this).attr("href"));
+	 				$("#deleteModal #btnExcluirModal").attr('href', $(this).attr("href"));
+	 				$("#deleteModal").modal("show");
+	 			});
+	 	 
+	 	 $(document).delegate('#btnExcluirModal','click',	function(event) 
+	 		{
+	 			event.preventDefault();
+	 			ajaxPost('DELETE', $(this).attr("href"),'',0);
+	 	 	});
+		 
+		 $(document).delegate('#addNew','click',function(event) 
+					{
+						event.preventDefault();
+						console.log("click add");
+						console.log($(this).attr("href"));
+						
+						$("#myModal").modal("show").find(".modal-content").load($(this).attr("href"));
+					});
+
+		 $(document).delegate('#btnSalvar','click',
+				 function(event) {
+					console.log("click btnSalvar")
+					event.preventDefault();
+					const myForm = document.getElementById('editForm');
+					var myData = new FormData(myForm);
+					const formJSON = Object.fromEntries(myData.entries());
+					var myJon = JSON.stringify(	formJSON, null, 2);
+					console.log("teste");
+					if (document.getElementById('id').value == "") 
+						ajaxPost('POST', $(this).attr("href"),myJon,0);
+					else
+						ajaxPost('PUT', $(this).attr("href"),myJon,0);
+		 		}		
+		 );
+		 
+	}
+);		 
+</script>
+</head>
+<body>
+	<p>
+		<a class='btn' id='addNew' th:href="@{/favorecido/cadastrar/}" rel="modal:mymodal">Cria Favorecido</a>
+	</p>
+	<div class="alert alert-dismissible"  style="display: none;"  role="alert" >
+  		<strong>Warning!</strong> 
+  		<p>Better check yourself, you're not looking too good.</p>
+  		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	<div class="container">
+		<div class="card">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Nome</th>
+					</tr>
+				</thead>
+
+				<tr th:each="f : ${favorecido}">
+					<td th:text="${f.id}">1</td>
+					<td th:text="${f.nome}">nome</td>
+					<td colspan="2">
+						<a id="btn_editar" class="btn btn-info btn-sm"	th:href="@{/favorecido/editar/{id} (id=${f.id}) }"> 
+							<span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
+						</a>
+						<a id="btn_deletar" class="btn btn-info btn-sm"	th:href="@{/favorecido/{id} (id=${f.id}) }"> 
+							<span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
+						</a>
+					 </td>
+					 <td>
+						<button th:id="${#strings.concat('btn_cargos/excluir/', f.id)  }"
+							type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+							data-target="#myModal">
+							<span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
+						</button></td>
+				</tr>
+
+			</table>
+		</div>
+
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <form id="deleteForm" method="DELETE">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titulo">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Deseja excluir o registro ? 
+      </div>	
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger"  id="btnExcluirModal">Excluir</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+	</div>
+</body>
+</html>

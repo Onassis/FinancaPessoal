@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html layout:decorate="~{home}">
+<head><meta charset="UTF-8"/>
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    	
+ 	<script>	
+	  function formToJon (ev) {	 
+		 ev.preventDefault();	 
+		 const myForm = ev.target;
+	 	 var myData = new FormData(myForm);
+		 const formJSON = Object.fromEntries(myData.entries());
+		 var myJon =  JSON.stringify(formJSON, null, 2);
+ 
+		 const xhr = new XMLHttpRequest();
+	 
+		 console.log("teste");
+     	if (document.getElementById('id').value == "") 
+	 		xhr.open("post","/conta")
+	 	else
+		 	xhr.open("put","/conta");
+		 
+	 	xhr.setRequestHeader("Content-Type", "application/json");
+	 	xhr.send(myJon);
+ }
+ 
+		 document.addEventListener('DOMContentLoaded', () => {
+		 document
+		 .getElementById('editForm')
+	 	.addEventListener('submit',formToJon);	 
+   		 } );	  
+	 </script>
+</head>
+<body>
+	    <section class="layout-content" layout:fragment="corpo">
+	
+	        <nav class="navbar navbar-expand-md bg-light">
+	            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+	                <ul class="navbar-nav mr-auto">
+	                    <li class="nav-item active">
+	                        <i class="oi oi-caret-right"></i>
+	                        <span>Cadastrar Contas</span>
+	                    </li>
+	                </ul>
+	            </div>
+	            <a class="btn btn-primary btn-md" href="/conta/listar" role="button">
+	                <span class="oi oi-spreadsheet" title="Cadastro" aria-hidden="true"></span>
+	                <span>Listar Canta</span>
+	            </a>
+	        </nav>
+	     <div class="row">
+          <div class="col-lg-6">
+            <section class="panel">
+              <header class="panel-heading">
+                Cadastrar Contas 
+              </header>
+
+	        <div th:replace="fragments/alert"></div>
+	        <div class="panel-body"> 	
+           <form role="form" class="form validity" id="editForm"  
+           		 th:action="${conta.id == null} ? @{/conta/salvar} : @{/conta/editar}" 
+	             th:object="${conta}" method="POST">
+	                <div class="form-group">	       
+	                	<label for="TipoConta">Tipo de Conta</label>  
+	                	<select id="id_tipoConta" class="form-control" th:field="*{tipoConta}" autofocus="autofocus" required>       
+	               			<option th:each="tipoConta : ${T(br.com.fenix.dominio.modelo.DadoBasico.TipoConta).values()}" 
+        							th:value="${tipoConta}" th:text="${tipoConta.descricao}">
+        					</option>
+        				 </select>	
+                    </div> 
+	                 <div class="form-group">
+	                        <label for="apelido">Apelido</label>
+	                        <input type="text" class="form-control" id="apelido" placeholder="apelido" 
+	                        		 th:field="*{apelido}" required />
+	                 </div>                           
+	                 <div class="form-group">
+	                        <label for="nome">Instituição</label>
+	                        <input type="text" class="form-control" id="instituicao" placeholder="instituicao" 
+	                        		 th:field="*{instituicao}" required/>
+	                 </div>
+                     <div class="form-group">
+	                        <label for="nome">Agência</label>
+	                        <input type="text" class="form-control" id="agencia" placeholder="agencia" 
+	                        		 th:field="*{agencia}" />
+	                    </div>	
+	                    <div class="form-group">
+	                        <label for="nome">Número Conta/Cartão</label>
+	                        <input type="text" class="form-control" id="numero" placeholder="numero" 
+	                        		 th:field="*{numero}"/>
+	                    </div>	   
+	                    <div class="form-group">
+	                        <label for="nome">Dia Vencimento Cartão</label>
+	                        <input type="text" class="form-control" id="diaVencimento" placeholder="diaVencimento" 
+	                        		 th:field="*{diaVencimento}"/>
+	                    </div>	
+	                    <div class="form-group">
+	                        <label for="moeda">Moedas</label>
+	                        <select id="id_moeda"  th:field="*{moeda}" class="form-control" required>
+	                            <option value="">Selecione</option>
+	                            <option th:each="m : ${moedas}" 
+	                                    th:value="${m.codigo}" th:text="${m.moeda}">Moedas</option>
+	                        </select>
+	                    </div>
+                  		 <div class="form-group">
+	                        <label for="Saldo">Saldo</label>
+	                        <input type="text" class="form-control" id="Saldo" data-mask="#.##0,00"
+	                               data-mask-reverse="true" th:field="*{saldo}"/>
+	                        <div class="invalid-feedback">
+	                    </div>
+	                   <div class="form-group">	       
+	                		<label for="Inativo">Conta Inativa</label>
+                	  		<input type="checkbox" name="inativo" th:checked="*{inativo}" />	               	
+        	           </div>
+	                 </div>
+	                <input type="hidden" id="id" th:field="*{id}"/>
+	                <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+	            </form>
+              </div>	            
+              </div>
+            </section>
+          </div>
+         </div>
+ </section>         
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="js/jquery.validity.min.js"></script>
+	<script src="js/script.js"></script>
+
+
+</body>
+</html>		
