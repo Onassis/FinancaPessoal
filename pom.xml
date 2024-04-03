@@ -11,7 +11,7 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.fenix</groupId>
-	<artifactId>Financeiro1</artifactId>
+	<artifactId>FinancaPessoal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>WebOS</name>
 	<properties>
