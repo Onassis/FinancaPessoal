@@ -91,7 +91,7 @@ public class LancamentoServico {
 	    
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 		try {
-			  dataInicio = LocalDate.parse(mesLancamento, formatter);				
+			  dataInicio = LocalDate.parse("01".concat(mesLancamento), formatter);				
 		} catch (Exception e) {
 			 dataInicio = LocalDate.now();
 			 dataInicio = LocalDate.of(dataInicio.getYear(), dataInicio.getMonthValue(), 1);
@@ -364,13 +364,17 @@ public class LancamentoServico {
 	detLanc.setValor( lancDTO.getValor()); 
 	detLanc.setDataVenc(lancDTO.getLancamentoDataDoc());
 	
+ 	
 	
-	
-    if (!detLanc.possuiContaLancanto() && lancDTO.possuiContaLancanto() ) {
+    if (!detLanc.possuiContaLancanto() ) {
     	
     	saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento() , lancDTO.getLancamentoDataDoc());            
     	detLanc.setContaLancamento(lancDTO.getContaLancamento());
     	saldoRP.save(saldo);
+    }
+
+    if (detLanc.possuiContaLancanto() ) { 
+    	detLanc.setConciliado(lancDTO.isConciliado());
     }
     
 		

@@ -14,7 +14,9 @@
 	                	        <input type="date"  class="form-control" id="lancamentoDataDoc" placeholder="Data Compra " 
  	                 	 	      	 th:field="*{lancamentoDataDoc}"    autofocus/>
                  	 	      	 
-	                 	</div>		                       
+	                 	</div>		
+	                 	                       
+				                 	
 	             	     <div class="form-group">
 	              	          <label for="Valor">Valor</label>
 	              	          <input type="text" class="form-control"  id="Valor" data-mask="#.##0,00" placeholder="Valor " 
@@ -28,7 +30,9 @@
 	                                    th:value="${c.id}" th:text="${c.apelido}">conta</option>
 	                        	</select>
 	                   		</div>
-	                   		
+	                   	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input')}" />
+	                
+
 	                   	<div class="col-md-12">
         	          		<label for="validationCustom01" class="form-label">Tipo de Conta</label>
             		    	<select id="id_lancamentoTipoOperacao" class="form-control" th:field="*{lancamentoTipoOperacao}" autofocus="autofocus" required>

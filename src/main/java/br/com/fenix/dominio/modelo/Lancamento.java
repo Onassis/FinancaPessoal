@@ -50,7 +50,7 @@ public class Lancamento extends EntidadeAuditavel<Long> {
     private Categoria categoria;
 
     @JsonDeserialize (using = SubCategoriaDeserializer.class)    
-    @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY ,optional = true  )
+    @ManyToOne(cascade = CascadeType.MERGE ,fetch = FetchType.LAZY ,optional = true  )
     private SubCategoria subCategoria;
     
  
