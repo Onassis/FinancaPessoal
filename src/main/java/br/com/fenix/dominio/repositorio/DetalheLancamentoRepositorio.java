@@ -40,8 +40,15 @@ public interface DetalheLancamentoRepositorio extends GenericRepository<DetalheL
 	
 	@Query("select COALESCE(sum(d.valor),0) from DetalheLancamento d "
 			+ "where d.contaLancamento = ?1 and  d.ano = ?2 and d.mes = ?3 and "
-			+ "d.criadoPor.id = ?#{ principal.id} " )		
+			+ "d.criadoPor.id = ?#{ principal.id} and " 
+			+ "d.conciliado = true " )		
 	double TotalMesConta(Conta conta, Integer ano, Integer mes);
+	
+	@Query("select COALESCE(sum(d.valor),0) from DetalheLancamento d "
+			+ "where d.contaLancamento = ?1 and  d.dataVenc  between  ?2 and ?3 and "
+			+ "d.criadoPor.id = ?#{ principal.id}  and " 
+			+ "d.conciliado = true " )				
+	double TotalMesConta(Conta conta, LocalDate dataIni, LocalDate dataFim);
 	
 	@Query(value = 
 			"SELECT d.conta_lancamento_id as conta,"

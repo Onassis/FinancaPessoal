@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.modelo;
+package br.com.fenix.util;
 
 import java.math.BigDecimal;
 

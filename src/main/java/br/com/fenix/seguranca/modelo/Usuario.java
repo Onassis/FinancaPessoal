@@ -66,6 +66,7 @@ public class Usuario implements UserDetails {
 		this.lastName = lastName;
 		this.password = password;
 		this.roles.add(Role.UNVERIFIED);
+		this.enabled = 1;
 	}
 	
 	public Collection<Role> getRoles() {

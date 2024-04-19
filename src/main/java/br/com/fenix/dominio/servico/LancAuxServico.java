@@ -1,5 +1,6 @@
 package br.com.fenix.dominio.servico;
 
+import com.google.common.collect.Iterables;
 import java.io.DataInput;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -28,9 +29,9 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.DetalheLancamento;
 import br.com.fenix.dominio.modelo.LancAux;
 import br.com.fenix.dominio.modelo.Lancamento;
-import br.com.fenix.dominio.modelo.SaldoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.LancAuxRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
@@ -49,6 +50,8 @@ public class LancAuxServico {
 	@Autowired
 	SaldoContaRepositorio saldoRP;
 	
+	@Autowired
+	SaldoServico saldoSC;
 	
 	@Autowired
 	AutomacaoServico autoSC;
@@ -58,7 +61,9 @@ public class LancAuxServico {
 	
 	@Autowired
 	LancamentoRepositorio  lancRP;
-
+	@Autowired
+	DetalheLancamentoRepositorio  detLancRP;
+	
 	@Autowired
 	private ModelMapper modelMapper;
 	
@@ -85,37 +90,67 @@ public class LancAuxServico {
 	            return ListaSaldo.get(ListaSaldo.size() - 1);
 	        }
 	}
-	
-/*	
+
 	@Transactional
-	public void  gerarLancamento(ArrayList<LancamentoDTO> dados) {
-		
-		SaldoConta saldo;
-		
-		ArrayList<SaldoConta> listSaldos = new ArrayList<>(); 
-		
-		LocalDate  dataSaldo; 
-		
-		System.out.println("gera lancamento ");
-		
-	}
-	
-*/
-	
 	public void  gerarLancamento(ArrayList<LancAux> dados) {   
 		
 		ArrayList<Lancamento> lancamentos = new ArrayList<>(); 
-		
-		BigDecimal saldo = dados.get(dados.size()-1).getSaldo() ;
+
 		LancAux lanc = dados.get(0);
 		Conta conta = lanc.getContaLanc();
+				
 //---------------- Salva Lançamento --------------------------------------------------// 
 		for (LancAux lancAux  : dados   ) {
-			LancamentoDTO lancDTO = modelMapper.map(lancAux, LancamentoDTO.class);				
+			LancamentoDTO lancDTO = modelMapper.map(lancAux, LancamentoDTO.class);	
+			lancDTO.setConciliado(true);
 			lancDTO.setContaLancamento(conta);
+/*			if (!saldo.isSaldoAtual(lancDTO.getDataVenc())) { 
+				saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento(), lancDTO.getDataVenc());
+				saldos.add(saldo);
+			}	
+			if (lancDTO.getContaDestino() != null ) {
+				SaldoConta saldoDestino = saldoSC.buscaSaldo(lancDTO.getContaDestino(), lancDTO.getDataVenc());
+				if (!saldoDestinos.contains(saldoDestino)) {
+					saldoDestinos.add(saldoDestino);
+				}
+				
+			}
+*/			
 			lancamentos.add(lancSC.criar(lancDTO));
 		}
+		
 		lancRP.saveAll(lancamentos);
+		
+		
+		
+		saldoRP.f_atualiza_saldo(lanc.getCriadoPor().getId(), lanc.getContaLanc().getId(),
+				lanc.getDataVenc(), lanc.getSaldoAnterior());
+		
+		/* -------------------------------------------------------- 
+		 *     Acerta Saldo 
+		 * -------------------------------------------------------- */
+/*		BigDecimal saldoFinal  = Iterables.getLast(dados).getSaldo();
+		LocalDate dataUltLanc  = Iterables.getLast(dados).getDataVenc();
+		
+		for (int i = saldos.size() -1 ; i  >= 0 ; i--)  {
+			SaldoConta saldoAux  = saldos.get(i);
+			saldoAux.setFlag_compensacao(true);
+			if (saldoAux.isSaldoAtual(dataUltLanc)) {
+				LocalDate dataInicio = LocalDate.of(dataUltLanc.getYear(), dataUltLanc.getMonthValue(), 1);
+				double totalMes = detLancRP.TotalMesConta(saldoAux.getConta(), dataInicio, dataUltLanc);
+				saldoFinal = BigDecimal.valueOf(totalMes).subtract(saldoFinal);
+				saldoAux.setSaldoInicial(saldoFinal);			
+				
+			} else { 				
+				double totalMes = detLancRP.TotalMesConta(saldoAux.getConta(), saldoAux.getAno(), saldoAux.getMes());
+				saldoFinal = BigDecimal.valueOf(totalMes).subtract(saldoFinal);
+				saldoAux.setSaldoInicial(saldoFinal);
+			}	
+		}	
+
+		saldoRP.saveAll(saldos);
+		saldoRP.saveAll(saldoDestinos);
+*/		
 	}				
 	
 	public Coletor  processInput(Conta conta,List<String> conteudo) {
@@ -142,11 +177,11 @@ public class LancAuxServico {
 
 //---------------- Acerta Saldo do LançamentoDTO --------------------------------------------------// 
 	
-		BigDecimal saldo = coletorLanc.UltimoLancamento().getSaldo();
-		for (int i = coletorLanc.getLancamentosAux().size() -2 ; i  >= 0 ; i--)  {
+		BigDecimal saldoAnt = coletorLanc.UltimoLancamento().getSaldoAnterior();
+		for (int i = coletorLanc.getLancamentosAux().size() -2 ; i  >= 0 ; i--)  {			
 			LancAux   lancAux = coletorLanc.getLancamentosAux().get(i);
-					lancAux.setSaldo(saldo); 
-		      		saldo = lancAux.acertaSaldo(); 			 			
+			 lancAux.setSaldo(saldoAnt);
+			 saldoAnt = lancAux.getSaldoAnterior();  			 			
 		}
 		return coletorLanc;
 	}
@@ -174,9 +209,9 @@ public class LancAuxServico {
 		
 		BigDecimal saldo = coletorLanc.UltimoLancamento().acertaSaldo();
 		for (int i = coletorLanc.getLancamentosAux().size() -2 ; i  >= 0 ; i--)  {
-			LancAux   lancDTO = coletorLanc.getLancamentosAux().get(i);
-			      lancDTO.setSaldo(saldo); 
-		          saldo = lancDTO.acertaSaldo(); 				 			
+			LancAux   lancAux = coletorLanc.getLancamentosAux().get(i);
+			      lancAux.setSaldo(saldo); 
+		          saldo = lancAux.acertaSaldo(); 				 			
 		}
 		return coletorLanc;
 	}

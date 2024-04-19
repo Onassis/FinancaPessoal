@@ -11,6 +11,7 @@ import br.com.fenix.abstrato.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.ContaDeserializer;
 import br.com.fenix.dominio.converter.FavorecidoDeserializer;
 import br.com.fenix.dominio.converter.MoneyDeserializer;
+import br.com.fenix.dominio.converter.NumericBooleanDeserializer;
 import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
@@ -125,8 +126,9 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
 	private BigDecimal debito;
 	
-	@Transient
-	private boolean conciliado;
+
+    @JsonDeserialize(using = NumericBooleanDeserializer.class)
+	protected boolean conciliado ;
 	
 	
 	
@@ -139,7 +141,8 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		this.saldo = new BigDecimal(0); 
 		
 		this.lancamentoNroInicialPrestacao = 1; 
-		this.lancamentoNroPrestacao = 1 ; 
+		this.lancamentoNroPrestacao = 1 ;
+		this.conciliado = true;
 	}
 	
 	public LancAux(Conta conta) {
@@ -151,6 +154,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		this.contaLanc = conta;
 		this.lancamentoNroInicialPrestacao = 1; 
 		this.lancamentoNroPrestacao = 1 ; 
+		this.conciliado = true;
 	}
 	 
 /*	public void setVencSubCategoria( SubCategoria subCategoria ) {
@@ -165,15 +169,14 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		return this.tipoLancamento == TipoLancamento.C;
 	}
 	
+	
 	public void setValor (BigDecimal valor) {
 	    	this.valor = valor.abs();
+	    	if (isDebito()) 
+	    		this.valor = this.valor.negate() ; 
 	    }
 	
-	public BigDecimal getValor (BigDecimal valor) {
-		if (isDebito()) 
-			 return this.valor.multiply( new BigDecimal(-1)); 
-		return this.valor;
-    }	
+		
 	 
 	public BigDecimal getCredito() { 
 		
@@ -190,16 +193,18 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		return BigDecimal.ZERO; 		
 	}    
 	 
-
+	public BigDecimal getSaldoAnterior() { 
+		return this.saldo.subtract(getValor() );
+	}
 	
-	public BigDecimal calculaSaldo(BigDecimal saldoAnterior) {
+	public BigDecimal acertaSaldo(BigDecimal saldoAnterior) {
 		
 		this.saldo = saldoAnterior.add(this.getCredito()).subtract(this.getDebito()); 
 		return this.saldo; 		
 	}
 	public BigDecimal acertaSaldo() {
 		
-		return this.saldo.subtract(this.getCredito()).add(this.getDebito()); 
+		return this.saldo.add(this.valor); 
 				
 	}
 	@Override

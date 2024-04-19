@@ -8,12 +8,9 @@ public enum TipoOperacao {
 	CH("CH","Cheque"),
 	DB("DB","Débito"),
 	DP("DP","Depósito"),
-	EP("EP", "Emprestimo"),
 	PI("PI", "Pix"),
-	PO("PO", "Poupança"), 
 	PG("PG","Pagamento"),
 	SQ("SQ","Saque"),
-//	RD("RD","Rendimento"),
 	RG("RG", "Resgate"),	
 	TR("TR", "Transferência");
 

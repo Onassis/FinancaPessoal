@@ -29,9 +29,9 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.DetalheLancamento;
 import br.com.fenix.dominio.modelo.LancAux;
 import br.com.fenix.dominio.modelo.Lancamento;
-import br.com.fenix.dominio.modelo.SaldoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.SaldoContaRepositorio;
@@ -116,7 +116,7 @@ public class LancamentoServico {
 	@Transactional
     public Lancamento salvar (LancamentoDTO lancDTO) {
 		Lancamento lancamento = criar (lancDTO);
-		if ( lancDTO.getContaLancamento() != null) {
+/*		if ( lancDTO.getContaLancamento() != null) {
 			 SaldoConta saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento(), lancDTO.getLancamentoDataDoc());
 		     saldoRP.save(saldo);
 		}    	
@@ -124,8 +124,9 @@ public class LancamentoServico {
 			SaldoConta saldoDest = saldoSC.buscaSaldo(lancDTO.getContaDestino(), lancDTO.getLancamentoDataDoc());
 	     	saldoRP.save(saldoDest);
 		}    
-
-		return lancamentoRP.save(lancamento); 
+*/
+		lancamento = lancamentoRP.save(lancamento); 
+		return lancamento; 
 	}
 
 	public Lancamento criar (LancamentoDTO lancDTO  ) {
@@ -159,7 +160,7 @@ public class LancamentoServico {
 		
 // -------------------- Credito -------------------------- 		
 		
-			case DP -> lancamento = comprarCartao (lancDTO);
+			case DP -> lancamento = depositar(lancDTO);
 		//	case RD -> lancamento = pagar (lancDTO);   // Rendimento
 		
 // -------------------- Compra cartao de credito -------------------------- 				
@@ -167,7 +168,7 @@ public class LancamentoServico {
 			case CC -> lancamento = comprarCartao (lancDTO);		
 		
 // -------------------- Transferencia  -------------------------- 	
-			case AP , PO -> lancamento = Transferir (lancDTO);
+			case AP  -> lancamento = Transferir (lancDTO);
 			case SQ 	 -> lancamento = Transferir (lancDTO);
 			case PI 	 -> lancamento = Transferir (lancDTO);
 			case TR 	 -> lancamento = Transferir (lancDTO);
@@ -178,7 +179,7 @@ public class LancamentoServico {
 //		case RG -> lancamento = pagar (lancDTO);
 
 // -------------------- Emprestimo  ------------------------------------		
-			case EP -> lancamento = sacar (lancDTO);  // Emprestimo
+//			case EP -> lancamento = sacar (lancDTO);  // Emprestimo
 		}
 		
 		return lancamento; 
@@ -260,15 +261,13 @@ public class LancamentoServico {
     	return lancamento; 
 	}
 	@Transactional
-	public Lancamento depositar (LancamentoDTO lancDTO  ) {
-			SaldoConta saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento(), lancDTO.getDataVenc());
+	public Lancamento depositar (LancamentoDTO lancDTO  ) {	
 			Lancamento lancamento = modelMapper.map(lancDTO, Lancamento.class);
 			lancamento.setTipoOperacao(TipoOperacao.DP);
 			lancamento.setNroInicialPrestacao(1);
 
 			DetalheLancamento detalheLancamento = modelMapper.map(lancDTO, DetalheLancamento.class);
-	     	detalheLancamento.setTipoLancamento(TipoLancamento.C);
-	     	
+	     	detalheLancamento.setTipoLancamento(TipoLancamento.C);	     	
 	     	detalheLancamento.setDataVenc(lancDTO.getLancamentoDataDoc());     	
 
 			lancamento.addDatalheLancamento(detalheLancamento);
@@ -277,8 +276,7 @@ public class LancamentoServico {
 	}		
 	@Transactional
 	public Lancamento Transferir (LancamentoDTO lancDTO  ) {
-		SaldoConta saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento(), lancDTO.getLancamentoDataDoc());
-		
+				
 		Lancamento lancamento = modelMapper.map(lancDTO, Lancamento.class);		
 		lancamento.setDataDoc(lancDTO.getLancamentoDataDoc() );		
 		DetalheLancamento detalheLancamento = modelMapper.map(lancDTO, DetalheLancamento.class);
@@ -290,7 +288,8 @@ public class LancamentoServico {
 //--------------- Transfere para Conta/Carteira -----------------------------------     
        	if ( lancDTO.getContaDestino() != null) { 
        		    lancamento.setTransferencia(true);
-         		DetalheLancamento detLancDestino = modelMapper.map(lancDTO, DetalheLancamento.class);         		
+         		DetalheLancamento detLancDestino = modelMapper.map(lancDTO, DetalheLancamento.class);    
+                detLancDestino.setContaLancamento(lancDTO.getContaDestino()) ;           		
          		detLancDestino.setDataVenc(lancDTO.getLancamentoDataDoc());     	
          		detLancDestino.setTipoLancamento(TipoLancamento.C);
           		lancamento.addDatalheLancamento(detLancDestino);     	     		
@@ -351,7 +350,7 @@ public class LancamentoServico {
   public Lancamento alterar(LancamentoDTO lancDTO) {
 	
 	SaldoConta saldo; 
-	long id = lancDTO.getDetalheId();
+	long id = lancDTO.getDetalheLancamentoId();
 	Optional<DetalheLancamento> optDetLanc =  DtlancamentoRP.findById(id); 
 	DetalheLancamento detLanc = optDetLanc.get();
 	Lancamento lancamento = detLanc.getLancamento();

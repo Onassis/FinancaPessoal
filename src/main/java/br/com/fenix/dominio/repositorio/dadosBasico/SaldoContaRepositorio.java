@@ -8,12 +8,14 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.dominio.enumerado.TipoConta;
-import br.com.fenix.dominio.modelo.SaldoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
 import br.com.fenix.seguranca.modelo.Usuario;
 
 @Repository
@@ -39,7 +41,13 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
 	
 	
 
-	
+	@Query(value = "select * from f_atualiza_saldo(:usuario,:conta,:datasaldo,:saldoinicial)", nativeQuery = true)
+	boolean f_atualiza_saldo(
+			@Param("usuario") Long usuario,
+			@Param("conta") Long conta,
+			@Param("datasaldo") LocalDate datasaldo,
+			@Param("saldoinicial") BigDecimal saldoinicial); 
+			
 
 //	Optional<SaldoConta> findByCriadoPorAndContaAndDataLessThanOrderByDateDesc(Usuario usuario,Conta conta, LocalDate data) ; 
 

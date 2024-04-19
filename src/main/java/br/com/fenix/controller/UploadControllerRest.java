@@ -96,7 +96,7 @@ public class UploadControllerRest  {
 	}
 	@ModelAttribute("contas")
 	public List<Conta> listaDeContas() {		
-		return contaRP.findByOrderByApelidoAsc();
+		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC);
 	}	
   
     @GetMapping

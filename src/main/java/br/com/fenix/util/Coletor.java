@@ -85,13 +85,7 @@ public class Coletor {
 	    							break;
 	    		case "TRNAMT"    : 	    			
 	    			 			UltimoLancamento().setValor (tag.getTagValorBigDecimal());
-	    			 			if (UltimoLancamento().isCredito()) { 
-	    			 				UltimoLancamento().setLancamentoTipoOperacao(TipoOperacao.DP); 
-	    			 				}
-	    			 			else {
-	    								UltimoLancamento().setLancamentoTipoOperacao(TipoOperacao.DB);
-	    			 				}
-         					    			 			
+	    			 			        					    			 			
 	    			 			break;
 	    		// 	 ID da transação do banco			
 	    		case "FITID"     : UltimoLancamento().setChaveBanco(tag.getTagValor()); break;	    		

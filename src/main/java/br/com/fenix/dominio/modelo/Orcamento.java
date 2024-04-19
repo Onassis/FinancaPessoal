@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.fenix.abstrato.EntidadeAuditavel;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
+import br.com.fenix.util.ValorAno;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.modelo;
+package br.com.fenix.dominio.modelo.DadoBasico;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -14,8 +14,6 @@ import br.com.fenix.abstrato.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.ContaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
-import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
 import br.com.fenix.seguranca.modelo.Usuario;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,8 +24,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(
-		indexes = {@Index(name = "idx_saldo", columnList = "criado_por_id,conta_id,data", unique = true),
-				   @Index(name = "idx_AnoMes", columnList = "criado_por_id,conta_id,ano,mes", unique = true)})
+		indexes = {@Index(name = "idx_saldo", columnList = "criado_por_id,data,conta_id", unique = true)})				   
 public class SaldoConta extends EntidadeAuditavel<Long> {
 
 	
@@ -47,8 +44,6 @@ public class SaldoConta extends EntidadeAuditavel<Long> {
 	@Column(nullable = false)
 	private int mes;
 	
-	private boolean flag_manual = false; 
-
 	private boolean flag_compensacao = false; 
 	
 
@@ -58,10 +53,7 @@ public class SaldoConta extends EntidadeAuditavel<Long> {
         this.mes = data.getMonthValue();        
 	}
 
-	public void setSaldoIni (BigDecimal valor ) {
-		this.saldoInicial = valor;
-		
-	}
+
 	public SaldoConta() {		
 		super();
 		saldoInicial = BigDecimal.ZERO;
@@ -77,5 +69,10 @@ public class SaldoConta extends EntidadeAuditavel<Long> {
 	public boolean isAnoMesCorrente() {
 		return (ano == LocalDate.now().getYear() && mes == LocalDate.now().getMonthValue());
 	}
-	
+	public boolean isSaldoAtual(LocalDate dataLanc) {
+		return (this.ano == dataLanc.getYear() && this.mes == dataLanc.getMonthValue());
+	}
+	public boolean isFuturo() {
+		return data.isAfter(LocalDate.now());
+	}
 }

@@ -97,6 +97,9 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 		</dependency>
+		
+
+
 		<!--  para trabalhar com data -->
 <dependency>
     <groupId>org.thymeleaf.extras</groupId>
@@ -225,6 +228,13 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+<dependency>
+    <groupId>com.google.guava</groupId>
+    <artifactId>guava</artifactId>
+    <version>33.1.0-jre</version>
+</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

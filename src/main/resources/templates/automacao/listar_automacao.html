@@ -54,19 +54,19 @@
 							</thead>
 							<tbody>
 									<tr th:each="f : ${automacao}">
-										<td th:text="${f.id}">1</td>
-										<td th:text="${f.criterio}">criterio</td>
+										<td th:text="${f?.id}">1</td>
+										<td th:text="${f?.criterio}">criterio</td>
 										<td th:text="${f?.TipoOperacao?.getDescricao()}">nome</td>										
 										<td th:text="${f?.favorecido?.nome}">nome</td>
 										<td th:text="${f?.contaTransferencia?.apelido}">nome</td>
 										<td th:text="${f?.subCategoria?.descricao}">categoria</td>
 										<td colspan="2">
 											<a id="btn_editar"class="btn btn-info btn-sm"
-											   th:href="@{/automacao/editar/{id} (id=${f.id}) }"> 
+											   th:href="@{/automacao/editar/{id} (id=${f?.id}) }"> 
 											   <span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
 											</a> 
 										   <a id="btn_deletar" class="btn btn-danger btn-sm"
-											  th:href="@{/automacao/{id} (id=${f.id}) }"> 
+											  th:href="@{/automacao/{id} (id=${f?.id}) }"> 
 											  <span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
 										   </a>
 										</td>

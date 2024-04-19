@@ -69,7 +69,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
  	private Conta contaLancamento ;
    
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-	private BigDecimal valor;
+	private BigDecimal valor = BigDecimal.ZERO;
 	
 	
     @Column(nullable = false,columnDefinition = "DATE")	
@@ -96,6 +96,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
     
 	public DetalheLancamento() {
 		super();
+		valor = BigDecimal.ZERO;
 	}
 	
 	public DetalheLancamento(LocalDate dataVenc, Conta conta,TipoLancamento tipoLancamento, BigDecimal valor) {
@@ -105,6 +106,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		this.tipoLancamento =  tipoLancamento; 
 		this.contaLancamento = conta;
 		this.valor = valor; 
+		ajustaValor();
 	}
 
 	public boolean isDebito() {
@@ -114,14 +116,14 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		return this.tipoLancamento == TipoLancamento.C;
 	}
 	public BigDecimal getCredito() { 		
-		if (isCredito()) 
+		if (isCredito())
 			return credito = this.valor;		
-		return credito; 		
+		return BigDecimal.ZERO; 		
 	}
 	public BigDecimal getDebito() { 		
 		if (isDebito()) 
-			return debito = this.valor;		
-		return debito; 		
+			return debito = this.valor.abs().negate(); 		
+		return BigDecimal.ZERO; 		
 	}
 
 
@@ -138,22 +140,19 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		this.dataVenc = dataVenc;
 	}
 
-
+   public void setTipoLancamento ( TipoLancamento tipo) {
+	   this.tipoLancamento = tipo; 
+	   ajustaValor();
+   }
 
 /*
  * Grava valor negativo par lançamento Debito	
  */
 	public void setValor(BigDecimal valor ) {
-		this.valor = valor.abs();
-		if ( isDebito())  			
-			this.valor = this.valor.negate() ; 
+		this.valor = valor;
+		ajustaValor();
 	}
 	
-	public void getValor(BigDecimal valor ) {
-		this.valor = valor.abs();
-		if ( isDebito())  			
-			this.valor = this.valor.negate() ; 
-	}
 	
 	public void ajustaValor() {
 		this.valor = valor.abs();

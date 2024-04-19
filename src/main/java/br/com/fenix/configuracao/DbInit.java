@@ -35,19 +35,17 @@ public class DbInit implements CommandLineRunner {
     public void run(String... args) {
         
     	
-/*    	  Usuario onassis  = new Usuario("onassis.tavavares@gmail.com", "Onassis", "Tavares" ,passwordEncoder.encode("senha") ); 
+//    	  Usuario onassis  = new Usuario("onassis.tavares@gmail.com", "Onassis", "Tavares" ,passwordEncoder.encode("senha") ); 
     	
 //    	System.out.println("Inicio");
     	
  //       Usuario onassis  = new Usuario("onassis.tavavares@gmail.com", "Onassis", "Tavares" ,passwordEncoder.encode("senha") ); 
 
-        onassis.addRole(Role.ADMIN);
+//        onassis.addRole(Role.ADMIN);
         
-        System.out.println(onassis);
+//        System.out.println(onassis);
         
-        userRepository.criar(onassis);
-        
-*/     
+//        userRepository.criar(onassis);
         
   
     }

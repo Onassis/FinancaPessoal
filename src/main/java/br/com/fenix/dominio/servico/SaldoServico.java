@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
-import br.com.fenix.dominio.modelo.SaldoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 
 import br.com.fenix.dominio.repositorio.dadosBasico.SaldoContaRepositorio;
@@ -69,7 +69,7 @@ public class SaldoServico {
 					  .filter(saldoConta -> saldoConta.getData().equals(data))
 					  .findAny()
 					  .orElse(new SaldoConta( conta, data) );
-            	saldo.setSaldoIni(saldoIni.add( totalMesDet.getValor()));
+            	saldo.setSaldoInicial(saldoIni.add( totalMesDet.getValor()));
             	saldos.add(saldo);
             }
 		}
@@ -159,7 +159,7 @@ public class SaldoServico {
 		 saldo.setSaldoInicial(conta.getSaldo());
 		 return saldo; 
 	}
-	
+	/*
 	public SaldoConta buscaSaldoDestino ( LancamentoDTO lancDTO ) {
 		SaldoConta saldo; 
 		
@@ -177,5 +177,5 @@ public class SaldoServico {
 		}
 		return saldo;
 	}
-	
+	*/
 }

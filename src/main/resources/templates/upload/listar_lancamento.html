@@ -41,14 +41,12 @@
 				<div class="table-responsive">				
 				<table class="table table-striped table-hover table-sm">	
 					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Data Lancamento</th>
-							<th>Conta</th>						
+						<tr>					
+							<th>Data</th>			
 							<th>Descrição</th>
-							<th>Conta Destino</th>	
+							<th>Destino</th>	
 							<th>Categoria</th>
-							<th>Tipo Lancamento</th>
+							<th>D/C</th>
 							<th>Favorecido</th>
 							<th>Concialiado</th>	
 							<th align ="center" >Credito</th>					
@@ -58,13 +56,11 @@
 						</tr>		
 					<tbody>
 						<tr th:each="l : ${lancamentosDTO}">
-							<td th:text="${l?.id}">1</td>
 							<td th:text="${#temporals.format(l?.dataVenc, 'dd/MM/yyyy')}">2017/08/14</td>		
-							<td th:text="${l?.contaLanc?.getApelido()}">Conta lancamento</td>	
 							<td th:text="${l?.lancamentoInformacao}">Informação</td> 		
 							<td th:text="${l?.contaDestino?.getApelido()}">Conta destino</td>				
 							<td th:text="${l?.lancamentoSubCategoria?.getDescricao()}">Categorial</td>	
-							<td th:text="${l?.TipoLancamento?.getDescricao()}">Tipo Lançamento</td>												
+							<td th:text="${l?.TipoLancamento?.getDescricao()}">Lançamento</td>												
 							<td th:text="${l?.lancamentoFavorecido?.getNome()}">Favorecido</td>
 							<td th:text="${l?.conciliado}">Conciliado</td>
 							<td th:text="|R$ ${#numbers.formatDecimal(l?.credito ?: 0 , 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	

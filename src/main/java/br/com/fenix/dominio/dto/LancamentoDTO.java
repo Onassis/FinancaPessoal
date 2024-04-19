@@ -34,10 +34,9 @@ import lombok.NoArgsConstructor;
 public class LancamentoDTO implements Comparable<LancamentoDTO> {
 	
  
-	@Transient
-    private Long  id;
+	
 	private Long  idLancAux;
-	private Long  detalheId;
+	private Long  detalheLancamentoId;
 	private Long  detalheDestinoId;
 	private Long  lancamentoId;
 		
@@ -77,11 +76,7 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
     @JsonDeserialize(using = SubCategoriaDeserializer.class)
     @JsonInclude(content = Include.NON_NULL)    
     protected SubCategoria lancamentoSubCategoria;
-    
-
- 
-
-   
+      
     protected int lancamentoNroPrestacao;
     protected int lancamentoNroInicialPrestacao ;
     /**
@@ -102,11 +97,10 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
     
    
     @JsonDeserialize(using = NumericBooleanDeserializer.class)
-	protected boolean conciliado =  false;
+	protected boolean conciliado ;
    
     public LancamentoDTO() {    	
     	super();
-    	this.conciliado =  false;
     	this.valor = BigDecimal.ZERO; 
     	this.credito = BigDecimal.ZERO; 
     	this.debito = BigDecimal.ZERO; 
@@ -127,18 +121,7 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
 	public boolean isPositivo () {
 		  return (this.valor.compareTo(BigDecimal.ZERO) == 1); 	
 	}
-	public void setValor (BigDecimal valor) {
-		   
-		if ( isPositivo (valor)) {   
-		     this.tipoLancamento = TipoLancamento.C;	
-		 }
-		 else {
-			  this.tipoLancamento = TipoLancamento.D;
-        }
-		   
-	    this.valor = valor;
-	    }
-	
+
 	 
 	public BigDecimal getCredito() { 
 		credito = BigDecimal.ZERO; 
@@ -176,16 +159,6 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
 		return  0;
 	}
 	
-	public Long getId() {
-		if  (detalheId != null) {
-			return detalheId;
-		}
-		if (idLancAux != null) {
-			return idLancAux; 
-		}
-
-		return  lancamentoId;
-	}
 	
 	public void setLancamentoSubCategoria(SubCategoria  subCategoria) { 
 		

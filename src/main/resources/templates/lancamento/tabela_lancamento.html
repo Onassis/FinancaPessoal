@@ -21,7 +21,7 @@
 						</tr>		
 			<tbody>
 				<tr th:each="l : ${lancamentosDTO}">
-					<td th:text="${l.detalheId}">1</td>
+					<td th:text="${l.detalheLancamentoId}">1</td>
 					<td th:text="${l.lancamentoInformacao}">Informação</td> 					
 					<td th:text="${l?.lancamentoSubCategoria?.getDescricao()}">Categorial</td>
 					
@@ -32,9 +32,9 @@
 					<td th:text="${l?.conciliado}">Concialiado lancamento</td>	
 				    <td th:text="|R$ ${#numbers.formatDecimal(l.Valor, 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	
 				    <td colspan="2" align="center">
-						 <a id="btn_editar" th:href="@{/lancamento/editar/{id} (id=${l.detalheId}) }" title="Editar"	 
+						 <a id="btn_editar" th:href="@{/lancamento/editar/{id} (id=${l.detalheLancamentoId}) }" title="Editar"	 
 							    class="fa-regular fa-pen-to-square icon-dark"></a>           
-          				 <a id="btn_deletar" th:href="@{/lancamentolancamentoI{id} (id=${l.detalheId}) }" title="Excluir"          										     
+          				 <a id="btn_deletar" th:href="@{/lancamentolancamentoI{id} (id=${l.detalheLancamentoId}) }" title="Excluir"          										     
             					class="fa-regular fa-trash-can icon-dark btn-delete"></a>
         			</td>
 				 </tr>
