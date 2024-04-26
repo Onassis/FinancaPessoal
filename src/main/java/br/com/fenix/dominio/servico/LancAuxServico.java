@@ -152,8 +152,27 @@ public class LancAuxServico {
 		saldoRP.saveAll(saldoDestinos);
 */		
 	}				
+	public Coletor  processaCSV(Conta conta,List<String> conteudo) {
+
+		Coletor coletorLanc  = new Coletor();
+
+//---------------- Cria Lançamentos --------------------------------------------------// 
+		
+		for (String textoLinha  : conteudo) {
+		       System.out.println(textoLinha);
+	    		 coletorLanc.AddLancamentoCSV( conta, textoLinha );
+  
+		}
+		
+		//---------------- Ajusta os Lançamentos -------------------------------------------------- 		
+		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
+					autoSC.automatizar(lancDTO);
+ 		}
+			
+		return coletorLanc;
+	}	
 	
-	public Coletor  processInput(Conta conta,List<String> conteudo) {
+	public Coletor  processaOFX(Conta conta,List<String> conteudo) {
 
 		Coletor coletorLanc  = new Coletor();
 

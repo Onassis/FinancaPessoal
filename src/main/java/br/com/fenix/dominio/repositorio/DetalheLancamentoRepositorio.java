@@ -33,6 +33,11 @@ public interface DetalheLancamentoRepositorio extends GenericRepository<DetalheL
 			+ " d.valor = ?3 and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
 	public List<DetalheLancamento> findbyContaAndByDataVencandByValor(Conta conta, LocalDate dataVenc, BigDecimal valor); 	
 	
+	@Query("from DetalheLancamento d JOIN FETCH d.lancamento l where d.contaLancamento = null " + 
+	        " and  d.dataVenc between ?1 and ?2 " + 
+	        " and d.valor = ?3 and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
+	public List<DetalheLancamento> findbyDtVencBetweenAndByValor(LocalDate dataInicio, LocalDate dataFim, BigDecimal valor); 	
+	
 	@Query("select COALESCE(sum(d.valor),0) from DetalheLancamento d "
 			+ "where d.contaLancamento = ?1 and  d.dataVenc >= ?2 and "
 			+ "d.criadoPor.id = ?#{ principal.id} " )		

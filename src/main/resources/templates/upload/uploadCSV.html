@@ -41,7 +41,7 @@
                   	<label for="validationCustom01" class="form-label">Conta</label>
 					<select id="id_conta"  th:field="*{conta}" class="form-control" required>
 						 <option value="">Selecione</option>
-	                    <option th:each="c : ${contas}"
+	                    <option th:each="c : ${contaCartao}"
 	                        		 th:value="${c.id}" th:text="${c?.apelido}">Conta
 	                     </option>	                             
 	                 </select>     
@@ -51,7 +51,7 @@
                 </div>    
   				<div class="col-md-12">
 <!-- HTML5 Input Form Elements -->
-					<input id="fileupload" type="file" name="file" /> 
+					<input id="fileupload" type="file" name="file" accept=".csv"/> 
 	
 					<button  id="upload-button"  onclick="uploadFile"> Upload </button>
   				</div>

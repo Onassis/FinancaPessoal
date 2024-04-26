@@ -86,18 +86,23 @@ public class UploadControllerRest  {
 	LancAuxRepositorio lancAuxRP; 
 	
 	@ModelAttribute("formaPgtos")
-	public List<FormaPgto> listaDeFormaPgto() {
+	public List<FormaPgto> listarFormaPgto() {
 		return formaRP.findByOrderByNomeAsc();
 	}	
     
 	@ModelAttribute("favorecidos")
-	public Iterable<Favorecido> listaDeFavorecido() {		
+	public Iterable<Favorecido> listarFavorecido() {		
 	 return favorecidoRP.findAll();  
 	}
 	@ModelAttribute("contas")
-	public List<Conta> listaDeContas() {		
+	public List<Conta> listarConta() {		
 		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC);
 	}	
+	
+	@ModelAttribute("contaCartao")
+	public List<Conta> listarCartao() {		
+		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CR);
+	}
   
     @GetMapping
 	public ModelAndView listarUploadView() {
@@ -131,43 +136,29 @@ public class UploadControllerRest  {
  	
       @Transactional
 	  @PostMapping  	  
-	  public String FileUpload(@RequestParam("conta") long  conta, @RequestParam("file") MultipartFile file ) throws IOException {
-
-//	  public ResponseEntity<?> handleFileUpload(@RequestParam("conta") conta, @RequestParam("file") MultipartFile file ) throws IOException {
-            
+	  public String FileUpload(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException {
     	   System.out.println("handleFileUpload");
 		    String fileName = file.getOriginalFilename();
 		    List<String> conteudo =  readAll(file.getInputStream()); 
-		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(conta).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
-		    
-		    Coletor lancamento = lancAuxSC.processInput(contaImp.get(),conteudo ) ; 
-		    
-//		    for (LancamentoDTO lanc :lancamento.getLancamentosDTO() ) {
-//		    	System.out.println(lanc);
-//		    }
-		 
-		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;
-		         
+		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
+		    Conta conta = contaImp.get(); 
+		    Coletor lancamento  = lancAuxSC.processaOFX(conta,conteudo ) ;
+		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;		         
 		    return "redirect:/upload/confirmar";
 	  }
       
       @Transactional
-	  @PostMapping("/csv")  	  
-	  public String FileUploadCSV(@RequestParam("conta") long  conta, @RequestParam("file") MultipartFile file ) throws IOException {
-
-          
+	  @PostMapping("/CSV")  	  
+	  public String FileUploadCSV(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException {
+     
     	   System.out.println("handleFileUploadCSV");
 		    String fileName = file.getOriginalFilename();
 		    List<String> conteudo =  readAll(file.getInputStream()); 
-		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(conta).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
 		    
-//		    Coletor lancamento = lancDTOSC.processInputCSV(contaImp.get(),conteudo ) ; 
-		    
-//		    for (LancamentoDTO lanc :lancamento.getLancamentosDTO() ) {
-//		    	System.out.println(lanc);
-//		    }
-		 
-//		    lancDTOSC.excluiSalvaTodos(lancamento.getLancamentosDTO())	;
+		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
+		    Conta conta = contaImp.get(); 
+		    Coletor lancamento = lancAuxSC.processaCSV(conta,conteudo ) ;
+		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;
 		         
 		    return "redirect:/upload/confirmar";
 	  }
@@ -176,14 +167,10 @@ public class UploadControllerRest  {
 			List<String> conteudo = new ArrayList<String>();
 		    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		    String line = null;
-//		    StringBuilder stringBuilder = new StringBuilder();
 		    String ls = System.getProperty("line.separator");
 		    try{
 		        while((line=reader.readLine())!=null){
 		        	conteudo.add(line);
-//		            stringBuilder.append(line);
-//		            System.out.println(line);
-//		            stringBuilder.append(ls);
 		        }
 		        return conteudo;
 		    }finally{

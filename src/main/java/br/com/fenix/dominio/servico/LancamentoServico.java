@@ -126,6 +126,12 @@ public class LancamentoServico {
 		}    
 */
 		lancamento = lancamentoRP.save(lancamento); 
+		
+		 LocalDate datasaldo = lancDTO.getLancamentoDataDoc();
+		saldoRP.f_atualiza_saldo(lancamento.getCriadoPor().getId(), 
+								 lancDTO.getContaLancamento().getId(),
+								 datasaldo,
+								 null);
 		return lancamento; 
 	}
 
@@ -386,103 +392,52 @@ public class LancamentoServico {
 }
     
 public LancAux conciliar( LancAux  lancDTO) {
-	// TODO Auto-generated method stub
-	return lancDTO;
-}
-}
-
-/*	
     List<DetalheLancamento> lancamentos ;
-    lancamentos  = DtlancamentoRP.
-    		findbyContaAndByDataLancamentoandByValor(lancDTO.getContaDestino(), 
-    				lancDTO.getDataComp(), lancDTO.getValor());
+    Optional<DetalheLancamento>  lancOpt;
     
-	for (DetalheLancamento lancDet  : lancamentos  ) {
-		if (lancDTO.getIdBanco().equals(lancDet.getIdBanco())) {
-			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-			lancDTO.setDetalheLancamentoId(lancDet.getId());
-			System.out.println(lancDTO.getConciliado() );
+    lancamentos  = DtlancamentoRP.
+    		findbyContaAndByDataVencandByValor (
+    					lancDTO.getContaDestino(), 
+    					lancDTO.getLancamentoDataDoc(), lancDTO.getValor());
+    
+	for (DetalheLancamento lancDet  : lancamentos  ) {		
+			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 			
+			lancDTO.setDetalheDestinoId( lancDet.getId());
+			lancDTO.setConciliado(true);
 			return lancDTO;    			    			
 		}
-		if ( lancDTO.getLancamentoFavorecido().equals(lancDet.getLancamento().getFavorecido())) {    			
-			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-			lancDTO.setDetalheLancamentoId(lancDet.getId());
-			System.out.println(lancDTO.getConciliado() );
-			return lancDTO;    			
-		}
+     lancamentos  = DtlancamentoRP.
+    		 findbyDtVencBetweenAndByValor (
+    				    lancDTO.getLancamentoDataDoc().minusDays(30),
+    					lancDTO.getLancamentoDataDoc().plusDays(30), lancDTO.getValor());
+    
+     
+     lancOpt = lancamentos.stream()
+    		 		.filter(e -> e.getDataVenc().equals(lancDTO.getLancamentoDataDoc()))
+    		 			.findFirst();
+     
+     if (lancOpt.isPresent()) {
+    	    DetalheLancamento detLanc = lancOpt.get(); 
+    		lancDTO.setLancamentoId(detLanc.getLancamento().getId()); 			
+			lancDTO.setDetalheDestinoId( detLanc.getId());
+			lancDTO.setConciliado(true);
+			return lancDTO; 
+     }
+     
+     lancOpt = lancamentos.stream()
+    		 .filter(e -> e.getValor().equals(lancDTO.getValor()))
+				.findFirst();
+
+	if (lancOpt.isPresent()) {
+		DetalheLancamento detLanc = lancOpt.get(); 
+		lancDTO.setLancamentoId(detLanc.getLancamento().getId()); 			
+		lancDTO.setDetalheDestinoId( detLanc.getId());
+		lancDTO.setConciliado(true);
+		return lancDTO; 
 	}
-	for (DetalheLancamento lancDet  : lancamentos  ) {
-		if ( lancDTO.getLancamentoInformacao().contains(lancDet.getLancamento().getInformacao() )) {   			
-			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-			lancDTO.setDetalheLancamentoId(lancDet.getId());
-			return lancDTO;    			
-		}
-	}
-	for (DetalheLancamento lancDet  : lancamentos  ) {
-		lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-		lancDTO.setDetalheLancamentoId(lancDet.getId());	
-		return lancDTO;
-	}  
+ 
+ 
 	return lancDTO;
+ }
 }
-
-	/**	@Transactional
-
-	 * 	
-	 
-		public void gerarLancamento(ArrayList<LancAux> lancDTOs) {
-			
-			
-	// --------------  Acerta Saldo Inicial -------------------------------------------//		
-			LancAux lancDTOSaldo = lancDTOs.get(0); 
-			
-			System.out.println("gerar Lancamento");
-			System.out.println(lancDTOSaldo);
-			
-			SaldoConta saldo = saldoSC.buscaSaldo(lancDTOSaldo.getContaLancamento(),lancDTOSaldo.getDataCompesacao()); 
-			saldo.setSaldoInicial( lancDTOSaldo.getSaldo());
-			saldo.setSaldo( lancDTOSaldo.getSaldo());
-			saldoRP.save(saldo);
-			
-	// --------------  Cria Lancamento  -------------------------------------------//
-			for (LancAux lancDTO  :  lancDTOs  ) {
-				criar(lancDTO);
-			}	
-		}
-		
-		public LancAux conciliar( LancamentoDTO  lancDTO) {
-			
-	        List<DetalheLancamento> lancamentos ;
-	        lancamentos  = DtlancamentoRP.findbyContaAndByDataLancamentoandByValor(lancDTO.getContaLancamento(), lancDTO.getDataLancamento(), lancDTO.getValor());
-	    	for (DetalheLancamento lancDet  : lancamentos  ) {
-	    		if (lancDTO.getIdBanco().equals(lancDet.getIdBanco())) {
-	    			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-	    			lancDTO.setDetalheLancamentoId(lancDet.getId());
-	    			System.out.println(lancDTO.getConciliado() );
-	    			return lancDTO;    			    			
-	    		}
-	    		if ( lancDTO.getLancamentoFavorecido().equals(lancDet.getLancamento().getFavorecido())) {    			
-	    			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-	    			lancDTO.setDetalheLancamentoId(lancDet.getId());
-	    			System.out.println(lancDTO.getConciliado() );
-	    			return lancDTO;    			
-	    		}
-	    	}
-	    	for (DetalheLancamento lancDet  : lancamentos  ) {
-	    		if ( lancDTO.getLancamentoInformacao().contains(lancDet.getLancamento().getInformacao() )) {   			
-	    			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-	    			lancDTO.setDetalheLancamentoId(lancDet.getId());
-	    			return lancDTO;    			
-	    		}
-	    	}
-	    	for (DetalheLancamento lancDet  : lancamentos  ) {
-				lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 
-				lancDTO.setDetalheLancamentoId(lancDet.getId());	
-				return lancDTO;
-			}  
-			return lancDTO;
-		}
-
-	*/	
-
-
+ 

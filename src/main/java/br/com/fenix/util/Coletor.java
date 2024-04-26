@@ -1,6 +1,8 @@
 package br.com.fenix.util;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Locale;
 
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
@@ -17,28 +19,39 @@ import br.com.fenix.dominio.modelo.LancAux;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import lombok.Data;
 import lombok.Getter;
+import java.util.Scanner;
 
 
 public class Coletor {
+
 	
 	private BigDecimal saldoFinal = new BigDecimal(0); 
     private List<Tag> openTags = new LinkedList<>();
     private ArrayList<LancAux> lancamentosAux =  new ArrayList<>();
     
-    
+    private String pattern = "#.##0,0#";
+
+    private DecimalFormatSymbols symbols;
+    private DecimalFormat decimalFormat;
 
     public void end() {
 
     }
 
 
-    public Coletor(Conta conta, List<String> conteudo) {
+/*    public Coletor(Conta conta, List<String> conteudo) {
     	  super();
-//    	  processInput( conta,conteudo); 	  
+    	  symbols = new DecimalFormatSymbols();
+    	  symbols.setGroupingSeparator(',');
+    	  symbols.setDecimalSeparator('.');
+    	  decimalFormat = new DecimalFormat(pattern, symbols);
+    	  decimalFormat.setParseBigDecimal(true);	  
     }
-
+*/
 	public Coletor() {
-		// TODO Auto-generated constructor stub
+		  super();
+		  symbols = new DecimalFormatSymbols(Locale.ITALIAN);
+    	  decimalFormat = new DecimalFormat("", symbols);
 	}
 
     public void OrdenaDescendente () {
@@ -51,6 +64,45 @@ public class Coletor {
     public ArrayList<LancAux>  getLancamentosAux() {
     	return this.lancamentosAux;
     }
+	public void AddLancamentoCSV(Conta conta, String linha ) {
+		LancAux lanc = new LancAux(conta);
+		String tag;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		Scanner scanner = new Scanner(linha);
+        scanner.useDelimiter(";");
+        try {
+          		tag = scanner.next();     
+           		System.out.println(tag);          		
+               	LocalDate date = LocalDate.parse(tag, formatter);
+                lanc.setDataVenc( date) ;
+                lanc.setLancamentoDataDoc(date) ;
+                lanc.setLancamentoTipoOperacao(TipoOperacao.CC); 
+                
+          	    
+                tag = scanner.next();     
+                lanc.setLancamentoInformacao(tag); 
+                
+          		tag = scanner.next();
+          		tag = tag.replace("R$", "");
+          		tag = tag.replaceAll(" ", ""); 	
+           		System.out.println(tag);          		               	     
+          	    BigDecimal valor = new BigDecimal( decimalFormat.parse(tag).toString());
+          	    if (valor.compareTo(BigDecimal.ZERO) > 0) {
+          	      lanc.setTipoLancamento(TipoLancamento.C); 
+          	      }
+          	      else {
+              	      lanc.setTipoLancamento(TipoLancamento.D);          	    	  
+          	      }
+
+                lanc.setValor(valor); 
+                scanner.close();
+                lancamentosAux.add(lanc);              
+            	    
+           } catch (Exception e) {
+        	   System.out.println(e);
+           }        
+	}
 	public void AddLLancamento(Conta conta,Tag tag) {
 		   BigDecimal saldoAnterior; 
 		   
