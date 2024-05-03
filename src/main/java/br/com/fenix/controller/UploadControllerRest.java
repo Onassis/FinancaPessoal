@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,23 @@ public class UploadControllerRest  {
 	public List<FormaPgto> listarFormaPgto() {
 		return formaRP.findByOrderByNomeAsc();
 	}	
+	
+	@ModelAttribute("mesesAno")
+	public List<String> listaMesAno() {
+		LocalDate data   = LocalDate.now().minusMonths(2);
+		String sData; 
+		
+		List<String> todosMeses = new ArrayList<String>();
+		for (int x = 0; x <= 6; x++) {
+			sData = String.format("%02d",data.getMonthValue());
+			sData = sData.concat("/");
+			sData = sData.concat(String.format("%04d",data.getYear()));
+			todosMeses.add( sData );
+			data = data.plusMonths(1);			
+		}
+
+	    return todosMeses;
+	}
     
 	@ModelAttribute("favorecidos")
 	public Iterable<Favorecido> listarFavorecido() {		
@@ -110,7 +128,7 @@ public class UploadControllerRest  {
     	UploadDTO dado = new UploadDTO();		
 		return new ModelAndView("upload/upload","upload",dado) ;		  			  
 	}	
-    @GetMapping("/CSV")
+    @GetMapping("/Cartao")
 	public ModelAndView listarUploadCSVView() {
 		// TODO Auto-generated method stub    	
     	UploadDTO dado = new UploadDTO();		
@@ -125,6 +143,15 @@ public class UploadControllerRest  {
 		return new ModelAndView("upload/listar_lancamento","lancamentosDTO",dados) ;
 //		return null; 
 	}	
+    @GetMapping("/confirmarCartao")
+	public ModelAndView listarUploadViewConfCartao(LancamentoDTO entidade) {
+		// TODO Auto-generated method stub
+    	
+		Iterable<LancAux> dados = lancAuxRP.findAll();
+		
+		return new ModelAndView("upload/listar_lancamentoCartao","lancamentosDTO",dados) ;
+//		return null; 
+	}
     
     @GetMapping("/gerar")
     @Transactional
@@ -148,8 +175,11 @@ public class UploadControllerRest  {
 	  }
       
       @Transactional
-	  @PostMapping("/CSV")  	  
-	  public String FileUploadCSV(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException {
+	  @PostMapping("/Cartao")  	  
+	  public String FileUploadCSV(@RequestParam("conta") long  contaId,
+			  					 @RequestParam("mesCarga") String  mesCarga,
+			  					 @RequestParam("saldoIni") BigDecimal  saldoIni,
+			  					 @RequestParam("file") MultipartFile file ) throws IOException {
      
     	   System.out.println("handleFileUploadCSV");
 		    String fileName = file.getOriginalFilename();
@@ -157,10 +187,10 @@ public class UploadControllerRest  {
 		    
 		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
 		    Conta conta = contaImp.get(); 
-		    Coletor lancamento = lancAuxSC.processaCSV(conta,conteudo ) ;
+		    Coletor lancamento = lancAuxSC.processaCartao(conta,mesCarga,saldoIni,conteudo ) ;
 		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;
 		         
-		    return "redirect:/upload/confirmar";
+		    return "redirect:/upload/confirmarCartao";
 	  }
 
 		private List<String> readAll(InputStream is) throws IOException {

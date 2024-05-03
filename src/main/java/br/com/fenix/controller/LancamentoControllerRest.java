@@ -88,8 +88,7 @@ public class LancamentoControllerRest {
 		for (int x = 1; x <= 12; x++) {
 		   todosMeses.add( LocalDate.of(year, x, 1) );	
 		}
-//		System.out.println("mes");
-//		System.out.println(todosMeses.toString());
+
 	    return todosMeses;
 	}
 	

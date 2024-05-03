@@ -113,11 +113,13 @@ public class Conta extends EntidadeAuditavel<Long> {
 		}
 		return datVenc;
    }
-   public LocalDate getDataSaldo( LocalDate dataSaldo) {
-	   
-	
-	    	
-		if ( isCredito() ) {		
+   public LocalDate getDataSaldo( LocalDate dataSaldo) {	
+		if ( isCredito() ) {	
+			if ( !dataSaldo.isAfter(LocalDate.now()) ) { 
+				dataSaldo = LocalDate.of(LocalDate.now().getYear(), 
+		    			 			 LocalDate.now().getMonthValue(), 
+		    			 			dataSaldo.getDayOfMonth());
+			}
 			if ( dataSaldo.getDayOfMonth() -  this.diaVencimento > 9) {
 				dataSaldo.plusMonths(1);
 				dataSaldo = LocalDate.of(dataSaldo.getYear(), dataSaldo.getMonth(), diaVencimento);
@@ -137,12 +139,15 @@ public class Conta extends EntidadeAuditavel<Long> {
 		return dataSaldo; 		
 	
 }
-   public boolean contaIsCartao() {
+   public boolean isContaCartao() {
 	   return this.tipoConta == TipoConta.CR; // Cartaa de credito 
+   }
+   public boolean isContaCorrente() {
+	   return this.tipoConta == TipoConta.CC; // Cartaa de credito 
    }
    public LocalDate dataSaldoAnterior (LocalDate data) {
 	   
-		if ( contaIsCartao()) { 		
+		if ( isContaCartao()) { 		
 			if ( ( data.getDayOfMonth() -  diaVencimento) <=  9) {
 				data.plusMonths(1);
 				return  LocalDate.of(data.getYear(), data.getMonth(), diaVencimento );

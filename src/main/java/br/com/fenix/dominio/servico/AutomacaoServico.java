@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,17 +48,20 @@ public class AutomacaoServico {
 		automacoes = autoRP.findAll();
 		
 		for (Automacao auto  : automacoes) {
-			
-			if (lancDTO.getLancamentoInformacao().contains(auto.getCriterio().toUpperCase())) {	
-				System.out.println(auto);
-				lancDTO.setLancamentoFavorecido(  auto.getFavorecido());
-				lancDTO.setLancamentoSubCategoria(auto.getSubCategoria());
-				lancDTO.setContaDestino(auto.getContaTransferencia());
-				lancDTO.setLancamentoTipoOperacao( auto.getTipoOperacao());
+			for ( String criterio : StringUtils.split(auto.getCriterio(),";") ) {
+				
+				if (lancDTO.criterio(criterio)) { 
+					System.out.println(auto);
+					lancDTO.setLancamentoFavorecido(  auto.getFavorecido());
+					lancDTO.setLancamentoSubCategoria(auto.getSubCategoria());
+					lancDTO.setContaDestino(auto.getContaTransferencia());
+					if (lancDTO.isContaCorrente()) { 
+						lancDTO.setLancamentoTipoOperacao( auto.getTipoOperacao());
+					}	
 				break;
 			}
 		}
-	
+		}
 	}
 
 	}

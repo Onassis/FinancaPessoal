@@ -105,11 +105,16 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
     private LocalDate dataVenc;
     
     @Column(nullable = true)
-    private int lancamentoNroPrestacao;
+    private int lancamentoNroPrestacao=1;
     
     @Column(nullable = true)
-    private int lancamentoNroInicialPrestacao ;
+    private int lancamentoNroInicialPrestacao=1 ;
     
+	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
+	@JsonDeserialize(using = MoneyDeserializer.class) 	
+	private BigDecimal lancamentoTotal;
+	
+	
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
 	private BigDecimal valor;
@@ -136,6 +141,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	public LancAux() {
 		super();
 		this.valor = new BigDecimal(0); 
+		this.lancamentoTotal = new BigDecimal(0); 
 		this.credito = new BigDecimal(0);
 		this.debito = new BigDecimal(0);
 		this.saldo = new BigDecimal(0); 
@@ -148,6 +154,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	public LancAux(Conta conta) {
 		super();
 		this.valor = new BigDecimal(0); 
+		this.lancamentoTotal = new BigDecimal(0); 
 		this.credito = new BigDecimal(0);
 		this.debito = new BigDecimal(0);
 		this.saldo = new BigDecimal(0); 
@@ -156,12 +163,39 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		this.lancamentoNroPrestacao = 1 ; 
 		this.conciliado = true;
 	}
+	 public String prestacao() {
+		 String sPrestacao; 
+		 sPrestacao = String.format("%02d",lancamentoNroInicialPrestacao);
+		 sPrestacao = sPrestacao.concat("/");
+		 sPrestacao = sPrestacao.concat(String.format("%02d",lancamentoNroPrestacao));
+		 return sPrestacao; 
+	 }
 	 
+	 public boolean criterio(String criterio) { 
+		 return lancamentoInformacao.toUpperCase().contains(criterio.toUpperCase());
+	 }
 /*	public void setVencSubCategoria( SubCategoria subCategoria ) {
 		this.lancamentoSubCategoria = subCategoria; 
 		this.lancamentoCategoria = subCategoria.getCategoria();
 	}
 */	
+	
+	 public void setLancamentoValor( BigDecimal valor) { 
+	    	this.lancamentoTotal = acertaSinal(valor); 
+	    	this.valor = lancamentoTotal.divide(new BigDecimal(lancamentoNroPrestacao));    	
+	 }
+	 /*
+	  * Acerta o sinal conforme se Credito e Debito 
+	  * 
+	  * Debito =>  Negativo
+	  * Credito => Positivo 
+	  */
+	 public BigDecimal acertaSinal( BigDecimal valor) { 
+		 if (isDebito()) { 
+			 return valor.abs().multiply(new BigDecimal(-1)); 
+		 }
+		 return valor.abs();
+	 }
 	public boolean isDebito() {
 		return this.tipoLancamento == TipoLancamento.D;
 	}
@@ -169,7 +203,12 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		return this.tipoLancamento == TipoLancamento.C;
 	}
 	
-	
+	public boolean isContaCorrente() {
+		if (contaLanc == null) {
+			return false; 
+		}
+		return contaLanc.isContaCorrente();
+	}
 	public void setValor (BigDecimal valor) {
 	    	this.valor = valor.abs();
 	    	if (isDebito()) 

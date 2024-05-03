@@ -85,6 +85,9 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
     protected int prestacao;
 
     @JsonDeserialize(using = MoneyDeserializer.class) 
+	protected BigDecimal lancamentoTotal;
+    
+    @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal valor;
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal saldo;
@@ -102,13 +105,38 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
     public LancamentoDTO() {    	
     	super();
     	this.valor = BigDecimal.ZERO; 
+    	this.lancamentoTotal = BigDecimal.ZERO; 
     	this.credito = BigDecimal.ZERO; 
     	this.debito = BigDecimal.ZERO; 
         this.lancamentoNroPrestacao = 1;
         this.lancamentoNroInicialPrestacao = 1;
     	
     }
-
+   
+    public void setLancamentoValor( BigDecimal valor) { 
+    	this.lancamentoTotal = acertaSinal(valor); 
+    	this.valor = lancamentoTotal.divide(new BigDecimal(lancamentoNroPrestacao));    	
+    }
+    
+	 public String prestacao() {
+		 String sPrestacao; 
+		 sPrestacao = String.format("%02d",lancamentoNroInicialPrestacao);
+		 sPrestacao = sPrestacao.concat("/");
+		 sPrestacao = sPrestacao.concat(String.format("%02d",lancamentoNroPrestacao));
+		 return sPrestacao; 
+	 }
+	 /*
+	  * Acerta o sinal conforme se Credito e Debito 
+	  * 
+	  * Debito =>  Negativo
+	  * Credito => Positivo 
+	  */
+	 public BigDecimal acertaSinal( BigDecimal valor) { 
+		 if (isDebito()) { 
+			 return valor.abs().multiply(new BigDecimal(-1)); 
+		 }
+		 return valor.abs();
+	 }
 	public boolean isDebito() {
 		return this.tipoLancamento == TipoLancamento.D;
 	}

@@ -51,6 +51,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	@Column(nullable = false)
 	private int mes;
 	
+	
 	@Column(length = 2, nullable =  false)
     @Enumerated(EnumType.STRING)
 	private TipoLancamento tipoLancamento;	
@@ -159,7 +160,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		if ( isDebito())  			
 			this.valor = this.valor.negate() ; 
 	}
-	public boolean possuiContaLancanto() {
+	public boolean possuiContaLancamento() {
 		return this.contaLancamento != null;  
 	}
 }

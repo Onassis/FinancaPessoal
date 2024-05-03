@@ -35,7 +35,7 @@ public class Lancamento extends EntidadeAuditavel<Long> {
     @Column(length = 2, nullable =  false)
     @Enumerated(EnumType.STRING)
 	private TipoOperacao tipoOperacao;
-    
+   
     @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY ,optional = true  )
 	@JsonBackReference
     private Favorecido favorecido;
@@ -67,7 +67,7 @@ public class Lancamento extends EntidadeAuditavel<Long> {
     private boolean transferencia=false; 
     
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-	private BigDecimal valor;
+	private BigDecimal total;
 
 	
 	public Lancamento() {
@@ -81,7 +81,7 @@ public class Lancamento extends EntidadeAuditavel<Long> {
 	    this.nroPrestacao = 1;
 	    this.nroInicialPrestacao = 1;		
 		this.tipoOperacao = tipoOperacao;
-		this.valor = valor; 
+		this.total = valor; 
 	}
 	public void addDatalheLancamento(DetalheLancamento detalheLancamento) {
         detalheLancamento.setLancamento(this); 

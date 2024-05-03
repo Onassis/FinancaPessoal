@@ -44,7 +44,14 @@ public class UtilSerguranca {
 		
 		return Optional.empty();
 	}
+	public static long userId() {
+		Optional<Usuario> user = currentUser(); 
+	    if  (user.isEmpty()) 
+	    	return 0; 
 	
+	    	return user.get().getId();
+    }
+	    
 	public static void login(UserDetails user) {
 		
 		Authentication auth = new UsernamePasswordAuthenticationToken(

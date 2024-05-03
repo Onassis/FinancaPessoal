@@ -27,16 +27,12 @@ public class Coletor {
 	
 	private BigDecimal saldoFinal = new BigDecimal(0); 
     private List<Tag> openTags = new LinkedList<>();
-    private ArrayList<LancAux> lancamentosAux =  new ArrayList<>();
+    private ArrayList<LancAux> lancamentos =  new ArrayList<>();
     
     private String pattern = "#.##0,0#";
 
     private DecimalFormatSymbols symbols;
     private DecimalFormat decimalFormat;
-
-    public void end() {
-
-    }
 
 
 /*    public Coletor(Conta conta, List<String> conteudo) {
@@ -55,18 +51,20 @@ public class Coletor {
 	}
 
     public void OrdenaDescendente () {
-		Collections.sort(lancamentosAux , Collections.reverseOrder());   
+		Collections.sort(lancamentos , Collections.reverseOrder());   
     }
     public void OrdenaAcendente () {
-    	Collections.sort(lancamentosAux);   
+    	Collections.sort(lancamentos);   
     }
     
     public ArrayList<LancAux>  getLancamentosAux() {
-    	return this.lancamentosAux;
+    	return this.lancamentos;
     }
-	public void AddLancamentoCSV(Conta conta, String linha ) {
+	public void AddLancamentoCSV(Conta conta, LocalDate dataCartao, String linha ) {
 		LancAux lanc = new LancAux(conta);
-		String tag;
+		String tag,sPrestacao;
+		int prestacaoIni ;
+    	int prestacaoFinal;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
 		Scanner scanner = new Scanner(linha);
@@ -75,29 +73,51 @@ public class Coletor {
           		tag = scanner.next();     
            		System.out.println(tag);          		
                	LocalDate date = LocalDate.parse(tag, formatter);
-                lanc.setDataVenc( date) ;
+           
                 lanc.setLancamentoDataDoc(date) ;
+                
+                lanc.setDataVenc(dataCartao) ; 
                 lanc.setLancamentoTipoOperacao(TipoOperacao.CC); 
                 
-          	    
+                prestacaoIni   = 1;
+            	prestacaoFinal = 1;
+            	
                 tag = scanner.next();     
                 lanc.setLancamentoInformacao(tag); 
+                
+                int tamanho =  tag.length();
+                
+                String prestacao = tag.substring(tamanho-5, tamanho); 
+                if (prestacao.contains("/"))  {
+                	try {
+                		sPrestacao   =  tag.substring(tamanho-5, tamanho-3);
+                		prestacaoIni = Integer.parseInt(sPrestacao);                 	
+                		sPrestacao =  tag.substring(tamanho-2, tamanho);
+                		prestacaoFinal = Integer.parseInt(sPrestacao);
+                	} catch (Exception e){             		
+                	}
+                }                		               
+                lanc.setLancamentoNroInicialPrestacao(prestacaoIni);
+                lanc.setLancamentoNroPrestacao(prestacaoFinal);
                 
           		tag = scanner.next();
           		tag = tag.replace("R$", "");
           		tag = tag.replaceAll(" ", ""); 	
            		System.out.println(tag);          		               	     
           	    BigDecimal valor = new BigDecimal( decimalFormat.parse(tag).toString());
+          	    lanc.setLancamentoValor(valor.multiply( new BigDecimal(prestacaoFinal)));
+          	    
+          	    
           	    if (valor.compareTo(BigDecimal.ZERO) > 0) {
-          	      lanc.setTipoLancamento(TipoLancamento.C); 
+          	      lanc.setTipoLancamento(TipoLancamento.D); 
           	      }
           	      else {
-              	      lanc.setTipoLancamento(TipoLancamento.D);          	    	  
+              	      lanc.setTipoLancamento(TipoLancamento.C);          	    	  
           	      }
 
                 lanc.setValor(valor); 
                 scanner.close();
-                lancamentosAux.add(lanc);              
+                lancamentos.add(lanc);              
             	    
            } catch (Exception e) {
         	   System.out.println(e);
@@ -110,7 +130,7 @@ public class Coletor {
 			
          	switch (tag.getTagNome()) {
 	        	case "STMTTRN"    : {   
-	        							lancamentosAux.add(new LancAux(conta));
+	        							lancamentos.add(new LancAux(conta));
 	        						    UltimoLancamento().setSaldo(new BigDecimal(0));
 	        							break;
 	        						}
@@ -168,17 +188,17 @@ public class Coletor {
 
 
 	public LancAux UltimoLancamento() {
-        if (lancamentosAux.size() == 0) {
+        if (lancamentos.size() == 0) {
             return null;
         } else {
-            return lancamentosAux.get(lancamentosAux.size() - 1);
+            return lancamentos.get(lancamentos.size() - 1);
         }
     }
     public LancAux PrimeiroLancamento() {
-        if (lancamentosAux.size() == 0) {
+        if (lancamentos.size() == 0) {
             return null;
         } else {
-            return lancamentosAux.get(0);
+            return lancamentos.get(0);
         }
     }
 

@@ -95,20 +95,18 @@ public class LancamentoServico {
 		} catch (Exception e) {
 			 dataInicio = LocalDate.now();
 			 dataInicio = LocalDate.of(dataInicio.getYear(), dataInicio.getMonthValue(), 1);
-			// TODO: handle exception
 		}
 		  
- 	  LocalDate DataFim =  dataInicio.with(TemporalAdjusters.lastDayOfMonth()); 
+  	    LocalDate DataFim =  dataInicio.with(TemporalAdjusters.lastDayOfMonth()); 
 		
-		  List<DetalheLancamento> detalheLancamentos = DtlancamentoRP.findAllBydataVenctoBetween(dataInicio,DataFim);
+		List<DetalheLancamento> detalheLancamentos = DtlancamentoRP.findAllBydataVenctoBetween(dataInicio,DataFim);
 	
-		  List<LancamentoDTO> lancamentosDTO =  new ArrayList<LancamentoDTO>(); 
+		List<LancamentoDTO> lancamentosDTO =  new ArrayList<LancamentoDTO>(); 
 		  
-		  for(DetalheLancamento detLanc : detalheLancamentos) {      
+		for(DetalheLancamento detLanc : detalheLancamentos) {      
 			  LancamentoDTO lancamentoDTO = modelMapper.map(detLanc, LancamentoDTO.class); 
 			  lancamentosDTO.add(lancamentoDTO);
-		  }	
-		
+		}			
 		  System.out.println("Lista todos ");
 		  return lancamentosDTO;
 	}
@@ -116,19 +114,9 @@ public class LancamentoServico {
 	@Transactional
     public Lancamento salvar (LancamentoDTO lancDTO) {
 		Lancamento lancamento = criar (lancDTO);
-/*		if ( lancDTO.getContaLancamento() != null) {
-			 SaldoConta saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento(), lancDTO.getLancamentoDataDoc());
-		     saldoRP.save(saldo);
-		}    	
-		if ( lancDTO.getContaDestino()  != null) { 
-			SaldoConta saldoDest = saldoSC.buscaSaldo(lancDTO.getContaDestino(), lancDTO.getLancamentoDataDoc());
-	     	saldoRP.save(saldoDest);
-		}    
-*/
-		lancamento = lancamentoRP.save(lancamento); 
-		
-		 LocalDate datasaldo = lancDTO.getLancamentoDataDoc();
-		saldoRP.f_atualiza_saldo(lancamento.getCriadoPor().getId(), 
+		lancamento = lancamentoRP.save(lancamento); 		
+		LocalDate datasaldo = lancDTO.getLancamentoDataDoc();
+  		saldoRP.f_atualiza_saldo(lancamento.getCriadoPor().getId(), 
 								 lancDTO.getContaLancamento().getId(),
 								 datasaldo,
 								 null);
@@ -200,7 +188,7 @@ public class LancamentoServico {
 		    int nroPrestacao      = lancDTO.getLancamentoNroPrestacao();
 		    int prestacaoInicial  = lancDTO.getLancamentoNroInicialPrestacao();
 	
-		    valorPrestacao = lancDTO.getValor().divide(new BigDecimal(nroPrestacao));
+		    valorPrestacao = lancDTO.getLancamentoTotal().divide(new BigDecimal(nroPrestacao));
 			
 			for(int count=prestacaoInicial ; count <= nroPrestacao; count++){				
 			 	DetalheLancamento detalheLancamento = modelMapper.map(lancDTO, DetalheLancamento.class);
@@ -208,7 +196,7 @@ public class LancamentoServico {
 			 	LocalDate data = lancDTO.getLancamentoDataDoc().plusMonths(count-1);
 			 	detalheLancamento.setDataVenc(data);
 			 	if  (detalheLancamento.getContaLancamento() != null) { 
-			 		if (detalheLancamento.getContaLancamento().contaIsCartao() ) { 
+			 		if (detalheLancamento.getContaLancamento().isContaCartao() ) { 
 			 			data = LocalDate.of(data.getYear(), data.getMonthValue(), detalheLancamento.getContaLancamento().getDiaVencimento());
 			 		}
 			 	}	 
@@ -218,7 +206,7 @@ public class LancamentoServico {
 		 		 
 		 return detLancs;		 
 	}
-	@Transactional
+	
 	private Lancamento conta_a_vencer(LancamentoDTO lancDTO) {
 	    int nroPrestacao      = lancDTO.getLancamentoNroPrestacao();
 	    int prestacaoInicial  = lancDTO.getLancamentoNroInicialPrestacao();
@@ -229,17 +217,17 @@ public class LancamentoServico {
 		
 		lancamento.setDatalheLancamento( DTO_to_DetalhaLancamento(lancDTO));
 		
-		return lancamentoRP.save(lancamento); 	
+		return lancamento; 	
 	}	
 	
-	@Transactional
+	
 	private Lancamento comprarCheque(LancamentoDTO lancDTO) {
 		 
 	    int nroPrestacao      = lancDTO.getLancamentoNroPrestacao();
 	    int prestacaoInicial  = lancDTO.getLancamentoNroInicialPrestacao();
 	    BigDecimal valorPrestacao; 
 	    Lancamento lancamento = modelMapper.map(lancDTO, Lancamento.class);
-	    valorPrestacao = lancDTO.getValor().divide(new BigDecimal(nroPrestacao)); 
+	    valorPrestacao = lancDTO.getLancamentoTotal().divide(new BigDecimal(nroPrestacao)); 
 		for(int count=prestacaoInicial ; count <= nroPrestacao; count++){
 			
 			 	DetalheLancamento detalheLancamento = modelMapper.map(lancDTO, DetalheLancamento.class);
@@ -255,18 +243,19 @@ public class LancamentoServico {
 		 return lancamento; 	
 	}
   
-	@Transactional
+	
 	public Lancamento sacar (LancamentoDTO lancDTO  ) {
 				
 		Lancamento lancamento = modelMapper.map(lancDTO, Lancamento.class);		
 		lancamento.setDataDoc(lancDTO.getLancamentoDataDoc() );		
 		DetalheLancamento detalheLancamento = modelMapper.map(lancDTO, DetalheLancamento.class);
      	detalheLancamento.setTipoLancamento(TipoLancamento.D);
+     	detalheLancamento.setValor(lancDTO.getLancamentoTotal());
      	detalheLancamento.setDataVenc(lancDTO.getLancamentoDataDoc());     	
 		lancamento.addDatalheLancamento(detalheLancamento);
     	return lancamento; 
 	}
-	@Transactional
+
 	public Lancamento depositar (LancamentoDTO lancDTO  ) {	
 			Lancamento lancamento = modelMapper.map(lancDTO, Lancamento.class);
 			lancamento.setTipoOperacao(TipoOperacao.DP);
@@ -276,11 +265,10 @@ public class LancamentoServico {
 	     	detalheLancamento.setTipoLancamento(TipoLancamento.C);	     	
 	     	detalheLancamento.setDataVenc(lancDTO.getLancamentoDataDoc());     	
 
-			lancamento.addDatalheLancamento(detalheLancamento);
-//	    	saldoRP.save(saldo);			
+			lancamento.addDatalheLancamento(detalheLancamento);			
 			return lancamento; 	
 	}		
-	@Transactional
+
 	public Lancamento Transferir (LancamentoDTO lancDTO  ) {
 				
 		Lancamento lancamento = modelMapper.map(lancDTO, Lancamento.class);		
@@ -303,7 +291,6 @@ public class LancamentoServico {
      return lancamento; 
 	}
 
-   @Transactional
    public Lancamento comprarCartao(LancamentoDTO lancDTO  ) {
  
     int nroPrestacao      = lancDTO.getLancamentoNroPrestacao();
@@ -316,26 +303,16 @@ public class LancamentoServico {
 /* ---------------------------------------------------------------------------------
 *  Ajusta a data da compra passada para atual 	 
 ------------------------------------------------------------------------------------*/
-  	 data = lancamento.getDataDoc();
-  	 
-	 data = lancDTO.getContaLancamento().getDataFatura(data);
-	 
-	 System.out.println("Data compra " + data); 
-  	 
-     if ( !data.isAfter(LocalDate.now()) ) { 
-    	 data = LocalDate.of(LocalDate.now().getYear(), 
-    			 			 LocalDate.now().getMonthValue(), 
-    			 			 data.getDayOfMonth());
-
-     }
+    if (lancDTO.getDataVenc() != null) {
+    	data = lancDTO.getDataVenc(); 
+    } else {
+     	 data = lancamento.getDataDoc();
+    	 data = lancDTO.getContaLancamento().getDataSaldo(data);    	
+    }
 // ------------------------------------------------------------------------------         
-//    Lancamento lancamento = modelMapper.map(lancDTO, Lancamento.class);
-	
-//	SaldoConta saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento(), data);
-    valorPrestacao = lancDTO.getValor().divide(new BigDecimal(nroPrestacao)); 
+    valorPrestacao = lancDTO.getLancamentoTotal().divide(new BigDecimal(nroPrestacao)); 
 	lancamento.setTipoOperacao(TipoOperacao.CC);
 	 
-
 //-------------------------------------------------------------------------------	 
 	 for(int count=prestacaoInicial ; count <= nroPrestacao; count++){
 		
@@ -349,13 +326,11 @@ public class LancamentoServico {
 		 	data = data.plusMonths(1);
      }
 	 System.out.println("compra parcelada");
-//     saldoRP.save(saldo);  
 	 return lancamento; 	
 }
-  @Transactional 
+
   public Lancamento alterar(LancamentoDTO lancDTO) {
 	
-	SaldoConta saldo; 
 	long id = lancDTO.getDetalheLancamentoId();
 	Optional<DetalheLancamento> optDetLanc =  DtlancamentoRP.findById(id); 
 	DetalheLancamento detLanc = optDetLanc.get();
@@ -365,33 +340,20 @@ public class LancamentoServico {
     lancamento.setFavorecido(lancDTO.getLancamentoFavorecido());
 	lancamento.setInformacao( lancDTO.getLancamentoInformacao());
 	lancamento.setObservacao( lancDTO.getLancamentoObservacao());
+	detLanc.setValor( lancDTO.getLancamentoTotal());  
+	detLanc.setDataVenc(lancDTO.getLancamentoDataDoc());	 	
 	
-	detLanc.setValor( lancDTO.getValor()); 
-	detLanc.setDataVenc(lancDTO.getLancamentoDataDoc());
-	
- 	
-	
-    if (!detLanc.possuiContaLancanto() ) {
-    	
-    	saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento() , lancDTO.getLancamentoDataDoc());            
+    if (!detLanc.possuiContaLancamento() ) {    	
     	detLanc.setContaLancamento(lancDTO.getContaLancamento());
-    	saldoRP.save(saldo);
     }
 
-    if (detLanc.possuiContaLancanto() ) { 
+    if (detLanc.possuiContaLancamento() ) { 
     	detLanc.setConciliado(lancDTO.isConciliado());
     }
+	return   lancamento;      
+  }
     
-		
-//	saldo = saldoSC.buscaSaldo(lancDTO.getContaLancamento(), lancDTO.getDataLanc());
-	
-	
-
-	return   lancamentoRP.save(lancamento);
-      
-}
-    
-public LancAux conciliar( LancAux  lancDTO) {
+  public LancAux conciliar( LancAux  lancDTO) {
     List<DetalheLancamento> lancamentos ;
     Optional<DetalheLancamento>  lancOpt;
     
@@ -438,6 +400,6 @@ public LancAux conciliar( LancAux  lancDTO) {
  
  
 	return lancDTO;
- }
+  }
 }
  
