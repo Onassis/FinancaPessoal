@@ -320,7 +320,6 @@ public class LancamentoServico {
 	
 		 	detalheLancamento.setPrestacao(count);
 		    detalheLancamento.setDataVenc(data);  	
-		 	detalheLancamento.setTipoLancamento(TipoLancamento.D);	
 		 	detalheLancamento.setValor(valorPrestacao ); 
 		 	lancamento.addDatalheLancamento(detalheLancamento);
 		 	data = data.plusMonths(1);

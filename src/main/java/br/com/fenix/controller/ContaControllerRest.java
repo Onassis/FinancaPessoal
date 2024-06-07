@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,8 @@ public class ContaControllerRest  extends ControleAbstratoRest<Conta> implements
     MoedaRepositorio moedaRP;
     @Autowired
     ContaService contaSV; 
+    @Autowired
+    private ContaRepositorio contaRP; 
     
 	public ContaControllerRest(ContaRepositorio repositorio) {
 		super(repositorio);
@@ -50,6 +53,13 @@ public class ContaControllerRest  extends ControleAbstratoRest<Conta> implements
     	contaSV.validar(conta);
     	return super.atualizar(conta); 	
     }
+   
+ 		@GetMapping("/listar2")  
+ 		public ModelAndView listarView2(Conta entidade) {
+ 	    	System.out.println("Listar");
+ 			Iterable<Conta> dados = contaRP.findAll();
+ 			return new ModelAndView("conta/listar_conta2",nomeEntidade(entidade),dados) ;		  			  
+ 		}
 	
 
 }

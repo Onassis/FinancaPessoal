@@ -59,9 +59,9 @@
 							 	  <tbody id="tab" th:remove="all-but-first">>
 									 <tr th:each="o : ${orcamentoDTO}">
 										<td th:text="${o.descricao}">categoria</td>
-										<td th:text="${o?.orcamentoMes?.valor01}">valor</td>
-										<td th:text="${o?.orcamentoMes?.valor02}">valor</td>
-										<td th:text="${o?.orcamentoMes?.valor03}">valor</td>
+										<td style='text-align: right;' contenteditable='true'  th:text="${o?.orcamentoMes?.valor01}">valor</td>
+										<td contenteditable='true' th:text="${o?.orcamentoMes?.valor02}">valor</td>
+										<td contenteditable='true' th:text="${o?.orcamentoMes?.valor03}">valor</td>
 										<td th:text="${o?.orcamentoMes?.valor04}">valor</td>
 										<td th:text="${o?.orcamentoMes?.valor05}">valor</td>
 										<td th:text="${o?.orcamentoMes?.valor06}">valor</td>

@@ -63,6 +63,7 @@ public class Coletor {
 	public void AddLancamentoCSV(Conta conta, LocalDate dataCartao, String linha ) {
 		LancAux lanc = new LancAux(conta);
 		String tag,sPrestacao;
+		BigDecimal valor = new BigDecimal(0);
 		int prestacaoIni ;
     	int prestacaoFinal;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -86,25 +87,30 @@ public class Coletor {
                 lanc.setLancamentoInformacao(tag); 
                 
                 int tamanho =  tag.length();
-                
-                String prestacao = tag.substring(tamanho-5, tamanho); 
-                if (prestacao.contains("/"))  {
-                	try {
+                try {
+                	String prestacao = tag.substring(tamanho-5, tamanho); 
+                	if (prestacao.contains("/"))  {
                 		sPrestacao   =  tag.substring(tamanho-5, tamanho-3);
                 		prestacaoIni = Integer.parseInt(sPrestacao);                 	
                 		sPrestacao =  tag.substring(tamanho-2, tamanho);
-                		prestacaoFinal = Integer.parseInt(sPrestacao);
-                	} catch (Exception e){             		
-                	}
-                }                		               
+                		prestacaoFinal = Integer.parseInt(sPrestacao);                	
+                	} 
+                	} catch (Exception e){    
+                		prestacaoIni   = 1;
+                       	prestacaoFinal = 1;
+                	}             		               
                 lanc.setLancamentoNroInicialPrestacao(prestacaoIni);
                 lanc.setLancamentoNroPrestacao(prestacaoFinal);
                 
           		tag = scanner.next();
           		tag = tag.replace("R$", "");
           		tag = tag.replaceAll(" ", ""); 	
-           		System.out.println(tag);          		               	     
-          	    BigDecimal valor = new BigDecimal( decimalFormat.parse(tag).toString());
+           		System.out.println(tag);    
+           	 	try {
+              	     valor = new BigDecimal( decimalFormat.parse(tag).toString());           	 		
+           	 	} catch (Exception e){    
+           	 	    valor = BigDecimal.ZERO;                   	
+            	}             		    
           	    lanc.setLancamentoValor(valor.multiply( new BigDecimal(prestacaoFinal)));
           	    
           	    

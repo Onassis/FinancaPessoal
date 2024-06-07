@@ -86,10 +86,7 @@ public class UploadControllerRest  {
 	@Autowired
 	LancAuxRepositorio lancAuxRP; 
 	
-	@ModelAttribute("formaPgtos")
-	public List<FormaPgto> listarFormaPgto() {
-		return formaRP.findByOrderByNomeAsc();
-	}	
+	
 	
 	@ModelAttribute("mesesAno")
 	public List<String> listaMesAno() {
@@ -107,16 +104,21 @@ public class UploadControllerRest  {
 
 	    return todosMeses;
 	}
-    
+	/*
+	 * 	@ModelAttribute("formaPgtos")
+	public List<FormaPgto> listarFormaPgto() {
+		return formaRP.findByOrderByNomeAsc();
+	}  
 	@ModelAttribute("favorecidos")
 	public Iterable<Favorecido> listarFavorecido() {		
 	 return favorecidoRP.findAll();  
 	}
+	
 	@ModelAttribute("contas")
 	public List<Conta> listarConta() {		
 		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC);
 	}	
-	
+ */	
 	@ModelAttribute("contaCartao")
 	public List<Conta> listarCartao() {		
 		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CR);

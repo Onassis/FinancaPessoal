@@ -44,38 +44,26 @@
 						<tr>					
 							<th>Data Compra</th>			
 							<th>Descrição</th>
-							<th>Destino</th>	
 							<th>Categoria</th>
-							<th>Data</th>
-						    <th>Prestação</th>
 							<th>D/C</th>
-							<th>Favorecido</th>
-							<th>Concialiado</th>	
-							<th align ="center" >Credito</th>					
-							<th align ="center" >Debito</th>							
-							<th align ="center" >Saldo</th>							
+						    <th>Prestação</th>
+							<th>Data</th>			
+							<th align ="center" >Valor</th>											
 							<th><i class="icon_cogs"></i> Ação</th>
 						</tr>		
 					<tbody>
 						<tr th:each="l : ${lancamentosDTO}">
 							<td th:text="${#temporals.format(l?.lancamentoDataDoc, 'dd/MM/yyyy')}">2017/08/14</td>		
-							<td th:text="${l?.lancamentoInformacao}">Informação</td> 		
-							<td th:text="${l?.contaDestino?.getApelido()}">Conta destino</td>				
+							<td th:text="${l?.lancamentoInformacao}">Informação</td> 											
 							<td th:text="${l?.lancamentoSubCategoria?.getDescricao()}">Categorial</td>	
 							<td th:text="${l?.TipoLancamento?.getDescricao()}">Lançamento</td>		
 							<td th:text="${l?.prestacao()}">01/03</td>		
 							<td th:text="${#temporals.format(l?.dataVenc, 'dd/MM/yyyy')}">>Lançamento</td>															
-							<td th:text="${l?.lancamentoFavorecido?.getNome()}">Favorecido</td>
-							<td th:text="${l?.conciliado}">Conciliado</td>
-							<td th:text="|R$ ${#numbers.formatDecimal(l?.credito ?: 0 , 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	
-					    	<td th:text="|R$ ${#numbers.formatDecimal(l?.debito , 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	
-			
-					    	<td th:text="|R$ ${#numbers.formatDecimal(l?.saldo, 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>											 			
+							<td align ="right"  th:text="|R$ ${#numbers.formatDecimal(l?.valor ?: 0 , 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	
 					 	</tr>
 					 	<tr>  
-					    	<td colspan="8"> Total </td>
-							<td align ="right" colspan="1" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO.![credito]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
-							<td align ="right" colspan="1" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO.![debito]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        							    	 
+					    	<td colspan="6"> Total </td>
+							<td align ="right"  th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO.![valor]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
 					 	</tr>  					    								
 					</tbody>
 				</table>
