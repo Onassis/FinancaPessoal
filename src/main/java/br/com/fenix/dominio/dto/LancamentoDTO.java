@@ -105,6 +105,7 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
     public LancamentoDTO() {    	
     	super();
     	this.valor = BigDecimal.ZERO; 
+    	this.lancamentoTotal = BigDecimal.ZERO;
     	this.lancamentoTotal = BigDecimal.ZERO; 
     	this.credito = BigDecimal.ZERO; 
     	this.debito = BigDecimal.ZERO; 
