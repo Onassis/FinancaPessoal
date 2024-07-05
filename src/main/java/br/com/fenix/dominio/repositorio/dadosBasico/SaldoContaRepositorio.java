@@ -16,7 +16,7 @@ import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 
 @Repository
 public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {

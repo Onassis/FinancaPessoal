@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.fenix.dominio.DadosModelo.ModeloCategoria;
 import br.com.fenix.dominio.repositorio.dadosBasico.ModeloCategoriaRepositorio;
-import br.com.fenix.seguranca.controllers.UsuarioControleRest;
-import br.com.fenix.seguranca.modelo.*;
-import br.com.fenix.seguranca.modelo.Usuario.Role;
+import br.com.fenix.seguranca.usuario.*;
+import br.com.fenix.seguranca.usuario.UsuarioControleRest;
+import br.com.fenix.seguranca.usuario.Usuario.Role;
 
 import java.util.Arrays;
 import java.util.List;

@@ -4,8 +4,7 @@ package br.com.fenix.seguranca.validacao;
 
 import org.springframework.stereotype.Component;
 
-
-import br.com.fenix.seguranca.repositorio.UsuarioRepositorio;
+import br.com.fenix.seguranca.usuario.UsuarioRepositorio;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

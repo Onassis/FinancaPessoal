@@ -1,4 +1,4 @@
-package br.com.fenix.seguranca.modelo;
+package br.com.fenix.seguranca.usuario;
 
 
 import java.io.Serializable;
@@ -11,13 +11,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(indexes = { @Index(columnList = "email", unique=true)})
+@Table(indexes = { @Index(name = "idx_email",columnList = "email", unique=true),@Index(name = "idx_cpf", columnList = "cpf", unique=true) })
 @Getter
 @Setter
 @ToString
@@ -35,16 +36,22 @@ public class Usuario implements UserDetails {
 	private Long id;
 	
 	@Column(nullable=false, length=250)
+	@NotBlank
 	private String email;
 	
 	@Column(nullable=false, length=40)
+	@NotBlank
 	private String firstName; 
 	
 	@Column(nullable=false, length=80)
 	private String lastName;
 	
+	@Column(nullable=false, length=250)
+	@NotBlank
+	private String cpf; 
 
 	@Column(nullable=false)
+	@NotBlank
 	private String password;
 	
 	@Column(nullable=false)

@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import br.com.fenix.seguranca.servico.UsuarioServicoImp;
+import br.com.fenix.seguranca.usuario.UsuarioServicoImp;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.Servlet;
 

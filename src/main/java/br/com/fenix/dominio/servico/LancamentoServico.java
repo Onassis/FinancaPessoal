@@ -35,7 +35,7 @@ import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.SaldoContaRepositorio;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
 @Service

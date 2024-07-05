@@ -25,7 +25,7 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
 import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.NoArgsConstructor;

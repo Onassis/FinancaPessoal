@@ -19,7 +19,7 @@ import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.repositorio.dadosBasico.ContaRepositorio;
 import br.com.fenix.dominio.servico.ContaService;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
 @RestController
@@ -44,11 +44,13 @@ public class HomeController {
 		System.out.println(total);
 		return total;
 	}
+/*	
 	@GetMapping("/teste")
 	public ModelAndView teste() {
 
 		return new ModelAndView("/teste/listar");
 	}
+*/	
 	@GetMapping("/")
 	public ModelAndView padrao() {
 		System.out.println("passou padrao");
@@ -57,19 +59,8 @@ public class HomeController {
 	@GetMapping("/home")
 	public ModelAndView home() {
 		System.out.println("passou home");
-		return new ModelAndView("/home");
+		return new ModelAndView("/error.html");
 	}
-	  // Login form
-	  @RequestMapping("/login")	  
-	  public ModelAndView login() {
-			System.out.println("passou login");
-	    return new ModelAndView("login");
-	  }
 
-	  // Login form with error
-	  @RequestMapping("/login-error")
-	  public ModelAndView loginError(Model model) {
-	   
-	    return new ModelAndView("login.html");
-	  }	
+		
 }

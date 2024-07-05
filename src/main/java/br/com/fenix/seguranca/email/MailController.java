@@ -1,12 +1,9 @@
-package br.com.fenix.seguranca.controllers;
+package br.com.fenix.seguranca.email;
 
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import br.com.fenix.seguranca.email.MailSender;
-import br.com.fenix.seguranca.email.MessagingException;
 
 
 
