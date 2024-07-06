@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
 public abstract class ControleAbstratoAutenticadoUsuarioRest<T> implements IControleRest<T>{

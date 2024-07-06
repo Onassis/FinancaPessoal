@@ -35,7 +35,7 @@ import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.SaldoContaRepositorio;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
 @Service
@@ -102,9 +102,14 @@ public class LancamentoServico {
 		List<DetalheLancamento> detalheLancamentos = DtlancamentoRP.findAllBydataVenctoBetween(dataInicio,DataFim);
 	
 		List<LancamentoDTO> lancamentosDTO =  new ArrayList<LancamentoDTO>(); 
-		  
+		LancamentoDTO lancamentoDTO = new LancamentoDTO();  
 		for(DetalheLancamento detLanc : detalheLancamentos) {      
-			  LancamentoDTO lancamentoDTO = modelMapper.map(detLanc, LancamentoDTO.class); 
+			try { 
+			  lancamentoDTO = modelMapper.map(detLanc, LancamentoDTO.class);
+			} catch (Exception e) {
+				System.out.print("Erro de converção Detalhe -> LancamentoDTO : ");
+				System.out.println(detLanc.getId());
+			}
 			  lancamentosDTO.add(lancamentoDTO);
 		}			
 		  System.out.println("Lista todos ");

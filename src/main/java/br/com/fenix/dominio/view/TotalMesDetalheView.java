@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import br.com.fenix.dominio.converter.ContaDeserializer;
 import br.com.fenix.dominio.converter.MoneyDeserializer;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

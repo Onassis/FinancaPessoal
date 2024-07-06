@@ -13,8 +13,7 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 
 
 

@@ -1,4 +1,4 @@
-package br.com.fenix.seguranca.modelo;
+package br.com.fenix.seguranca.usuario;
 
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.fenix.seguranca.modelo.Usuario.Role;
+import br.com.fenix.seguranca.usuario.Usuario.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

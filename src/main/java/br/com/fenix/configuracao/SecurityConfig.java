@@ -13,6 +13,7 @@ import org.springframework.data.spel.spi.EvaluationContextExtension;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,8 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import br.com.fenix.seguranca.modelo.Usuario;
-import br.com.fenix.seguranca.servico.UsuarioServicoImp;
+import br.com.fenix.seguranca.usuario.Usuario;
+import br.com.fenix.seguranca.usuario.UsuarioServicoImp;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
 
@@ -108,20 +109,36 @@ public class SecurityConfig  {
 	 }
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable()
+		http
+//		    .csrf(csrf -> csrf.disable())
+		    .csrf(Customizer.withDefaults())
+/**		    .formLogin(form ->  form
+						.loginPage("/login")
+						.defaultSuccessUrl("/", true)
+				        .failureUrl("/login-error")
+						.permitAll())
+**/						
 			.authorizeHttpRequests((authorize) ->  {
 				try {
-					authorize
+					authorize 
+							.requestMatchers("favicon.ico").permitAll()
 							.requestMatchers("/home").permitAll()
 //							.requestMatchers("/index").permitAll()
 //							.requestMatchers("/").permitAll()		
 							.requestMatchers("/layout").permitAll()
-							.requestMatchers("/usuario/cadastrar").permitAll()
-							.requestMatchers("/fragments/**").permitAll()							
-							.requestMatchers("/usuario/**").hasRole("ADMIN")
-							.requestMatchers(HttpMethod.POST, "/usuario").permitAll()								
+							.requestMatchers("/usuario/cadastrar").permitAll()							
+							.requestMatchers("/fragments/**").permitAll()	
+							.requestMatchers("/webjars/**").permitAll()
+							.requestMatchers("../static/js").permitAll()	
+							.requestMatchers("../static/img").permitAll()	
+							.requestMatchers("/admin/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.POST, "/usuario").permitAll()		
+							.requestMatchers(HttpMethod.GET, "/usuario/**").hasRole("ADMIN")	
+							.requestMatchers(HttpMethod.DELETE, "/usuario/**").hasRole("ADMIN")								
+							.requestMatchers(HttpMethod.PUT, "/usuario/**").hasRole("USER")								
 							.anyRequest().authenticated()
-						.and()
+							
+/**					.and()
 							.formLogin( form -> {
 								try {
 									form
@@ -135,13 +152,25 @@ public class SecurityConfig  {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-							});
+							})
+**/							
+							;
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-				);
+				)
+			.formLogin(form ->  form
+					.loginPage("/login")
+					.failureUrl("/login-error.html").permitAll()
+//					.loginProcessingUrl("/")
+					.defaultSuccessUrl("/", true)
+					
+				)
+			
+			.logout((logout) -> logout.logoutUrl("/logout"))
+			;
 		return http.build();
 /*		
 		http

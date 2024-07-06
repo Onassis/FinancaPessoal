@@ -1,4 +1,4 @@
-package br.com.fenix.seguranca.controllers;
+package br.com.fenix.seguranca.email;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
-import br.com.fenix.seguranca.modelo.UsuarioDto;
-import br.com.fenix.seguranca.servico.UsuarioServicoImp;
+import br.com.fenix.seguranca.usuario.UsuarioDto;
+import br.com.fenix.seguranca.usuario.UsuarioServicoImp;
 
 
 

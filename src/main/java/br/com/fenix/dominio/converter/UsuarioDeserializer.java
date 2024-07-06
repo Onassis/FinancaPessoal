@@ -10,8 +10,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import br.com.fenix.seguranca.modelo.Usuario;
-import br.com.fenix.seguranca.repositorio.UsuarioRepositorio;
+
+import br.com.fenix.seguranca.usuario.Usuario;
+import br.com.fenix.seguranca.usuario.UsuarioRepositorio;
 
 public class UsuarioDeserializer extends StdDeserializer<Usuario> {
 	/**

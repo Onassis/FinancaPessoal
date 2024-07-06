@@ -14,7 +14,7 @@ import br.com.fenix.abstrato.EntidadeAbstrata;
 import br.com.fenix.abstrato.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.dominio.converter.ContaDeserializer;
 import br.com.fenix.dominio.converter.FavorecidoDeserializer;
 import br.com.fenix.dominio.converter.StringDeserializer;

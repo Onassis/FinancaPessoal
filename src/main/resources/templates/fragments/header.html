@@ -217,9 +217,12 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="javascript: document.logoutForm.submit()">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
+                  <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+      					<input hidden type="submit" value="Sign Out"/>
+   					</form> 
               </a>
             </li>
 

@@ -2,11 +2,8 @@
 <html layout:decorate="~{layout}">
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>	 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" /> 
 	<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-	<script src="http://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 </head>
 <main id="main" class="main" layout:fragment="corpo">
      <div class="row">
@@ -57,49 +54,42 @@
 										<th pages:sort="moedas?.codigo">Moeda</th>
 										<th pages:sort="saldo">Saldo</th>
 										<th pages:sort="inativo">Inativo</th>
-				
+										<th><i class="icon_cogs"></i> Ação</th>
 									</tr>
 								</thead>
-								 <tbody th:remove="all-but-first">
-										 <tr th:each="c : ${conta}">
-											<td th:text="${c.apelido}"> </td>
-											<td th:text="${c.tipoConta.descricao}">Auxiliar Contábil</td>
-											<td th:text="${c.instituicao}">Contabilidade</td>
-											<td align="right"  th:text="${c.agencia}">Contabilidade</td>
-											<td align="right" th:text="${c.numero}">Numero Conta</td>
-											<td align="center" th:text="${c.diaVencimento}">Dia Vencimento</td>
-											<td align="center" th:text="${c.diaComp}">Dia compra</td>
-											<td align="center" th:text="${c?.moeda?.codigo}">Moeda</td>
-											<td align="right" id="saldo" th:text="|R$ ${{c.saldo}}|">saldo</td>
-											<td align="center">
-												<a th:if="${c.inativo == true}" class="fa-regular fa-square-check" title="Conta inativa"></a>
-  												<a th:if="${c.inativo == false}" class="fa-regular fa-square" style="color: #ced6de" title="Conta ativa"></a>											
-											</td>
-																
-															
-										</tr>
-									</tbody>
 							</table>
 					 	</div>							
 				</div>
 		</div>
 </div>		
-</main>  
-</html>
-
-
 <script>
-$(document).ready(function () {
-	console.log("inicio") 
-    var table = $('#myTable').DataTable();
 
-    table.MakeCellsEditable({
-        "onUpdate": myCallbackFunction
-    });
+</script>
+	</main>  
+</html>
+<script src="https://code.jquery.com/jquery-1.12.2.min.js" integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<script src="http://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="../js/dataTables.cellEdit.js"></script>
+<script>
+var table;
+$(document).ready(function () {
+	console.log("iniciao data	")
+    table = $('#myTable').DataTable(
+  {
+    serverSide: true,
+    ajax: {
+		type : 'GET' ,
+        url: '/FinancaPessoal/conta',        
+        dataFilter: function(data){
+            var json = jQuery.parseJSON( data );
+            json.recordsTotal = json.total;
+            json.recordsFiltered = json.total;
+            json.data = json.list;
+ 
+            return JSON.stringify( json ); // return JSON string
+        }
+    }
+} )
 });
-function myCallbackFunction(updatedCell, updatedRow, oldValue) {
-    console.log("The new value for the cell is: " + updatedCell.data());
-    console.log("The old value for that cell was: " + oldValue);
-    console.log("The values for each cell in that row are: " + updatedRow.data());
-}
 </script>

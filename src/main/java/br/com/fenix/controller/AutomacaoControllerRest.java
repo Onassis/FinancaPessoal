@@ -32,7 +32,6 @@ import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 @PreAuthorize("hasRole('USER')")    
-
 @RequestMapping("/automacao")
 public class AutomacaoControllerRest  extends ControleAbstratoRest<Automacao> implements IControleRest<Automacao> {
  

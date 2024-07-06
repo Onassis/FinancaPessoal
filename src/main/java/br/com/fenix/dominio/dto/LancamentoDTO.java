@@ -26,7 +26,7 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
 import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
-import br.com.fenix.seguranca.modelo.Usuario;
+import br.com.fenix.seguranca.usuario.Usuario;
 import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -106,6 +106,7 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
     public LancamentoDTO() {    	
     	super();
     	this.valor = BigDecimal.ZERO; 
+    	this.lancamentoTotal = BigDecimal.ZERO;
     	this.lancamentoTotal = BigDecimal.ZERO; 
     	this.credito = BigDecimal.ZERO; 
     	this.debito = BigDecimal.ZERO; 
