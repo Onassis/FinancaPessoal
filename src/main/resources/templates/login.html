@@ -43,6 +43,14 @@
   <main>
     <div class="container">
 <p th:if="${loginError}" class="error">Wrong user or password</p>
+
+  		<div th:if="${param.error}">
+            Invalid username and password.
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">

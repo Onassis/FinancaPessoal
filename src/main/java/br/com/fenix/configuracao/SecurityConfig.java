@@ -11,6 +11,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.spel.spi.EvaluationContextExtension;
 import org.springframework.http.HttpMethod;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -43,7 +44,7 @@ public class SecurityConfig  {
 		    return UtilSerguranca.currentUser();
 		  }
 		}
-		
+	
 		
 		/* Bean para usar   @Query ?#{ principal.id}") */
 	
@@ -77,6 +78,7 @@ public class SecurityConfig  {
 //	    return Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
 	}
 	
+	/* Retorna objeto de autenticação e verifica o usuario e senha   */
 	@Bean 
 	public AuthenticationManager authenticationManager(HttpSecurity http,
 							PasswordEncoder  passwordEncoder, 
@@ -93,7 +95,7 @@ public class SecurityConfig  {
 
 	 @Bean
 	 public WebSecurityCustomizer ignoringCustomizer() {
-	      return (web) -> web.ignoring()
+	      return ( web -> web.ignoring()
 	    		  .requestMatchers("favicon.ico",
 	    				  			"fontawresome/**",
 	    				  			"/vendor/**",
@@ -101,42 +103,43 @@ public class SecurityConfig  {
 	    				  			"/assets/**",
 	    				  			"/css/**",
 	    				  			"/fonts/**",
-	    				  			"/image/**",
 	    				  			"/img/**",
 	    				  			"/js/**",
 	    				  			"js/**", 	    				  				    				  			
-	    				  			"/fragments/**");  
+	    				  			"/fragments/**"));  
 	 }
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-//		    .csrf(csrf -> csrf.disable())
-		    .csrf(Customizer.withDefaults())
-/**		    .formLogin(form ->  form
-						.loginPage("/login")
-						.defaultSuccessUrl("/", true)
-				        .failureUrl("/login-error")
-						.permitAll())
-**/						
-			.authorizeHttpRequests((authorize) ->  {
-				try {
+		    .csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(authorize ->  
 					authorize 
-							.requestMatchers("favicon.ico").permitAll()
-							.requestMatchers("/home").permitAll()
-//							.requestMatchers("/index").permitAll()
-//							.requestMatchers("/").permitAll()		
-							.requestMatchers("/layout").permitAll()
-							.requestMatchers("/usuario/cadastrar").permitAll()							
+							.requestMatchers("/login", "/verify-email","/layout","/usuario/cadastrar" ).permitAll()
+//							.requestMatchers("/home").permitAll()
+//							.requestMatchers("/login").permitAll()
+//							.requestMatchers("/layout").permitAll()
+//							.requestMatchers("/usuario/cadastrar").permitAll()							
 							.requestMatchers("/fragments/**").permitAll()	
 							.requestMatchers("/webjars/**").permitAll()
 							.requestMatchers("../static/js").permitAll()	
-							.requestMatchers("../static/img").permitAll()	
+							.requestMatchers("../static/img/**").permitAll()	
 							.requestMatchers("/admin/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.POST, "/usuario").permitAll()		
-							.requestMatchers(HttpMethod.GET, "/usuario/**").hasRole("ADMIN")	
+							.requestMatchers(HttpMethod.GET, "/usuario/**").permitAll()	
 							.requestMatchers(HttpMethod.DELETE, "/usuario/**").hasRole("ADMIN")								
 							.requestMatchers(HttpMethod.PUT, "/usuario/**").hasRole("USER")								
-							.anyRequest().authenticated()
+							.anyRequest().authenticated())
+			.formLogin(form -> form
+					.loginPage("/login").permitAll()				    
+					.failureUrl("/login-error.html"))
+			
+		    .rememberMe(Customizer.withDefaults());
+			; 
+
+				
+						
+					return http.build();
+			}}	
 							
 /**					.and()
 							.formLogin( form -> {
@@ -152,26 +155,17 @@ public class SecurityConfig  {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-							})
+							}
 **/							
-							;
-				} catch (Exception e) {
+							
+/**				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 				)
-			.formLogin(form ->  form
-					.loginPage("/login")
-					.failureUrl("/login-error.html").permitAll()
-//					.loginProcessingUrl("/")
-					.defaultSuccessUrl("/", true)
-					
-				)
-			
-			.logout((logout) -> logout.logoutUrl("/logout"))
-			;
-		return http.build();
+**/				
+		
 /*		
 		http
 //		 	.httpBasic().disable()
@@ -215,5 +209,4 @@ public class SecurityConfig  {
 		
 		return http.build();
 */		
-	}
-}
+

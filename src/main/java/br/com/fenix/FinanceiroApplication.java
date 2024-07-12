@@ -32,6 +32,7 @@ import java.util.EnumSet;
 @SpringBootApplication
 @ComponentScan("br.com.fenix.controller")
 @ComponentScan("br.com.fenix.dominio.converter")
+@ComponentScan("br.com.fenix.seguranca.email")
 @EnableAutoConfiguration
 @EnableCaching
 public class FinanceiroApplication {
