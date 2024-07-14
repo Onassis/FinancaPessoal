@@ -6,12 +6,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,23 +40,30 @@ public class Usuario implements UserDetails {
 	private Long id;
 	
 	@Column(nullable=false, length=250)
-	@NotBlank
+
+	@NotBlank(message = "{email.notbank}")
+	@NotNull
+	@Email
 	private String email;
 	
 	@Column(nullable=false, length=40)
-	@NotBlank
+	@NotEmpty
 	private String firstName; 
 	
 	@Column(nullable=false, length=80)
+	@NotBlank
 	private String lastName;
 	
 	@Column(nullable=false, length=250)
-	@NotBlank
+	@NotBlank(message = "O cpf é obrigatório")
+	@CPF
 	private String cpf; 
 
 	@Column(nullable=false)
 	@NotBlank
 	private String password;
+	 
+	private String verificationToken;
 	
 	@Column(nullable=false)
 	private int enabled;

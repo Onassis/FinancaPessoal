@@ -16,6 +16,8 @@ public interface UsuarioRepositorio extends GenericRepository<Usuario> {
 	
 	Optional<Usuario> findByEmail(String email);
 	Optional<Usuario> findByCpf(String cpf);
+    
+	Optional<Usuario> findByVerificationToken(String token);
 	   
   //  Optional<Usuario> findByUsernameOrEmail(String username, String email);
 

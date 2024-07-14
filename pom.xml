@@ -23,6 +23,11 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		 <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>3.3.1</version>
+        </dependency>
 		<!--~~(org.springframework.boot:spring-boot-starter-thymeleaf failed. Unable to download metadata. Tried repositories:
 https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake)~~>-->
 		<dependency>
@@ -73,6 +78,19 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api -->
+
+<!--  						Validação de campos -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.expressly</groupId>
+			<artifactId>expressly</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+<!--  						Fim Validação de campos -->
 
 		<!-- https://mvnrepository.com/artifact/com.github.gavlyukovskiy/datasource-proxy-spring-boot-starter -->
 		<!-- gera log do sql  -->
