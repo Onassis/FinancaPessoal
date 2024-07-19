@@ -41,9 +41,9 @@ public class Usuario implements UserDetails {
 	
 	@Column(nullable=false, length=250)
 
-	@NotBlank(message = "{email.notbank}")
+	@NotBlank(message = "{email.not.blank}")
 	@NotNull
-	@Email
+	@Email(message = "{email.not.valid}")
 	private String email;
 	
 	@Column(nullable=false, length=40)
@@ -55,7 +55,7 @@ public class Usuario implements UserDetails {
 	private String lastName;
 	
 	@Column(nullable=false, length=250)
-	@NotBlank(message = "O cpf é obrigatório")
+	@NotBlank(message = "{cpf.not.blank}")
 	@CPF
 	private String cpf; 
 

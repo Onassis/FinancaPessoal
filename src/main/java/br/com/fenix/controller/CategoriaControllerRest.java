@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.fenix.abstrato.ControleAbstratoRest;
 import br.com.fenix.abstrato.GenericRepository;
-import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
@@ -83,7 +83,7 @@ public class CategoriaControllerRest  extends ControleAbstratoRest<Categoria> im
     public SubCategoria buscarSubCategoriaPorId (@PathVariable  long id2){
     
     	   	   return subCategoriaRP.findById(id2)	    			   
-    	   			   .orElseThrow ( () -> new EntidadeNaoEncontratException("Registro não encontrado Id:" + id2));		    			       		    	
+    	   			   .orElseThrow ( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id2));		    			       		    	
     }
 
     @GetMapping("{id}/subcategoria/editar/{id2}") 

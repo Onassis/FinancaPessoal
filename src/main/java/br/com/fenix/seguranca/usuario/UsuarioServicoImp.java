@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.fenix.api.exceptionhandle.RegistroJaExisteException;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.api.exceptionhandle.TokenNaoExisteException;
 import br.com.fenix.email.EmailModel;
 import br.com.fenix.email.EmailService;
@@ -42,7 +43,7 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 			
 			if (usuario.isEmpty()) {
 				          System.out.println("não encontro" + username);  
-						 new UsernameNotFoundException("User Not Found with username: " + username) ;
+				          throw 	 new RegistroNaoExisteException("User Not Found with username: " + username) ;
 			}		
 		    System.out.println(usuario.get());  
 			return usuario.get();
@@ -85,7 +86,7 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 	        		);
 	        
 	     
-			emailService.sendEmail(emailModel);
+		//	emailService.sendEmail(emailModel);
 
 	        return usuario;
 		}
@@ -107,7 +108,7 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 			// TODO Auto-generated method stub
 			if (UsuarioRp.findByEmail(username).isPresent()) {
 				System.out.println("SeExiste " + username);
-					new RegistroJaExisteException("Usuario já cadastrado : " + username);
+				throw new RegistroJaExisteException("Usuario já cadastrado : " + username);
 			}
 		}
 
@@ -115,7 +116,7 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 		public void SeExisteCpf(String cpf) throws RegistroJaExisteException {
 			if (UsuarioRp.findByCpf(cpf).isPresent()) {
 				System.out.println("SeExiste " + cpf);
-					new RegistroJaExisteException("Usuario já cadastrado : " + cpf);
+				throw new RegistroJaExisteException("Usuario já cadastrado : " + cpf);
 			}
 			
 		}

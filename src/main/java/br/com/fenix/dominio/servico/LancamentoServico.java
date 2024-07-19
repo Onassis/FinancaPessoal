@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
+
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoLancamento;

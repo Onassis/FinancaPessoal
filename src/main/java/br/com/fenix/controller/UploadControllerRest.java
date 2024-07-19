@@ -35,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import br.com.fenix.abstrato.ControleAbstratoRest;
 import br.com.fenix.abstrato.IControleRest;
-import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.dto.UploadDTO;
@@ -169,7 +169,7 @@ public class UploadControllerRest  {
     	   System.out.println("handleFileUpload");
 		    String fileName = file.getOriginalFilename();
 		    List<String> conteudo =  readAll(file.getInputStream()); 
-		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
+		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada")));;
 		    Conta conta = contaImp.get(); 
 		    Coletor lancamento  = lancAuxSC.processaOFX(conta,conteudo ) ;
 		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;		         
@@ -187,7 +187,7 @@ public class UploadControllerRest  {
 		    String fileName = file.getOriginalFilename();
 		    List<String> conteudo =  readAll(file.getInputStream()); 
 		    
-		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new EntidadeNaoEncontratException("Conta não cadastrada")));;
+		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada")));;
 		    Conta conta = contaImp.get(); 
 		    Coletor lancamento = lancAuxSC.processaCartao(conta,mesCarga,saldoIni,conteudo ) ;
 		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;

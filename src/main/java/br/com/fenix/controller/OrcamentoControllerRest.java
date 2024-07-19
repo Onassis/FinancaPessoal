@@ -23,7 +23,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import br.com.fenix.abstrato.ControleAbstratoRest;
 import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.abstrato.IControleRest;
-import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.Node;
 import br.com.fenix.dominio.dto.OrcamentoDTO;
