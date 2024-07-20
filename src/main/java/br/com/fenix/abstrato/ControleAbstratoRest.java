@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 
 public abstract class ControleAbstratoRest<T> implements IControleRest<T>{
 	
@@ -64,7 +64,7 @@ public abstract class ControleAbstratoRest<T> implements IControleRest<T>{
 	    @GetMapping("/{id}")	    
 	    public T buscarPorId (@PathVariable long id){	 
 	    	   return repositorio.findById(id)	    			   
-		        		.orElseThrow ( () -> new EntidadeNaoEncontratException("Registro não encontrado Id:" + id));		    			   
+		        		.orElseThrow ( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id));		    			   
 	    		    	
 	    }
 	    @Override

@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
-import br.com.fenix.api.exceptionhandle.EntidadeNaoEncontratException;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
@@ -130,7 +130,7 @@ public class LancamentoControllerRest {
     @GetMapping("/{id}")	    
     public Lancamento buscarPorId (@PathVariable long id){	 
     	   return lancRP.findById(id)
-    			   .orElseThrow( () -> new EntidadeNaoEncontratException("Registro não encontrado Id:" + id));	
+    			   .orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id));	
     }	   
 	        		
 	

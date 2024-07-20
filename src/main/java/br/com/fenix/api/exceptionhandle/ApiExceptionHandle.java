@@ -20,12 +20,21 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-@ControllerAdvice
+//@ControllerAdvice
 public class ApiExceptionHandle extends ResponseEntityExceptionHandler {
-	
+/**
 	@Autowired
     private MessageSource messageSource; 
-
+	
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> globleExcpetionHandler(Exception ex, WebRequest request) {
+    	Problema problema = new Problema(HttpStatus.BAD_REQUEST, 
+				ex.getMessage(),
+				OffsetDateTime.now() );
+    	System.out.println(problema);
+        return new ResponseEntity<>(problema, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
 	@ExceptionHandler(EntidadeNaoEncontratException.class)
 	public ResponseEntity<Object> HandleNegocio(EntidadeNaoEncontratException ex, WebRequest webRequest) {
 		Problema problema = new Problema(HttpStatus.NOT_FOUND, 
@@ -46,6 +55,16 @@ public class ApiExceptionHandle extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problema,new HttpHeaders(),problema.getStatus(), webRequest);
 	}
 	
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<Object> HandleNegocio(RuntimeException ex, WebRequest webRequest) {
+		Problema problema = new Problema(HttpStatus.BAD_REQUEST, 
+									ex.getMessage(),
+									OffsetDateTime.now() );
+		System.out.println(problema);
+		System.out.println(ex);
+		
+		return handleExceptionInternal(ex, problema,new HttpHeaders(),problema.getStatus(), webRequest);
+	}
 	
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, 
 								HttpHeaders headers, HttpStatus status, WebRequest webRequest) {		
@@ -66,5 +85,6 @@ public class ApiExceptionHandle extends ResponseEntityExceptionHandler {
 		System.out.println(problema);
 		return handleExceptionInternal(ex, problema, headers,status , webRequest);
 	}
+	**/
 }
 
