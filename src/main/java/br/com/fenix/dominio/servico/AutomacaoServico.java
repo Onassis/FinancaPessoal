@@ -27,11 +27,11 @@ import br.com.fenix.dominio.modelo.Lancamento;
 import br.com.fenix.dominio.modelo.LancAux;
 import br.com.fenix.dominio.modelo.DadoBasico.Automacao;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.LancAuxRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.AutomacaoRepositorio;
+import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.util.Tag;
 
 @Service

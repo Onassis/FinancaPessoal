@@ -115,7 +115,7 @@ public class SecurityConfig  {
 			.authorizeHttpRequests(authorize ->  
 					authorize 
 							.requestMatchers("/login", "/verify-email","/layout","/usuario/cadastrar" ).permitAll()
-//							.requestMatchers("/home").permitAll()
+							.requestMatchers("/error").permitAll()
 //							.requestMatchers("/login").permitAll()
 //							.requestMatchers("/layout").permitAll()
 //							.requestMatchers("/usuario/cadastrar").permitAll()							
@@ -124,7 +124,7 @@ public class SecurityConfig  {
 							.requestMatchers("../static/js").permitAll()	
 							.requestMatchers("../static/img/**").permitAll()	
 							.requestMatchers("/admin/**").hasRole("ADMIN")
-							.requestMatchers(HttpMethod.POST, "/usuario").permitAll()		
+							.requestMatchers(HttpMethod.POST, "/usuario/**").permitAll()		
 							.requestMatchers(HttpMethod.GET, "/usuario/**").permitAll()	
 							.requestMatchers(HttpMethod.DELETE, "/usuario/**").hasRole("ADMIN")								
 							.requestMatchers(HttpMethod.PUT, "/usuario/**").hasRole("USER")								

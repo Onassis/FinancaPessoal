@@ -1,4 +1,4 @@
-package br.com.fenix.controller;
+package br.com.fenix.fi.conta;
 
 
 import java.util.List;
@@ -12,12 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import br.com.fenix.abstrato.ControleAbstratoRest;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
-import br.com.fenix.dominio.repositorio.dadosBasico.ContaRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
-import br.com.fenix.dominio.servico.ContaService;
-import br.com.fenix.icontroller.IControleContaRest;
 
 @RestController
 @RequestMapping("/conta")
@@ -43,20 +39,21 @@ public class ContaControllerRest  extends ControleAbstratoRest<Conta> implements
     @CachePut("conta")
     public Conta criar(Conta conta) {
     	System.out.println("Conta" + conta);
-    	contaSV.validar(conta);
+    	contaSV.antesDeSalvar(conta);
     	return super.criar(conta); 	
     }
     @Override
     @CachePut("conta")
     public Conta atualizar(Conta conta) {
     	System.out.println("Conta" + conta);
-    	contaSV.validar(conta);
+    	contaSV.antesDeSalvar(conta);
     	return super.atualizar(conta); 	
     }
    
  		@GetMapping("/listar2")  
  		public ModelAndView listarView2(Conta entidade) {
  	    	System.out.println("Listar");
+ 	    	
  			Iterable<Conta> dados = contaRP.findAll();
  			return new ModelAndView("conta/listar_conta2",nomeEntidade(entidade),dados) ;		  			  
  		}

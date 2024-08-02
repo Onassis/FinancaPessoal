@@ -20,6 +20,7 @@ public class Problema {
 	private HttpStatus status;
 	private OffsetDateTime datahora;
 	private String titulo;
+	private String URL;
 	private List<Campo> campos;
 	@Getter
 	@Setter
@@ -37,11 +38,12 @@ public class Problema {
 		}
 		
 	}
-	public Problema(HttpStatus status,  String titulo, OffsetDateTime datahora) {
+	public Problema(HttpStatus status,  String titulo,String URL, OffsetDateTime datahora) {
 		super();
 		this.status = status;
 		this.datahora = datahora;
 		this.titulo = titulo;
+		this.URL = URL;
 	}
 
 }

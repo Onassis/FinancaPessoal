@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.modelo.DadoBasico;
+package br.com.fenix.fi.conta;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,6 +19,7 @@ import br.com.fenix.dominio.converter.MoneyDeserializer;
 import br.com.fenix.dominio.converter.StringDeserializer;
 import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoConta;
+import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

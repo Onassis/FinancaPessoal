@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 
 import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.dominio.enumerado.TipoConta;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
+import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.seguranca.usuario.Usuario;
 
 @Repository

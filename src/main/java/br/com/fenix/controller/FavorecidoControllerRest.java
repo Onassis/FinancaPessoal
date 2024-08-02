@@ -18,13 +18,13 @@ import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
 import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
 import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
-import br.com.fenix.dominio.repositorio.dadosBasico.ContaRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.FavorecidoRepositorio;
 import br.com.fenix.dominio.servico.CategoriaServico;
+import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.icontroller.IControleFavorecidoRest;
 import jakarta.annotation.security.RolesAllowed;
 

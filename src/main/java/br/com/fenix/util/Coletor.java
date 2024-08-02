@@ -16,7 +16,7 @@ import java.util.Locale;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.LancAux;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.fi.conta.Conta;
 import lombok.Data;
 import lombok.Getter;
 import java.util.Scanner;

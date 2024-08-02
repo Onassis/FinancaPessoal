@@ -1,5 +1,6 @@
 package br.com.fenix.seguranca.usuario;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;

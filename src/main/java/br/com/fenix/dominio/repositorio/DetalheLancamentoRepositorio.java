@@ -12,8 +12,8 @@ import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.DetalheLancamento;
 import br.com.fenix.dominio.modelo.Lancamento;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.view.ITotalMesDetalhe;
+import br.com.fenix.fi.conta.Conta;
 
 
 @Repository

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import br.com.fenix.abstrato.EntidadeAbstrata;
 import br.com.fenix.abstrato.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
+import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.dominio.converter.ContaDeserializer;
 import br.com.fenix.dominio.converter.StringDeserializer;
 import lombok.Getter;

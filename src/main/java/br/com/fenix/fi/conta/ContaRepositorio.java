@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.repositorio.dadosBasico;
+package br.com.fenix.fi.conta;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.abstrato.GenericRepositoryAutenticado;
 import br.com.fenix.dominio.enumerado.TipoConta;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 
 @Repository
 
