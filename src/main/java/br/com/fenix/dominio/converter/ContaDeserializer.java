@@ -12,9 +12,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
-import br.com.fenix.dominio.repositorio.dadosBasico.ContaRepositorio;
+import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.conta.ContaRepositorio;
 
 public class ContaDeserializer extends StdDeserializer<Conta> {
 	/**

@@ -16,9 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
-import br.com.fenix.dominio.repositorio.dadosBasico.ContaRepositorio;
-import br.com.fenix.dominio.servico.ContaService;
+import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.conta.ContaRepositorio;
+import br.com.fenix.fi.conta.ContaService;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
@@ -56,11 +56,11 @@ public class HomeController {
 		System.out.println("passou padrao");
 		return new ModelAndView("index","localDate",LocalDate.now()) ;				
 	}
-	@GetMapping("/home")
-	public ModelAndView home() {
-		System.out.println("passou home");
-		return new ModelAndView("/error.html");
-	}
+//	@GetMapping("/error")
+//	public ModelAndView home() {
+//		System.out.println("passou home");
+//		return new ModelAndView("error");
+//	}
 
 		
 }

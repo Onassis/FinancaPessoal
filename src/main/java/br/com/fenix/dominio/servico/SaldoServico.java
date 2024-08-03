@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
 import br.com.fenix.dominio.modelo.DadoBasico.SaldoConta;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 
 import br.com.fenix.dominio.repositorio.dadosBasico.SaldoContaRepositorio;
 import br.com.fenix.dominio.view.ITotalMesDetalhe;
+import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 

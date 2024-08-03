@@ -15,7 +15,7 @@ import br.com.fenix.dominio.converter.ContaDeserializer;
 import br.com.fenix.dominio.converter.MoneyDeserializer;
 import br.com.fenix.dominio.converter.StringDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
-import br.com.fenix.dominio.modelo.DadoBasico.Conta;
+import br.com.fenix.fi.conta.Conta;
 
 @ToString
 @Getter

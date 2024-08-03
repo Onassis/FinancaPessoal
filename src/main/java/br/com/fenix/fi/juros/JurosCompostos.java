@@ -1,4 +1,4 @@
-package br.com.fenix.Juros;
+package br.com.fenix.fi.juros;
 
 import java.math.BigDecimal;
 
