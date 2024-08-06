@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fragment Example</title>
+</head>
+<body>
+    <div th:fragment="selectFragment (id, name, options)">
+        <select id="[[${id}]]" name="[[${name}]]">
+            <option th:each="option : ${options}" th:value="${option.value}" th:text="${option.text}"></option>
+        </select>
+    </div>
+</body>
+</html>
