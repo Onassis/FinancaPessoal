@@ -1,9 +1,13 @@
-﻿<!DOCTYPE html>
-<html layout:decorate="~{layout}">
-<head><meta charset="UTF-8"></head>
-<main id="main" class="main" layout:fragment="corpo">
+﻿ <div class="modal-header">
+	<h4 class="modal-title" id="modalTitilo">Cadastro de Contas</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"
+		aria-label="Close"></button>
+</div>
 <div class="row">
-	           	<form id="CadastroForm" th:object="${conta}" th:action="@{/conta}"  class="row g-3 needs-validation"   method="POST">
+	<div class="modal-body">
+		<div class="card">
+        	 <div class="card-body">
+	           	<form id="editForm" th:object="${conta}" class="row g-3 needs-validation"   method="POST">
 				    <div class="col-md-12">
         	          <label for="validationCustom01" class="form-label">Tipo de Conta</label>
             		      	<select id="id_tipoConta" class="form-control" th:field="*{tipoConta}" autofocus="autofocus" required>       
@@ -15,25 +19,48 @@
                     		 Ok!
                   		</div>
                 	</div>
-                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='apelido',  required='true',rowClass='col-md-12')}" />
-                	 
-                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='instituicao', required='true',rowClass='col-md-6')}" />
-
-                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='agencia', required='true',rowClass='col-md-6')}" />
-
-                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='numero', required='true',rowClass='col-md-6')}" />
-
-	      
-	    		 <div hidden class="col-md-6">
+	                <div class="col-md-12">
+    	              	<label for="validationCustom01" class="form-label">Apelido</label>
+					  	<input type="text" class="form-control" id="apelido" placeholder="apelido" 
+	        	                		 th:field="*{apelido}" required />                  
+	            	   <div class="invalid-feedback">
+	                    Por favor, Inserir o apelido da conta!
+    	              </div>
+               		</div>
+	            <div class="col-md-6">
+                  	<label for="validationCustom01" class="form-label">Instituição</label>
+				    <input type="text" class="form-control" id="instituicao" placeholder="instituição bancaria" 
+	                        		 th:field="*{instituicao}" required/>               
+	                 <div class="valid-feedback">
+                    	 Ok!
+                  	</div>
+                </div>
+	            <div class="col-md-6">
+                  	<label for="validationCustom01" class="form-label">Agência</label>
+					<input type="text" class="form-control" id="agencia" placeholder="agência" 
+	                        		 th:field="*{agencia}" />          
+	                 <div class="valid-feedback">
+                    	 Ok!
+                  	</div>
+                </div>
+	            <div class="col-md-6">
+                  	<label for="validationCustom01" class="form-label">Número Conta/Cartão</label>
+					  <input type="text" class="form-control" id="numero" placeholder="Número do cartão de credito" 
+	                        		 th:field="*{numero}"/>         
+	                 <div class="valid-feedback">
+                    	 Ok!
+                  	</div>
+              	 </div>
+	    		 <div class="col-md-6">
         	          <label for="validationCustom01" class="form-label">Dia Vencimento Cartão</label>
         	          <select id="id_diaVencimento" class="form-control" th:field="*{diaVencimento}"  />
         	          		 <option value="null" selected hidden >- Selecione -</option>
     						 <option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}" 
     						 		 th:selected="${i}==*{diaVencimento}"></option>
 					  </select>
-               <p th:errors = "*{diaVencimento}" class="text-danger"
-                 		th:if="${#fields.hasErrors('diaVencimento')}">
-                 	</p>
+                  		<div class="valid-feedback">
+                    		 Ok!
+                  		</div>
                 </div>    
                 <div class="col-md-6">
         	          <label for="validationCustom01" class="form-label">Melhor Dia Compra Cartão</label>
@@ -55,9 +82,6 @@
                     	 Ok!
                   	</div>
                 </div>
-                
-            
-              
 	          <div class="col-md-6">
                   	<label for="validationCustom01" class="form-label">Moeda</label>
 					     <select id="id_moeda"  th:field="*{moeda}" class="form-control" required>
@@ -69,10 +93,9 @@
                     	 Ok!
                   	</div>
 	          	</div>	
-	          	 
                  <div class="row"> 	
 		             <div class="col-md-12">
-				         <input class="form-check-input" type="checkbox" value="" id="id_inativo"  th:field="*{inativo}" >
+				         <input class="form-check-input" type="checkbox" value="" id="id_inativo"  th:field="*{inativo}" required>
             		     <label class="form-check-label" for="invalidCheck">Inativo</label>				
                 	</div>
                  </div>
@@ -80,12 +103,12 @@
 	                <input type="hidden" id="id" th:field="*{id}"/>
          	    </div>
 	   			<input type="hidden" id="versao" th:field="*{versao}" />	
-	   			<div class="row">
-      			  	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-        			<button type="submit" id="btnSalvar" class="btn btn-primary"  >Salvar</button>
-				</div>
 	         </form>
+		</div>
+	</div>
 </div>
-
-	</main>  
-</html>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        <button type="submit" id="btnSalvar" class="btn btn-primary" th:href="@{/conta}" >Salvar</button>
+</div>

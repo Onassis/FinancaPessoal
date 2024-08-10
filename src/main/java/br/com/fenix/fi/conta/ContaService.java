@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class ContaService  extends ServicoAbstrato<Conta,Long> implements IServico<Conta,Long> {
 
-	ContaRepositorio2 repositorio; 
+	//ContaRepositorio2 repositorio;
 	
 	public ContaService(ContaRepositorio2 repositorio) {
 		super(repositorio);
@@ -26,9 +26,10 @@ public class ContaService  extends ServicoAbstrato<Conta,Long> implements IServi
 	
 	@Override
 	public void antesDeSalvar(Conta entidade) throws NegocioException {
-		Optional<Conta> contaApelido =    repositorio.findByApelido(entidade.getApelido()); 
-		
 		System.out.println("Valida conta");
+		Optional<Conta> contaApelido =    ((ContaRepositorio2) repositorio).findByApelido(entidade.getApelido()); 
+		
+		
 		if (contaApelido.isPresent() && entidade.isNew() ) { 
 		
 			throw new NegocioException("Conta já cadastrada com esse apelido");

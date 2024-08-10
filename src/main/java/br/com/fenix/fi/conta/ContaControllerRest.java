@@ -16,7 +16,7 @@ import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
 
 @RestController
-@RequestMapping("/conta")
+@RequestMapping("/api/conta")
 public class ContaControllerRest  extends ControleAbstratoRest<Conta> implements IControleContaRest  {
 
     @Autowired

@@ -63,7 +63,7 @@ ajaxPost = function (tipo, recurso, dados, id) {
 $(document).ready(function() 
 	{
 		 
-	 	 $(document).delegate('#btn_editar','click',function(event) 
+	 	 $(document).delegate('#btnEditarModal','click',function(event) 
 	 		{
 				console.log($(this).attr("href"));
 				event.preventDefault();
@@ -83,7 +83,7 @@ $(document).ready(function()
 	 			ajaxPost('DELETE', $(this).attr("href"),'',0);
 	 	 	});
 		 
-		 $(document).delegate('#btnadd','click',function(event) 
+		 $(document).delegate('#btnAddModal','click',function(event) 
 					{
 						event.preventDefault();
 						console.log("click add");
@@ -91,7 +91,7 @@ $(document).ready(function()
 						$("#myModal").modal("show").find(".modal-content").load($(this).attr("href"));
 					});
 
-		 $(document).delegate('#btnSalvar','click',
+		 $(document).delegate('#btnSalvarModal','click',
 				 function(event) {
 					event.preventDefault();
 					const myForm = document.getElementById('editForm');

@@ -54,7 +54,7 @@ public class Usuario implements UserDetails {
 	@NotBlank
 	private String lastName;
 	
-	@Column(nullable=false, length=250)
+	@Column(nullable=false, length=14)
 	@NotBlank(message = "{cpf.not.blank}")
 	@CPF
 	private String cpf; 

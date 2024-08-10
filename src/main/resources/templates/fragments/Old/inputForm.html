@@ -1,23 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <body>
-        <div th:fragment="inputRow()" th:with="type=${type} ?: 'text', required=${required}, inputClass=${inputClass}"  th:object="${__${object}__}">
+        <div th:fragment="inputRow()" 
+        	 th:with="type=${type} ?: 'text', required=${required}, inputClass=${inputClass}, rowClass=${rowClass}"  
+        	 th:object="${__${object}__}" th:classappend="${rowClass}" 
+        	 th:class="${__${rowClass}__} ? ${__${rowClass}__} : row mb-12">
             <div th:if="${type == 'checkbox'}">
                 <div>
-                    <input th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" />
+                    <input th:type="${type}" th:field="*{__${field}__}" 
+                    	   th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" 
+                     	   th:required="*{__${required}__}" />
                     <label th:for="${#ids.prev(field)}">
                         <span th:text="#{__${object}__.__${field}__.label}" />
                     </label>
+  					<div th:if="${#fields.hasErrors('${__${field}__}')}">
+        				<p th:errors="*{${__${field}__}}" class="text-danger"></p>
+    				</div>                    
                 </div>
                 <!--div th:replace="~{:: fieldErrors(${object}, ${field})}" /> -->
             </div>
             <label th:if="${type != 'checkbox'}" th:for="${field}">
                 <span th:text="#{__${object}__.__${field}__.label}" />
+                 <span teste />
             </label>
             <div th:if="${type != 'checkbox'}">
                 <input th:if="${type == 'text'  || type == 'date'  || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
-                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${#fields.hasErrors(field) ? 'is-invalid' : ''} + ' ' + ${inputClass}" />
-                <!-- ... -->
+                        th:type="${type}" th:field="*{__${field}__}"  
+                        required
+                        th:required="${__${required}__} ? 'required' : null"
+                       />
+             
+                  
             </div>
             <div th:if="${#fields.hasErrors('${__${field}__}')}">
         		<p th:errors="*{${__${field}__}}" class="text-danger"></p>

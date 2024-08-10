@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import jakarta.persistence.*;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.lang.Nullable;
 
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "moeda")
+@Cacheable
 public class Moeda implements Serializable  {
 	/**
 	 * ISO 4217 é um padrão internacional que define códigos de três letras para as 

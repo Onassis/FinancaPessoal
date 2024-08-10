@@ -18,7 +18,7 @@ import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
 
 @RestController
-@RequestMapping("/conta2")
+@RequestMapping("/conta")
 public class ContaController  extends ControleAbstrato<Conta,Long> implements IControle<Conta,Long>   {
 
   @Autowired
@@ -33,7 +33,7 @@ public class ContaController  extends ControleAbstrato<Conta,Long> implements IC
 	}
 
 	@ModelAttribute("moedas")
-	@Cacheable("moeda")
+	@Cacheable("moedas")
 	public List<Moeda> listaDeMoedas() {
 		return moedaRP.findAllByOrderByCodigoAsc();
 	}	
