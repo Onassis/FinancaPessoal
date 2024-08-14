@@ -19,6 +19,7 @@
                     		 Ok!
                   		</div>
                 	</div>
+                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='apelido')}" />
 	                <div class="col-md-12">
     	              	<label for="validationCustom01" class="form-label">Apelido</label>
 					  	<input type="text" class="form-control" id="apelido" placeholder="apelido" 
@@ -83,22 +84,11 @@
                   	</div>
                 </div>
 	          <div class="col-md-6">
-                  	<label for="validationCustom01" class="form-label">Moeda</label>
-					     <select id="id_moeda"  th:field="*{moeda}" class="form-control" required>
-	                            <option value="">Selecione</option>
-	                            <option th:each="m : ${moedas}" 
-	                                    th:value="${m.codigo}" th:text="${m.moeda}">Moedas</option>
-	                        </select>     
-	                 <div class="valid-feedback">
-                    	 Ok!
-                  	</div>
+				    <div th:replace="~{fragments/forms::inputRow(object='conta', field='moeda', type='select',required='required',options= ${moedas})}" />
+				    
 	          	</div>	
-                 <div class="row"> 	
-		             <div class="col-md-12">
-				         <input class="form-check-input" type="checkbox" value="" id="id_inativo"  th:field="*{inativo}" required>
-            		     <label class="form-check-label" for="invalidCheck">Inativo</label>				
-                	</div>
-                 </div>
+	            <div th:replace="~{fragments/forms::inputRow(object='conta', field='inativo', type='checkbox')}" />
+       
          	    <div class="col-md-12">
 	                <input type="hidden" id="id" th:field="*{id}"/>
          	    </div>

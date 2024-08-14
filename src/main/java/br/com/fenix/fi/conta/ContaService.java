@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 public class ContaService  extends ServicoAbstrato<Conta,Long> implements IServico<Conta,Long> {
-
+    @Autowired
 	ContaRepositorio2 repositorio; 
 	
 	public ContaService(ContaRepositorio2 repositorio) {

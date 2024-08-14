@@ -6,7 +6,7 @@
 <body>
     <div th:fragment="selectFragment (id, name, options)">
         <select id="[[${id}]]" name="[[${name}]]">
-            <option th:each="option : ${options}" th:value="${option.value}" th:text="${option.text}"></option>
+            <option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}"></option>
         </select>
     </div>
 </body>
