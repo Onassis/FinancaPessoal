@@ -21,22 +21,17 @@
                 </div>
                 <div th:replace="~{:: fieldErrors(${object}, ${field})}" />
             </div>
-            <div th:if="${type == 'select'}">
-                <div>
+            <div th:if="${type == 'select'}">				  
                     <label >
                        <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                     </label>
-                   <select  th:field="*{__${field}__}"  class="form-control" >
-                            <option value="">Selecione</option>
-	                </select>     
-	           
-                </div>
-                <div th:replace="~{:: fieldErrors(${object}, ${field})}" />
-            </div>            
-            <label class="form-label" th:if="${type != 'checkbox'}" th:for="${type == 'radio' ? '' : field}" >
-				<span th:text="#{'__${object}__.__${field}__.label'}"></span>
-
-            </label>
+        			<select id="[[${field}]]" th:field="*{__${field}__}"  class="form-control"  th:classappend="${inputClassappend}" 
+        				th:required="${__${required}__} ? 'required' : null"
+        			   	th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}">
+							<option value="">Selecione</option>
+            				<option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}"></option>
+        			</select>    	                           
+            </div>  
             <div th:if="${type != 'checkbox'}">
                 <input class="form-control" th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
                         th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}" 

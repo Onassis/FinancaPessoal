@@ -1,19 +1,22 @@
 package br.com.fenix.dominio.dto;
 
 public  class Option {
-    private String value;
-    private String text;
+    private String id;
+    private String ajuda;
 
-    public Option(String value, String text) {
-        this.value = value;
-        this.text = text;
+    public Option(String id, String ajuda) {
+        this.id = id;
+        this.ajuda = ajuda;
+    }
+    public Option(Long id, String ajuda) {
+        this.id = id.toString();
+        this.ajuda = ajuda;
+    }
+    public String getId() {
+        return id;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getText() {
-        return text;
+    public String getAjuda() {
+        return ajuda;
     }
 }

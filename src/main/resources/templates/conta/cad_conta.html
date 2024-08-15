@@ -59,15 +59,8 @@
             
               
 	          <div class="col-md-6">
-                  	<label for="validationCustom01" class="form-label">Moeda</label>
-					     <select id="id_moeda"  th:field="*{moeda}" class="form-control" required>
-	                            <option value="">Selecione</option>
-	                            <option th:each="m : ${moedas}" 
-	                                    th:value="${m.codigo}" th:text="${m.moeda}">Moedas</option>
-	                        </select>     
-	                 <div class="valid-feedback">
-                    	 Ok!
-                  	</div>
+				    <div th:replace="~{fragments/forms::inputRow(object='conta', field='moeda', type='select',required='required',options= ${moedas})}" />
+				    
 	          	</div>	
 	          	 
                  <div class="row"> 	

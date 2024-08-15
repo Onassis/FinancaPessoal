@@ -15,7 +15,6 @@ import br.com.fenix.abstrato.GenericRepositoryAutenticado;
 import br.com.fenix.dominio.enumerado.TipoConta;
 
 @Repository
-
 public interface ContaRepositorio2 extends CrudRepository<Conta,Long> {
 	
 	@Query("from Conta o where o.id = ?1 and o.criadoPor.id = ?#{ principal.id}")

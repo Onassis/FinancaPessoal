@@ -27,6 +27,7 @@ import jakarta.validation.Valid;
 public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 	   
         ServicoAbstrato<T, ID> servico; 
+       
         
         
 	    public ControleAbstrato(ServicoAbstrato<T, ID> servico) {
