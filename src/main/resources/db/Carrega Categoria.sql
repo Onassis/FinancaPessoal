@@ -18,6 +18,8 @@ insert into conta ( id,  dt_criacao, versao,agencia, apelido, dia_vencimento,
 		        alterado_por_id, criado_por_id, moeda_codigo, inativo)
 values  (2, CURRENT_TIMESTAMP, 1, '9111','BB',  0,'Banco Banco Brasil', '53331', 0, 'CC', 1, 1, 'BRL','F');
 
+insert into moeda ( codigo, casa_decimal, moeda,numero)
+values ('BRL',',','REAL','986');
 
 
 

@@ -1,9 +1,15 @@
 ﻿<!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <head><meta charset="UTF-8"></head>
+<script>   
+
+    $(document).ready(function(){
+        $('#saldo').mask('000.000.000,00', {reverse: true});
+    });
+</script>
 <main id="main" class="main" layout:fragment="corpo">
 <div class="row">
-	           	<form id="CadastroForm" th:object="${conta}" th:action="@{/conta}"  class="row g-3 needs-validation"   method="POST">
+	  <form id="CadastroForm" th:object="${conta}" th:action="@{/conta}"  class="row g-3 needs-validation"   method="POST">
 				    <div class="col-md-12">
         	          <label for="validationCustom01" class="form-label">Tipo de Conta</label>
             		      	<select id="id_tipoConta" class="form-control" th:field="*{tipoConta}" autofocus="autofocus" required>       
@@ -15,53 +21,23 @@
                     		 Ok!
                   		</div>
                 	</div>
-                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='apelido',  required='true',rowClass='col-md-12')}" />
+                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='apelido',  required='false',rowClass='col-md-12')}" />
                 	 
                 	<div th:replace="~{fragments/forms::inputRow(object='conta', field='instituicao', required='true',rowClass='col-md-6')}" />
 
-                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='agencia', required='true',rowClass='col-md-6')}" />
+                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='agencia', required='false',rowClass='col-md-6')}" />
 
-                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='numero', required='true',rowClass='col-md-6')}" />
+                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='numero', required='false',rowClass='col-md-12')}" />
 
-	      
-	    		 <div hidden class="col-md-6">
-        	          <label for="validationCustom01" class="form-label">Dia Vencimento Cartão</label>
-        	          <select id="id_diaVencimento" class="form-control" th:field="*{diaVencimento}"  />
-        	          		 <option value="null" selected hidden >- Selecione -</option>
-    						 <option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}" 
-    						 		 th:selected="${i}==*{diaVencimento}"></option>
-					  </select>
-               <p th:errors = "*{diaVencimento}" class="text-danger"
-                 		th:if="${#fields.hasErrors('diaVencimento')}">
-                 	</p>
-                </div>    
-                <div class="col-md-6">
-        	          <label for="validationCustom01" class="form-label">Melhor Dia Compra Cartão</label>
-        	          <select id="id_diaVencimento" class="form-control" th:field="*{diaComp}"  />
-        	          		 <option value="null" selected hidden >- Selecione -</option>
-    						 <option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"
-    						  th:selected="${i}==*{diaComp}"></option>
-					  </select>
-                  		<div class="valid-feedback">
-                    		 Ok!
-                  		</div>
-                </div>              	
+					<div th:replace="~{fragments/forms::inputRow(object='conta', field='diaVencimento', required='false',rowClass='col-md-6')}" />
+	
+					<div th:replace="~{fragments/forms::inputRow(object='conta', field='diaComp', type='cep',required='false',rowClass='col-md-6')}" />
+                	
+                	<div th:replace="~{fragments/forms::inputRow(object='conta', field='saldo', type='moeda',required='true',rowClass='col-md-6')}" />
+           
               
-                <div class="col-md-6">
-                  	<label for="validationCustom01" class="form-label">Valor</label>
-					  <input type="text" class="form-control" id="valor" placeholder="Saldo inicial da conta" 
-	                        		 th:field="*{saldo}"/>     
-	                 <div class="valid-feedback">
-                    	 Ok!
-                  	</div>
-                </div>
-                
-            
               
-	          <div class="col-md-6">
-				    <div th:replace="~{fragments/forms::inputRow(object='conta', field='moeda', type='select',required='required',options= ${moedas})}" />
-				    
-	          	</div>	
+			    <div th:replace="~{fragments/forms::inputRow(object='conta', field='moeda', type='select',required='true',rowClass='col-md-6',options= ${moedas})}" />
 	          	 
                  <div class="row"> 	
 		             <div class="col-md-12">

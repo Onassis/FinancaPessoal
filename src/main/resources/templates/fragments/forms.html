@@ -7,19 +7,24 @@
                 inputClassappend=${#fields.hasErrors(field) ? 'is-invalid ' : ''} + ${inputClass ?: ''}"
                 th:object="${__${object}__}"   
                 th:classappend="${rowClass}" 
-                th:id="${#strings.toLowerCase(field)}"      	             
+                th:id="|div_${#strings.toLowerCase(field)}|"      	             
              >
             <div th:if="${type == 'checkbox'}">
                 <div>
                     <input th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}" 
                       	   th:required="${__${required}__} ? 'required' : null"
                       	   th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
+                      	   th:id="|input_,${#strings.toLowerCase(field)}|"      	 
                     />
                     <label th:for="${#ids.prev(field)}">
                        <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                     </label>
                 </div>
-                <div th:replace="~{:: fieldErrors(${object}, ${field})}" />
+                 <div class="invalid-feedback">
+				    <ul>
+       					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    				</ul>	
+	             </div> 
             </div>
             <div th:if="${type == 'select'}">				  
                     <label >
@@ -27,17 +32,87 @@
                     </label>
         			<select id="[[${field}]]" th:field="*{__${field}__}"  class="form-control"  th:classappend="${inputClassappend}" 
         				th:required="${__${required}__} ? 'required' : null"
+                   	   th:id="|input_${#strings.toLowerCase(field)}|"      	         				
         			   	th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}">
 							<option value="">Selecione</option>
-            				<option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}"></option>
-        			</select>    	                           
+            				<option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}" 
+            				 		th:selected="${option.id}==*{__${field}__}">
+            				 </option>
+        			</select>
+                <div class="invalid-feedback">
+				 		<span th:errors="*{__${field}__}"></span>	
+	            </div> 
+        			    	                           
             </div>  
-            <div th:if="${type != 'checkbox'}">
+   			<div th:if="${type == 'moeda'}">
+              	<label >
+                    <span th:text="#{'__${object}__.__${field}__.label'}"></span>
+                </label>
+                <input class="form-control moeda_input"  type="text" 
+                      	th:id="|input_${#strings.toLowerCase(field)}|"      	                 
+                		data-mask="#.##0,00" data-mask-reverse="true" 
+                		style="text-align:right"                 		                	
+						data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal=","
+                        th:field="*{__${field}__}" th:classappend="${inputClassappend}" 
+                        th:required="${__${required}__} ? 'required' : null"
+                        th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}" />
+            	<div class="invalid-feedback">
+				    <ul>
+       					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    				</ul>	
+	             </div> 
+            </div>            
+        	<div th:if="${type == 'cep'}">
+              	<label >
+                    <span th:text="#{'__${object}__.__${field}__.label'}"></span>
+                </label>
+                <input class="form-control cep_input"  type="text"
+                   	   th:id="|input_${#strings.toLowerCase(field)}|"      	                  
+                		data-mask="00000-000" data-mask-reverse="true" 
+                		style="text-align:right" 
+                		pattern="[0-9]+$"
+                        th:field="*{__${field}__}" th:classappend="${inputClassappend}" 
+                        th:required="${__${required}__} ? 'required' : null"
+                        th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}" />
+            	<div class="invalid-feedback">
+				    <ul>
+       					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    				</ul>	
+	             </div> 
+            </div>  
+        	<div th:if="${type == 'cpf'}">
+              	<label >
+                    <span th:text="#{'__${object}__.__${field}__.label'}"></span>
+                </label>
+                <input class="form-control cpf_input"  type="text"
+                      	th:id="|input_${#strings.toLowerCase(field)}|"      	                  
+                		data-mask="00000-000" data-mask-reverse="true" 
+                		style="text-align:right" 
+                		pattern="[0-9]+$"
+                        th:field="*{__${field}__}" th:classappend="${inputClassappend}" 
+                        th:required="${__${required}__} ? 'required' : null"
+                        th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}" />
+            	<div class="invalid-feedback">
+				    <ul>
+       					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    				</ul>	
+	             </div> 
+            </div>            
+            <div th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' ||  type == 'number'}">
+              	<label >
+                    <span th:text="#{'__${object}__.__${field}__.label'}"></span>
+                </label>
                 <input class="form-control" th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
-                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}" 
+                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}"
+                   	   th:id="|input_${#strings.toLowerCase(field)}|"      	                          
                          th:required="${__${required}__} ? 'required' : null"
                          th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
                         />
+              	<div class="invalid-feedback">
+				    <ul>
+       					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    				</ul>	
+	             </div>                        
             </div>
         </div>
 

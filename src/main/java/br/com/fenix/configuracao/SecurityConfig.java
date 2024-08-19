@@ -121,7 +121,7 @@ public class SecurityConfig  {
 //							.requestMatchers("/usuario/cadastrar").permitAll()							
 							.requestMatchers("/fragments/**").permitAll()	
 							.requestMatchers("/webjars/**").permitAll()
-							.requestMatchers("../static/js").permitAll()	
+							.requestMatchers("../static/js/**").permitAll()	
 							.requestMatchers("../static/img/**").permitAll()	
 							.requestMatchers("/admin/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.POST, "/usuario/**").permitAll()		
