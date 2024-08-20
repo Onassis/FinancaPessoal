@@ -29,6 +29,10 @@ public class MyErrorView implements ErrorViewResolver {
 					model.addObject("error", "Página não encontrada.");
 					model.addObject("message", "A url para a página '" + map.get("path") + "' não existe.");
 					break;
+				case 405:
+					model.addObject("error", "Metodo não permitido.");
+					model.addObject("message", "A url para a página '" + map.get("path") + "' não existe.");
+					break;					
 				case 500:
 					model.addObject("error", "Ocorreu um erro interno no servidor.");
 					model.addObject("message", "Ocorreu um erro inexperado, tente mais tarde.");

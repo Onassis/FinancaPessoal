@@ -43,7 +43,8 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 			
 			if (usuario.isEmpty()) {
 				          System.out.println("não encontro" + username);  
-				          throw 	 new RegistroNaoExisteException("User Not Found with username: " + username) ;
+				         // throw UsernameNotFoundException
+				          throw new RegistroNaoExisteException("{usuario.existe}" + username) ;
 			}		
 		    System.out.println(usuario.get());  
 			return usuario.get();

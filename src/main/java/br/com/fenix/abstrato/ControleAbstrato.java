@@ -29,6 +29,7 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
         ServicoAbstrato<T, ID> servico; 
        
         
+        
 	    public ControleAbstrato(ServicoAbstrato<T, ID> servico) {
 			super();
 			this.servico = servico;
@@ -50,7 +51,7 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 	    @Override
 	    @GetMapping("/cadastrar")  	
 	    public ModelAndView cadastrar(T entidade) {
-	       	return new ModelAndView(nomeCadastro(entidade));
+	       	return new ModelAndView(nomeCadastro(entidade),nomeEntidade(entidade),entidade);
 	    }
 	    @Override
 	    @GetMapping("/editar/{id}")  
@@ -96,20 +97,20 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 	    @Override
 	    @PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
 	    @Transactional 
-	    public String criar(@Valid @ModelAttribute T entidade,BindingResult result, RedirectAttributes attr) { 	  
+	    public ModelAndView criar(@Valid @ModelAttribute  T entidade,BindingResult result, RedirectAttributes attr) { 	
+	      	System.out.println("ControleAbstrato-> Criar");
 	    	if (result.hasErrors()) {
-				return nomeCadastro(entidade);
+				return cadastrar(entidade);
 			}
-	    	System.out.println("ControleAbstrato-> Criar");
 	        try {
-//		    	entidade = servico.criar(entidade); 
+		    	entidade = servico.criar(entidade); 
 		    	attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");
 	        } catch (Exception e) {
 	        	System.out.println("ControleAbstrato-> Criar -> Error");
 		    	attr.addFlashAttribute("Erro", e.toString());        	
 //	            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	        }	
-	    	return nomeCadastro(entidade);//	            return new ResponseEntity<>(bookObj, HttpStatus.CREATED);
+	    	return cadastrar(entidade);//	            return new ResponseEntity<>(bookObj, HttpStatus.CREATED);
 	    	
 	    }
 	    

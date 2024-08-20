@@ -1,6 +1,7 @@
 package br.com.fenix.dominio.dto;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -116,7 +117,7 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
    
     public void setLancamentoValor( BigDecimal valor) { 
     	this.lancamentoTotal = acertaSinal(valor); 
-    	this.valor = lancamentoTotal.divide(new BigDecimal(lancamentoNroPrestacao));    	
+    	this.valor = lancamentoTotal.divide(new BigDecimal(lancamentoNroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
     
 	 public String prestacao() {

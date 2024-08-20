@@ -1,6 +1,7 @@
 package br.com.fenix.fi.conta;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +18,12 @@ import br.com.fenix.abstrato.ControleAbstrato;
 import br.com.fenix.abstrato.IControle;
 import br.com.fenix.abstrato.ServicoAbstrato;
 import br.com.fenix.dominio.dto.Option;
+import br.com.fenix.dominio.dto.OptionLong;
 import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
 
 @RestController
-@RequestMapping("/conta2")
+@RequestMapping("/conta")
 public class ContaController  extends ControleAbstrato<Conta,Long> implements IControle<Conta,Long>   {
 
   @Autowired
@@ -59,5 +61,17 @@ public class ContaController  extends ControleAbstrato<Conta,Long> implements IC
 		 return options;
 		//return moedaRP.findAllByOrderByCodigoAsc();
 	}	
+	
+	@ModelAttribute("diasMes")
+	public List<OptionLong> listaDias() {
+		System.out.println("listaDias");
+		 List<OptionLong> options = new ArrayList<>();
+
+		System.out.println("contacontrol");
+		for (int i=1;i<=31;i++) { 
+			 new Option(i, i);
+		}
+		 return options;
+	}
 
 }

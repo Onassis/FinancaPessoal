@@ -12,10 +12,13 @@ public  class Option {
         this.id = id.toString();
         this.ajuda = ajuda;
     }
-    public String getId() {
+    public Option(int id, int ajuda) {
+        this.id = String.valueOf(id);
+        this.ajuda = String.valueOf(ajuda);    		
+	}
+	public String getId() {
         return id;
     }
-
     public String getAjuda() {
         return ajuda;
     }

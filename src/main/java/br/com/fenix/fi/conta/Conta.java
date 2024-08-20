@@ -57,11 +57,11 @@ public class Conta extends EntidadeAuditavel<Long> {
    private String numero;
    
    @Column(nullable=true)
-   private int diaVencimento;
+   private int diaVencimento=1;
    
    // melhor dia de compra
    @Column(nullable=true)   
-   private int diaComp;
+   private int diaComp=1;
 
    @JsonDeserialize(using = MoedaDeserializer.class) 
    @ManyToOne (fetch = FetchType.EAGER )     

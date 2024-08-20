@@ -29,10 +29,13 @@
         				th:required="${__${required}__} ? 'required' : null"
         			   	th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}">
 							<option value="">Selecione</option>
-            				<option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}"></option>
+            				<option th:each="option : ${options}" th:value="${option?.id}" th:text="${option?.ajuda}"></option>
         			</select>    	                           
             </div>  
-            <div th:if="${type != 'checkbox'}">
+            <div th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}">
+				   <label >
+                       <span th:text="#{'__${object}__.__${field}__.label'}"></span>
+                    </label>
                 <input class="form-control" th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
                         th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}" 
                          th:required="${__${required}__} ? 'required' : null"

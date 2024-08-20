@@ -82,7 +82,7 @@ public abstract class ServicoAbstrato<T,ID> implements IServico<T,ID>{
 
 	    @Override
 	    @Transactional
-	    public T atualizar(@Valid @ModelAttribute  T entidade){	    	
+	    public T atualizar(T entidade){	    	
 	    	antesDeSalvar(entidade);
 		    entidade =  repositorio.save (entidade);
 		    depoisDeSalvar(entidade);

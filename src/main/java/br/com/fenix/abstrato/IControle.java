@@ -19,7 +19,7 @@ public interface IControle<T,ID> {
 	 ModelAndView listarView(T entidade);
 	 T buscarPorId(@PathVariable ID id);	 
 	 Iterable<T> listar();
-	 String   criar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
+	 ModelAndView   criar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
 	 T atualizar(@RequestBody T entidade);
 	 void excluirPorId(@PathVariable ID id);
 	void excluirTodos();
