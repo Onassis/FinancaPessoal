@@ -15,6 +15,8 @@ public  class Option {
     public Option(int id, int ajuda) {
         this.id = String.valueOf(id);
         this.ajuda = String.valueOf(ajuda);    		
+        this.id = Integer.toString(id);
+        this.ajuda = Integer.toString(ajuda);
 	}
 	public String getId() {
         return id;

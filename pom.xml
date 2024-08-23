@@ -226,13 +226,6 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 			<artifactId>ant</artifactId>
 			<version>1.10.13</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<version>3.0.17</version>
-			<type>pom</type>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
@@ -252,7 +245,6 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
     <artifactId>guava</artifactId>
     <version>33.1.0-jre</version>
 </dependency>
-
 	</dependencies>
 	<build>
 		<plugins>

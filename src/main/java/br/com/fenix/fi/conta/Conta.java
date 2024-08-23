@@ -1,6 +1,7 @@
 package br.com.fenix.fi.conta;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,6 +10,8 @@ import org.springframework.format.annotation.NumberFormat.Style;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -20,6 +23,7 @@ import br.com.fenix.dominio.converter.StringDeserializer;
 import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
+import br.com.fenix.seguranca.usuario.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -32,7 +36,7 @@ import lombok.ToString;
 @Table(name="conta", indexes = { @Index(name = "contaApelido", columnList = "criado_por_id,apelido", unique = true) })  
 @Data
 @ToString
-@NoArgsConstructor
+
 public class Conta extends EntidadeAuditavel<Long> {
    /**
 	 * 
@@ -43,8 +47,11 @@ public class Conta extends EntidadeAuditavel<Long> {
    @Enumerated(EnumType.STRING) 
    private TipoConta tipoConta;
    
-   @NotBlank
+  
    @Column(length = 40, nullable=false )
+   @NotBlank
+   @NotEmpty(message = "Apelido deve ser informado.")
+   @Size(min = 3, max = 40)
    private String apelido;
    
    @Column(length = 40, nullable = true)
@@ -57,11 +64,11 @@ public class Conta extends EntidadeAuditavel<Long> {
    private String numero;
    
    @Column(nullable=true)
-   private int diaVencimento=1;
+   private int diaVencimento;
    
    // melhor dia de compra
    @Column(nullable=true)   
-   private int diaComp=1;
+   private int diaComp;
 
    @JsonDeserialize(using = MoedaDeserializer.class) 
    @ManyToOne (fetch = FetchType.EAGER )     
@@ -73,12 +80,15 @@ public class Conta extends EntidadeAuditavel<Long> {
    @NumberFormat(style = Style.CURRENCY, pattern = "#,##0.00")
    @JsonDeserialize(using = MoneyDeserializer.class) 
    @Column(columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-   private BigDecimal saldo;
+   private BigDecimal saldo= BigDecimal.ZERO;
    
-   @Transient
-   private String ajuda ;
-
-  
+   public Conta() {
+	super();
+	   this.saldo= BigDecimal.ZERO;
+//	   this.diaVencimento=10;
+//	   this.diaComp=1;
+	}
+   @Override  
    public String getAjuda() {
 	   switch (this.tipoConta) {
 		   case CC :   return  apelido + ":" + instituicao + " -> " +  numero ;
@@ -159,4 +169,5 @@ public class Conta extends EntidadeAuditavel<Long> {
 		}
 		return 	LocalDate.of(data.getYear(), data.getMonth(), 1 );
   }
+
 }

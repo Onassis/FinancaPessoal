@@ -41,6 +41,7 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 	    @Override
 		public String nomeCadastro(T entidade) {
 	    	String nomeEntidade = nomeEntidade(entidade); 
+	    	System.out.println(entidade);
 	    	return nomeEntidade.concat("/cad_").concat(nomeEntidade);	    
 	    }
 	    @Override

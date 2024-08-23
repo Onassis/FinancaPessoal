@@ -37,32 +37,18 @@ public class ContaController  extends ControleAbstrato<Conta,Long> implements IC
 		// TODO Auto-generated constructor stub
 	}
 
-//	@ModelAttribute("moedas")
-//	@Cacheable("moeda")
-//	public List<Moeda> listaDeMoedas() {
-//		return moedaRP.findAllByOrderByCodigoAsc();
-//	}	
 	@ModelAttribute("moedas")
 	@Cacheable("moeda")
 	public List<Option> listaDeMoedas() {
 		System.out.println("contacontrol");
-//		 List<Option> options = Arrays.asList( 
-//		            new Option("1", "Option 1"),
-//		            new Option("2", "Option 2"),
-//		            new Option("3", "Option 3")
-//		        );
 		 List<Option> options  = moedaRP.findAllByOrderByCodigoAsc().stream()	               
 	                .map(p -> new Option(p.getCodigo(), p.getMoeda()))
 	                .collect(Collectors.toList());
 		 
-//		 List<Option> options = moedaRP.findAllByOrderByCodigoAsc() 
-//				 .forEach(new Option(moeda.getCodigo,moeda.getAjuda));
-					
 		 return options;
-		//return moedaRP.findAllByOrderByCodigoAsc();
 	}	
 	
-	@ModelAttribute("diasMes")
+	@ModelAttribute("diasMesLong")
 	public List<OptionLong> listaDias() {
 		System.out.println("listaDias");
 		 List<OptionLong> options = new ArrayList<>();
@@ -73,5 +59,13 @@ public class ContaController  extends ControleAbstrato<Conta,Long> implements IC
 		}
 		 return options;
 	}
-
+	@ModelAttribute("diaMes")
+	public List<Option> listaDiasMes() {
+		System.out.println("contaDiaMes");
+		 List<Option> options  = new ArrayList<>();
+		 for (int i = 1; i <= 31; i++) {
+			   options.add( new Option(i, i)); 
+		 }					
+		 return options;
+	}
 }

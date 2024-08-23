@@ -79,6 +79,9 @@ public abstract class EntidadeAuditavel<P> extends EntidadeAbstrata<P>   {
 	@Version
 	private long versao;
 	
+	@Transient
+	private String ajuda="" ;
+	
 	public boolean usuarioIgual ( Usuario usuario) {
 	    	
 		return this.criadoPor.equals(usuario); 
@@ -88,6 +91,7 @@ public abstract class EntidadeAuditavel<P> extends EntidadeAbstrata<P>   {
 		super();
 		this.criadoPor = criadoPor;
 	}
+	
 	
 }
 
