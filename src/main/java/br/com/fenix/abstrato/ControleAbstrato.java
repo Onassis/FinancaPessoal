@@ -2,7 +2,7 @@ package br.com.fenix.abstrato;
 
 import java.util.List;
 
-
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +24,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import jakarta.validation.Valid;
 
-public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
+public abstract class ControleAbstrato<S extends ServicoAbstrato,T,ID> implements IControle<T,ID>{
 	   
-        ServicoAbstrato<T, ID> servico; 
+        protected S servico; 
        
         
         
-	    public ControleAbstrato(ServicoAbstrato<T, ID> servico) {
+	    public ControleAbstrato(S servico) {
 			super();
 			this.servico = servico;
 		}
@@ -41,7 +41,7 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 	    @Override
 		public String nomeCadastro(T entidade) {
 	    	String nomeEntidade = nomeEntidade(entidade); 
-	    	System.out.println(entidade);
+
 	    	return nomeEntidade.concat("/cad_").concat(nomeEntidade);	    
 	    }
 	    @Override
@@ -58,6 +58,7 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 	    @GetMapping("/editar/{id}")  
 		public ModelAndView atualizarView(@PathVariable ID id) {    	
 			T entidade = buscarPorId(id); 
+	    	System.out.println("atualiza");
 			return new ModelAndView(nomeCadastro(entidade),nomeEntidade(entidade),entidade) ;		  			  
 		}  	  
 	    @Override
@@ -86,14 +87,13 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 	    @ResponseStatus(code = HttpStatus.OK)	    
 	    @GetMapping("/{id}")	    
 	    public T buscarPorId (@PathVariable ID id) throws RegistroNaoExisteException{	 
-//	    	   return servico.buscarPorId(id);
-	    	return null;
+
+	    	return (T) servico.buscarPorId (id);
 	    }
 	    @Override
 	    @GetMapping 
     	public Iterable<T> listar () {
-//			return servico.listar();	  
-			return null;
+			return servico.listar();	  
 		}
 	    @Override
 	    @PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -104,7 +104,7 @@ public abstract class ControleAbstrato<T,ID> implements IControle<T,ID>{
 				return cadastrar(entidade);
 			}
 	        try {
-		    	entidade = servico.criar(entidade); 
+		    	entidade = (T) servico.criar(entidade); 
 		    	attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");
 	        } catch (Exception e) {
 	        	System.out.println("ControleAbstrato-> Criar -> Error");

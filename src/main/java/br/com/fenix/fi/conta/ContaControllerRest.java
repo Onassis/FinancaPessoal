@@ -24,9 +24,9 @@ public class ContaControllerRest  extends ControleAbstratoRest<Conta> implements
     @Autowired
     ContaService contaSV; 
     @Autowired
-    private ContaRepositorio contaRP; 
+    private ContaRepositorioRest contaRP; 
     
-	public ContaControllerRest(ContaRepositorio repositorio) {
+	public ContaControllerRest(ContaRepositorioRest repositorio) {
 		super(repositorio);
 		// TODO Auto-generated constructor stub
 	}

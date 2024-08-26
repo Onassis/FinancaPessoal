@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
+import br.com.fenix.fi.conta.Conta;
 import jakarta.validation.Valid;
 
-public abstract class ServicoAbstrato<T,ID> implements IServico<T,ID>{
+public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T,ID> implements IServico< T,ID>   {
 
-	 protected CrudRepository<T, ID> repositorio;
+	 protected R repositorio  ;
 
-	 public ServicoAbstrato(CrudRepository<T,ID> repositorio) {
+	 public ServicoAbstrato(R repositorio) {
 	        this.repositorio = repositorio;
 	    }
 
@@ -27,16 +28,12 @@ public abstract class ServicoAbstrato<T,ID> implements IServico<T,ID>{
 
 
 	@Override
-	public void antesDeSalvar(T entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
+	public void antesDeSalvar(T entidade) throws NegocioException {	
 	}
 
 
 	@Override
 	public void depoisDeSalvar(T entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -99,5 +96,4 @@ public abstract class ServicoAbstrato<T,ID> implements IServico<T,ID>{
 	    public void excluirTodos(){
 	       	repositorio.deleteAll();
 	    }
-
 	}

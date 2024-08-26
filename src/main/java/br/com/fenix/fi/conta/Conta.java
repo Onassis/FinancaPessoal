@@ -11,6 +11,7 @@ import org.springframework.format.annotation.NumberFormat.Style;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -51,7 +52,7 @@ public class Conta extends EntidadeAuditavel<Long> {
    @Column(length = 40, nullable=false )
    @NotBlank
    @NotEmpty(message = "Apelido deve ser informado.")
-   @Size(min = 3, max = 40)
+   @Size(min = 2, max = 40)
    private String apelido;
    
    @Column(length = 40, nullable = true)
@@ -71,7 +72,8 @@ public class Conta extends EntidadeAuditavel<Long> {
    private int diaComp;
 
    @JsonDeserialize(using = MoedaDeserializer.class) 
-   @ManyToOne (fetch = FetchType.EAGER )     
+   @ManyToOne (fetch = FetchType.EAGER )   
+   @NotNull
    private Moeda moeda;
    
    @Column(name="inativo", nullable=false)
@@ -125,6 +127,8 @@ public class Conta extends EntidadeAuditavel<Long> {
 		return datVenc;
    }
    public LocalDate getDataSaldo( LocalDate dataSaldo) {	
+	    if (this.diaVencimento == 0)
+	    	return LocalDate.now();
 		if ( isCredito() ) {	
 			if ( !dataSaldo.isAfter(LocalDate.now()) ) { 
 				dataSaldo = LocalDate.of(LocalDate.now().getYear(), 
@@ -157,6 +161,8 @@ public class Conta extends EntidadeAuditavel<Long> {
 	   return this.tipoConta == TipoConta.CC; // Cartaa de credito 
    }
    public LocalDate dataSaldoAnterior (LocalDate data) {
+	   if (this.diaVencimento == 0)
+	    	return LocalDate.now();
 	   
 		if ( isContaCartao()) { 		
 			if ( ( data.getDayOfMonth() -  diaVencimento) <=  9) {

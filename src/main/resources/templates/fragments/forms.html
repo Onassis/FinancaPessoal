@@ -23,7 +23,8 @@
        					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
     				</ul>	
 	            </div> 
-            </div>
+            </div> 
+            
             <div th:if="${type == 'select'}">				  
                     <label class="form-label">
                        <span th:text="#{'__${object}__.__${field}__.label'}"></span>
@@ -32,15 +33,21 @@
         					th:id="|input_${#strings.toLowerCase(field)}|"   
         					th:classappend="${inputClassappend}" 
         					th:required="${__${required}__} ? 'required' : null"
-        			 		th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}">
-        		<option value=0 selected hidden >- Selecione -</option>
-					   <option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}"
-					         th:selected="${option.id}==*{__${field}__}"
-					   ></option> 				 
-        			</select>    	                           
-            </div>  
+        			 		th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
+        			 		th:disabled="*{__${field}__} != null and ${__${readOnly}__} ==  'readOnly'" >
+        				<option value=0 selected hidden >- Selecione -</option>
+					   		<option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}"
+					        		th:selected="${option.id}==*{__${field}__}">
+					   </option> 				 
+        			</select>   
+        			<div class="invalid-feedback">
+				    	<ul>
+       						 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    					</ul>	
+	             	</div>  	                           
+            </div>              
    			<div th:if="${type == 'moeda'}">
-              	<label >
+              	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
                 <input class="form-control moeda_input"  type="text" 
@@ -58,7 +65,7 @@
 	             </div> 
             </div>            
         	<div th:if="${type == 'cep'}">
-              	<label >
+              	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
                 <input class="form-control cep_input"  type="text"
@@ -76,7 +83,7 @@
 	             </div> 
             </div>  
         	<div th:if="${type == 'cpf'}">
-              	<label >
+              	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
                 <input class="form-control cpf_input"  type="text"
@@ -94,7 +101,7 @@
 	             </div> 
             </div>            
             <div th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' ||  type == 'number'}">
-              	<label >
+              	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
                 <input class="form-control" th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
@@ -102,6 +109,7 @@
                    	   th:id="|input_${#strings.toLowerCase(field)}|"      	                          
                          th:required="${__${required}__} ? 'required' : null"
                          th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
+                         th:readOnly="*{__${field}__} != null and ${__${readOnly}__} ==  'readOnly'" 
                         />
               	<div class="invalid-feedback">
 				    <ul>
