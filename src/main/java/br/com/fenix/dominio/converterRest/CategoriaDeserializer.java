@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.converter;
+package br.com.fenix.dominio.converterRest;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -13,39 +13,43 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
-import br.com.fenix.fi.conta.Conta;
-import br.com.fenix.fi.conta.ContaRepositorio;
 
-public class ContaDeserializer extends StdDeserializer<Conta> {
+
+public class CategoriaDeserializer extends StdDeserializer<Categoria> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	@Autowired
-	private ContaRepositorio contaRP;
+    CategoriaRepositorio categoriaRP;	
 	
-	public ContaDeserializer() { 
+	public CategoriaDeserializer() { 
         this(null); 
     } 
 
-    public ContaDeserializer(Class<?> vc) { 
+    public CategoriaDeserializer(Class<?> vc) { 
         super(vc); 
     }
 
     @Override
-    public Conta deserialize(JsonParser jp, DeserializationContext ctxt) 
+    public Categoria deserialize(JsonParser jp, DeserializationContext ctxt) 
       throws IOException, JsonProcessingException {
         JsonNode node = jp.getCodec().readTree(jp);       
-        String texto_id = node.asText();
-        System.out.println("Dezerialização Conta");
+        String texto_id = node.textValue();
+        System.out.println("Dezerialização");
+//        System.out.println(jp.getText()  );
         System.out.println(texto_id);        
-        if (texto_id.isEmpty()) {
+        if (texto_id.isEmpty() ) {
 			return null;
 		}
 		Long id = Long.valueOf(texto_id);
+        if (id == 0 ) {
+			return null;
+		}
+    	System.out.println("deserializar criar  subcategoria");
 		System.out.println(id);
-		Optional<Conta> contaOp = contaRP.findById(id);
-		return contaOp.get();    
+		Categoria categoria = categoriaRP.findById(id).get();
+		return categoria;    
 	}
 
 }

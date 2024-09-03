@@ -31,8 +31,20 @@ public class ContaService  extends ServicoAbstrato<ContaRepositorio,Conta,Long> 
 		
 		if (contaApelido.isPresent() && entidade.isNew() ) { 
 		
-			throw new NegocioException("Conta já cadastrada com esse apelido");
+			throw new NegocioException("Conta/Cartão já cadastrada com esse apelido");
 		}	
+	}
+
+	@Override
+	public void antesDeAlterar(Conta entidade) throws NegocioException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void depoisDeAlterar(Conta entidade) throws NegocioException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

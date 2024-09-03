@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import br.com.fenix.dominio.converter.ContaDeserializer;
-import br.com.fenix.dominio.converter.MoneyDeserializer;
+
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.MoneyDeserializer;
 import br.com.fenix.fi.conta.Conta;
 
 

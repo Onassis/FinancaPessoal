@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.converter;
+package br.com.fenix.dominio.converterRest;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -11,40 +11,36 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import br.com.fenix.seguranca.usuario.Usuario;
-import br.com.fenix.seguranca.usuario.UsuarioRepositorio;
+import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
+import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
 
-public class UsuarioDeserializer extends StdDeserializer<Usuario> {
+public class MoedaDeserializer extends StdDeserializer<Moeda> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
-	private UsuarioRepositorio usuarioRP;
+	private MoedaRepositorio moedaRP;
 	
-	public UsuarioDeserializer() { 
+	public MoedaDeserializer() { 
         this(null); 
-    }  
+    } 
 
-    public UsuarioDeserializer(Class<?> vc) { 
+    public MoedaDeserializer(Class<?> vc) { 
         super(vc); 
     }
-
     @Override
-    public Usuario deserialize(JsonParser jp, DeserializationContext ctxt) 
+    public Moeda deserialize(JsonParser jp, DeserializationContext ctxt) 
       throws IOException, JsonProcessingException {
         JsonNode node = jp.getCodec().readTree(jp);       
         String texto_id = node.asText();
-        System.out.println("Dezerialização Usuario");
-        System.out.println(texto_id);        
         if (texto_id.isEmpty()) {
-			return new Usuario();
+			return null;
 		}
-		Long id = Long.valueOf(texto_id);
-		System.out.println(id);
-		Optional<Usuario> usuarioOp = usuarioRP.findById(id);
-		return usuarioOp.get();    
+
+		Optional<Moeda> moedaOp = moedaRP.findById(texto_id);
+		return moedaOp.get();    
 	}
 
 }

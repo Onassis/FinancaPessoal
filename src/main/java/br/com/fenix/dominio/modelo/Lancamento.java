@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.*;
 import br.com.fenix.abstrato.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
+import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;

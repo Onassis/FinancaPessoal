@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.dominio.converter.ContaDeserializer;
-import br.com.fenix.dominio.converter.MoneyDeserializer;
-import br.com.fenix.dominio.converter.StringDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.MoneyDeserializer;
+import br.com.fenix.dominio.converterRest.StringDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.fi.conta.Conta;
 

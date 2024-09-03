@@ -8,11 +8,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.ContaDeserializer;
-import br.com.fenix.dominio.converter.FavorecidoDeserializer;
-import br.com.fenix.dominio.converter.MoneyDeserializer;
-import br.com.fenix.dominio.converter.NumericBooleanDeserializer;
-import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.FavorecidoDeserializer;
+import br.com.fenix.dominio.converterRest.MoneyDeserializer;
+import br.com.fenix.dominio.converterRest.NumericBooleanDeserializer;
+import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;

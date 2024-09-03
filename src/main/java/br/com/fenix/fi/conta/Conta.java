@@ -17,11 +17,11 @@ import jakarta.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import br.com.fenix.abstrato.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.ContaDeserializer;
-import br.com.fenix.dominio.converter.MoedaDeserializer;
-import br.com.fenix.dominio.converter.MoneyDeserializer;
-import br.com.fenix.dominio.converter.StringDeserializer;
-import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.MoedaDeserializer;
+import br.com.fenix.dominio.converterRest.MoneyDeserializer;
+import br.com.fenix.dominio.converterRest.StringDeserializer;
+import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import br.com.fenix.seguranca.usuario.Usuario;
@@ -45,7 +45,8 @@ public class Conta extends EntidadeAuditavel<Long> {
    private static final long serialVersionUID = 1L;
 
 
-   @Enumerated(EnumType.STRING) 
+   @Enumerated(EnumType.STRING)
+   @Column(updatable = false) 
    private TipoConta tipoConta;
    
   
@@ -72,7 +73,8 @@ public class Conta extends EntidadeAuditavel<Long> {
    private int diaComp;
 
    @JsonDeserialize(using = MoedaDeserializer.class) 
-   @ManyToOne (fetch = FetchType.EAGER )   
+   @ManyToOne (fetch = FetchType.EAGER )  
+   @JoinColumn(updatable = false)
    @NotNull
    private Moeda moeda;
    

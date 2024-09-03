@@ -8,7 +8,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.StringDeserializer;
+import br.com.fenix.dominio.converterRest.StringDeserializer;
 import br.com.fenix.dominio.modelo.Orcamento;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;

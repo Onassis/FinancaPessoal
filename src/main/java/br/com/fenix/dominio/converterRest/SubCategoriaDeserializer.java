@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.converter;
+package br.com.fenix.dominio.converterRest;
 
 import java.io.IOException;
 import java.util.Optional;

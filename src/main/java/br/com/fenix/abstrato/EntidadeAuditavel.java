@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.dominio.converter.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.seguranca.usuario.Usuario;
 
 import org.springframework.data.annotation.CreatedBy;

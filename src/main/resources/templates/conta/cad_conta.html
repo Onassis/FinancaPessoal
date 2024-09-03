@@ -7,8 +7,9 @@
     <div class="col-lg-6 bg-light">
 	 <div class="card">
 		 <div class="card-body">
-			 <h5 class="card-title">Horizontal Form</h5>
-			 
+			 <h5 class="card-title">Cadastro de Conta</h5>
+			<div th:replace="fragments/alert"></div>	 
+		
    		<form id="CadastroForm" th:object="${conta}" th:action="@{/conta}"  class="row g-3 needs-validation"   method="POST">  		
 	   		<div th:replace="~{fragments/forms::inputRow(object='conta', field='tipoConta', type='select',required='required',options= ${tipoConta},readOnly='readOnly',rowClass='col-md-12')}" />
 		   	<div th:replace="~{fragments/forms::inputRow(object='conta', field='apelido',  rowClass='col-md-12')}" />               	 
@@ -27,9 +28,18 @@
 	        	<button type="reset" class="btn btn-secondary">Reset</button>
 	          </div>	  		
     </form>
+    
 </div>
 </div>
 </div>
+	<script>
+		   jQuery(function() {
+			    	jQuery('form').bind('submit', function() {
+		        	jQuery(this).find(':disabled').removeAttr('disabled');
+    				});
+    		});
+	</script> 
  </section>
-	</main>  
+	</main>
+ 
 </html>

@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.dominio.converter.StringDeserializer;
+import br.com.fenix.dominio.converterRest.StringDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 
 @ToString

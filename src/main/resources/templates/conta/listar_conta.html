@@ -32,6 +32,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="alert"
 					aria-label="Close"></button>
 			</div>
+			<div th:replace="fragments/alert"></div>
 <!-------------------------------------------------- Lista ------------------------------------------------>	
 	  	<div class="Containner">
 	  	<div class="row">
@@ -56,7 +57,7 @@
 								 	  <tbody th:remove="all-but-first">
 										 <tr th:each="c : ${conta}">
 											<td th:text="${c.apelido}"> </td>
-											<td th:text="${c.tipoConta.descricao}">Auxiliar Contábil</td>
+											<td th:text="${c?.tipoConta?.descricao}">Auxiliar Contábil</td>
 											<td th:text="${c.instituicao}">Contabilidade</td>
 											<td align="right"  th:text="${c.agencia}">Contabilidade</td>
 											<td align="right" th:text="${c.numero}">Numero Conta</td>

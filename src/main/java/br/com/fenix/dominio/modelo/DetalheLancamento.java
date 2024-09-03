@@ -12,8 +12,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.ContaDeserializer;
-import br.com.fenix.dominio.converter.MoneyDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.MoneyDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;

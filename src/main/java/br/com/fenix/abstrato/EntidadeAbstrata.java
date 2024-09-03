@@ -17,7 +17,7 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>  {
 	private static final long serialVersionUID = 1L;
 
 	@Transient
-	private boolean isNew = true;
+	private boolean isNew = false;
 	  
 	public EntidadeAbstrata() {
 		super();	
@@ -30,8 +30,8 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>  {
 
    @Override
 	public boolean isNew() {
-	   return isNew;
-//		return null == getId();
+//	   return isNew;
+       return null == getId();
 	} 
    
    @PrePersist 

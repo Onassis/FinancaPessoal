@@ -12,13 +12,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import br.com.fenix.abstrato.EntidadeAbstrata;
 import br.com.fenix.abstrato.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.FavorecidoDeserializer;
+import br.com.fenix.dominio.converterRest.StringDeserializer;
+import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.seguranca.usuario.Usuario;
-import br.com.fenix.dominio.converter.ContaDeserializer;
-import br.com.fenix.dominio.converter.FavorecidoDeserializer;
-import br.com.fenix.dominio.converter.StringDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

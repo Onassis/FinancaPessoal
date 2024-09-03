@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.converter;
+package br.com.fenix.dominio.converterRest;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -11,39 +11,41 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
-import br.com.fenix.dominio.repositorio.dadosBasico.FavorecidoRepositorio;
+import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
+import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
+import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.conta.ContaRepositorio;
 
-public class FavorecidoDeserializer extends StdDeserializer<Favorecido> {
+public class ContaDeserializer extends StdDeserializer<Conta> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	@Autowired
-	private FavorecidoRepositorio favorecidoRP;
+	private ContaRepositorio contaRP;
 	
-	public FavorecidoDeserializer() { 
+	public ContaDeserializer() { 
         this(null); 
     } 
 
-    public FavorecidoDeserializer(Class<?> vc) { 
+    public ContaDeserializer(Class<?> vc) { 
         super(vc); 
     }
 
     @Override
-    public Favorecido deserialize(JsonParser jp, DeserializationContext ctxt) 
+    public Conta deserialize(JsonParser jp, DeserializationContext ctxt) 
       throws IOException, JsonProcessingException {
         JsonNode node = jp.getCodec().readTree(jp);       
         String texto_id = node.asText();
-        System.out.println("Dezerialização");
+        System.out.println("Dezerialização Conta");
         System.out.println(texto_id);        
         if (texto_id.isEmpty()) {
 			return null;
 		}
 		Long id = Long.valueOf(texto_id);
 		System.out.println(id);
-		Optional<Favorecido> favorecidoOp = favorecidoRP.findById(id);
-		return favorecidoOp.get();    
+		Optional<Conta> contaOp = contaRP.findById(id);
+		return contaOp.get();    
 	}
 
 }

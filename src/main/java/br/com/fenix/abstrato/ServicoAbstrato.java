@@ -1,5 +1,7 @@
 package br.com.fenix.abstrato;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -11,8 +13,10 @@ import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.fi.conta.Conta;
 import jakarta.validation.Valid;
 
-public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T,ID> implements IServico< T,ID>   {
+public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> implements IServico< T,ID>   {
 
+	
+//	private final Class<? extends R> repository;
 	 protected R repositorio  ;
 
 	 public ServicoAbstrato(R repositorio) {
@@ -22,7 +26,6 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T,ID> imple
     
 	 @Override
 	public Page<T> listarPagina(Pageable pageable) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -58,14 +61,13 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T,ID> imple
 //	        return "index";
 //	    }
 	    @Override
-	    public T buscarPorId ( ID id) throws RegistroNaoExisteException {
-	    	   return repositorio.findById(id)
-		        		.orElseThrow ( () ->  new RegistroNaoExisteException("Registro não encontrado Id:" + id));
-
+	    public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
+	    	   return 	Optional.ofNullable(this.repositorio.findById(id)
+	    			   .orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
 	    }
 	    @Override
     	public Iterable<T> listar () throws RegistroNaoExisteException {
-			return repositorio.findAll();
+			return this.repositorio.findAll();
 		}
 	    @Override
 	    @Transactional
@@ -79,7 +81,7 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T,ID> imple
 
 	    @Override
 	    @Transactional
-	    public T atualizar(T entidade){	    	
+	    public T atualizar(T entidade)  throws NegocioException {	    	
 	    	antesDeSalvar(entidade);
 		    entidade =  repositorio.save (entidade);
 		    depoisDeSalvar(entidade);

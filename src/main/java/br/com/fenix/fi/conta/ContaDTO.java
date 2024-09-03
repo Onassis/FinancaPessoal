@@ -15,11 +15,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.EntidadeAbstrata;
 import br.com.fenix.abstrato.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.ContaDeserializer;
-import br.com.fenix.dominio.converter.MoedaDeserializer;
-import br.com.fenix.dominio.converter.MoneyDeserializer;
-import br.com.fenix.dominio.converter.StringDeserializer;
-import br.com.fenix.dominio.converter.SubCategoriaDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.MoedaDeserializer;
+import br.com.fenix.dominio.converterRest.MoneyDeserializer;
+import br.com.fenix.dominio.converterRest.StringDeserializer;
+import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import lombok.AllArgsConstructor;

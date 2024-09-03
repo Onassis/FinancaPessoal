@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.dominio.converter.ContaDeserializer;
+import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.fi.conta.Conta;
 import jakarta.persistence.Embeddable;
 import lombok.Data;

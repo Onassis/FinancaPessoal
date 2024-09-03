@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.dominio.DadosModelo.ModeloSubCategoria;
-import br.com.fenix.dominio.converter.CategoriaDeserializer;
+import br.com.fenix.dominio.converterRest.CategoriaDeserializer;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity

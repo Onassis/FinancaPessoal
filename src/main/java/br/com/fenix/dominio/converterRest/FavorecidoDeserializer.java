@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.converter;
+package br.com.fenix.dominio.converterRest;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -11,45 +11,39 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
-import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
+import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
+import br.com.fenix.dominio.repositorio.dadosBasico.FavorecidoRepositorio;
 
-
-public class CategoriaDeserializer extends StdDeserializer<Categoria> {
+public class FavorecidoDeserializer extends StdDeserializer<Favorecido> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	@Autowired
-    CategoriaRepositorio categoriaRP;	
+	private FavorecidoRepositorio favorecidoRP;
 	
-	public CategoriaDeserializer() { 
+	public FavorecidoDeserializer() { 
         this(null); 
     } 
 
-    public CategoriaDeserializer(Class<?> vc) { 
+    public FavorecidoDeserializer(Class<?> vc) { 
         super(vc); 
     }
 
     @Override
-    public Categoria deserialize(JsonParser jp, DeserializationContext ctxt) 
+    public Favorecido deserialize(JsonParser jp, DeserializationContext ctxt) 
       throws IOException, JsonProcessingException {
         JsonNode node = jp.getCodec().readTree(jp);       
-        String texto_id = node.textValue();
+        String texto_id = node.asText();
         System.out.println("Dezerialização");
-//        System.out.println(jp.getText()  );
         System.out.println(texto_id);        
-        if (texto_id.isEmpty() ) {
+        if (texto_id.isEmpty()) {
 			return null;
 		}
 		Long id = Long.valueOf(texto_id);
-        if (id == 0 ) {
-			return null;
-		}
-    	System.out.println("deserializar criar  subcategoria");
 		System.out.println(id);
-		Categoria categoria = categoriaRP.findById(id).get();
-		return categoria;    
+		Optional<Favorecido> favorecidoOp = favorecidoRP.findById(id);
+		return favorecidoOp.get();    
 	}
 
 }
