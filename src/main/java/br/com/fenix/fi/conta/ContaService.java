@@ -27,8 +27,7 @@ public class ContaService  extends ServicoAbstrato<ContaRepositorio,Conta,Long> 
 	public void antesDeSalvar(Conta entidade) throws NegocioException {
 		System.out.println("Valida conta");
 		Optional<Conta> contaApelido =    repositorio.findByApelido(entidade.getApelido()); 
-		
-		
+
 		if (contaApelido.isPresent() && entidade.isNew() ) { 
 		
 			throw new NegocioException("Conta/Cartão já cadastrada com esse apelido");
@@ -37,13 +36,30 @@ public class ContaService  extends ServicoAbstrato<ContaRepositorio,Conta,Long> 
 
 	@Override
 	public void antesDeAlterar(Conta entidade) throws NegocioException {
-		// TODO Auto-generated method stub
+		Optional<Conta> contaApelido =    repositorio.findByApelido(entidade.getApelido()); 
+		if (contaApelido.get().getApelido() ==  entidade.getApelido() && contaApelido.get().getId() != entidade.getId()) { 		
+			throw new NegocioException("Conta/Cartão não pode ser alterada para esse apelido");
+		}	
 		
 	}
 
 	@Override
 	public void depoisDeAlterar(Conta entidade) throws NegocioException {
-		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void depoisDeSalvar(Conta entidade) throws NegocioException {
+	
+	}
+
+	@Override
+	public void antesDeExcluir(Long id) throws NegocioException {
+		boolean existeLancamento = repositorio.existsByContaLancamento (id);
+		if (existeLancamento) {
+			throw new NegocioException("Conta/Cartão possui lançamento e não pode ser excluida");
+		}
+
 		
 	}
 	

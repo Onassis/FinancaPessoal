@@ -23,27 +23,13 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 	        this.repositorio = repositorio;
 	    }
 
+
     
 	 @Override
 	public Page<T> listarPagina(Pageable pageable) {
 		return null;
 	}
 
-
-	@Override
-	public void antesDeSalvar(T entidade) throws NegocioException {	
-	}
-
-
-	@Override
-	public void depoisDeSalvar(T entidade) throws NegocioException {
-	}
-
-
-	@Override
-	public void antesDeExcluir(ID id) throws NegocioException {
-		buscarPorId(id); 		
-	}
 
 
 

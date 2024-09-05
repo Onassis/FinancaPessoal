@@ -19,14 +19,13 @@ public interface IControle<T ,ID> {
 	 String nomeEntidade(T entidade);
 	 String nomeCadastro(T entidade);
 	 String nomeListar(T entidade);
-//	 String urlListar2(T entidade);
-//	 String urlCadastrar2(T entidade);
 	 String urlListar(T entidade);
 	 String urlCadastrar(T entidade);
 	 ModelAndView cadastrar(T entidade);
 	 ModelAndView atualizarView(@PathVariable ID id);
 	 ModelAndView listarView(T entidade);
 //	 ModelAndView listarView2(T entidade, RedirectAttributes attr);
+	 RedirectView excluirPorId(@PathVariable ID id, RedirectAttributes attr);
 	 void excluirPorId(@PathVariable ID id);
 	 
 	 
