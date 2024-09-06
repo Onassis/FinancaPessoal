@@ -25,13 +25,8 @@
 			</a>
 	</nav>
 	
-<!----------------------------------------- alerta ---------------------------------------------------->				
-			<div class="alert alert-dismissible  fade show" style="display: none;" 	role="alert">
-				<strong>Alerta!</strong>
-				<p>Favor verificar o suporte.</p>
-				<button type="button" class="btn-close" data-bs-dismiss="alert"
-					aria-label="Close"></button>
-			</div>
+		
+
 			<div th:replace="~{fragments/alert}"></div>
 <!-------------------------------------------------- Lista ------------------------------------------------>	
 	  	<div class="Containner">
@@ -73,7 +68,7 @@
 											<td colspan="2" align="center">
 												 <a id="btn_editar" th:href="@{/conta/editar/{id} (id=${c.id}) }" title="Editar"	 
 												    class="fa-regular fa-pen-to-square icon-dark"></a>           
-          										 <a id="btn_deletar" th:href="@{/conta/{id} (id=${c.id}) }" title="Excluir"          										     
+          										 <a id="btn_deletar" th:href="@{/conta/deletar/{id} (id=${c.id}) }" title="Excluir"          										     
             										class="fa-regular fa-trash-can icon-dark btn-delete"></a>
         									</td>								
 										</tr>
@@ -83,5 +78,26 @@
 				</div>
 		</div>
 </div>		
+<script>
+   $(document).ready(function() 
+	{
+		 
+		 	 $(document).delegate('#btn_deletar','click',function(event) 
+	 	 		{
+	 				event.preventDefault();
+//	 				$("#deleteModal .modal-header .modal-title").text("Excluir Favorecido");
+	 				$("#deleteModal #btnExcluirModal").attr('href', $(this).attr("href"));
+	 				$("#deleteModal").modal("show");
+	 			});
+			 $(document).delegate('#btnExcluirModal','click',function(event)
+			 { 
+	 				event.preventDefault();
+//	 				$("#deleteModal .modal-header .modal-title").text("Excluir Favorecido");	 				
+	 				$("#deleteModal").modal("hide");
+//	 				document.location.href = $("#btnExcluirModal").attr('href');
+	 				 location.reload();
+	 			});
+	 	})
+</script>	 			
 	</main>  
 </html>

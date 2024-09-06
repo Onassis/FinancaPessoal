@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import br.com.fenix.abstrato.ControleAbstrato;
 import br.com.fenix.abstrato.IControle;
@@ -61,5 +62,11 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
 		 }					
 		 return options;
 	}
+	@Override
+	protected Conta getInstanciaT() {
+		// TODO Auto-generated method stub
+		return new Conta();
+	}
+
 
 }

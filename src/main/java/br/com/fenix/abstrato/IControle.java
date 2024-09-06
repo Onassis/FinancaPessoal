@@ -25,8 +25,9 @@ public interface IControle<T ,ID> {
 	 ModelAndView atualizarView(@PathVariable ID id);
 	 ModelAndView listarView(T entidade);
 //	 ModelAndView listarView2(T entidade, RedirectAttributes attr);
-	 RedirectView excluirPorId(@PathVariable ID id, RedirectAttributes attr);
-	 void excluirPorId(@PathVariable ID id);
+	 ModelAndView excluirPorId(@PathVariable ID id, RedirectAttributes attr);
+//	 RedirectView excluirPorId(@PathVariable ID id);
+//	 void excluirPorId(@PathVariable ID id);
 	 
 	 
 	 RedirectView salvar2(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);

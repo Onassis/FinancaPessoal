@@ -46,6 +46,15 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
     	private String contextPath;
 	    
         protected S servico; 
+        // Método para retornar o nome da classe T
+        public String getNomeClasseT() {
+            // Supondo que você tenha uma instância de T
+            T instancia = getInstanciaT();
+            return instancia.getClass().getSimpleName();
+        }
+
+        // Método abstrato que deve ser implementado pelas subclasses para fornecer uma instância de T
+        protected abstract T getInstanciaT();
 
         public ControleAbstrato(S servico) {
 			super();
@@ -172,34 +181,41 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	    }
 	    
 	    @Override
-	    @DeleteMapping("/{id}")
+	    @GetMapping("/deletar/{id}")  
 	    @Transactional
 	    @ResponseStatus(code = HttpStatus.NO_CONTENT)	    
-	    public  RedirectView excluirPorId(@PathVariable ID id, RedirectAttributes attr) throws NegocioException {
-	    	
+	    public ModelAndView excluirPorId(@PathVariable ID id , RedirectAttributes attr) { 
+	    	String nomeClasse = getNomeClasseT();
 	       	try {
-	       		Optional<T>  entidadeOp = servico.buscarPorId(id);
-		    	T entidade = entidadeOp.get();
-		    	
-
 	        	servico.excluirPorId(id);
 		    	attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");			        		        		    	
-	        }
-	        
+	        }	        
 	    	catch (NegocioException e) {
 	        	System.out.println("ControleAbstrato-> Excluir -> Error");
-	        	attr.addFlashAttribute("Erro", e.toString());       
-	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();	         
+	        	System.out.println(e.getMessage());
+	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();	    
+	        	attr.addFlashAttribute("Erro", e.getMessage());        
 	        }
-	    	finally {
-		    	return new RedirectView("conta/listar"	,true) ;						
-			}
+	        System.out.println(nomeClasse);
+	    	return new ModelAndView("redirect:/conta/listar") ;						
+	    	
 	    }
-	    @Override
-	    public void excluirPorId(@PathVariable ID id){	  
-	        	servico.excluirPorId(id);
-	
-	    }
+//	    public  RedirectView excluirPorId(@PathVariable ID id) {
+//	    	String nomeClasse = getNomeClasseT();
+//	       	try {
+//	        	servico.excluirPorId(id);
+//		    	attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");			        		        		    	
+//	        }	        
+//	    	catch (NegocioException e) {
+//	        	System.out.println("ControleAbstrato-> Excluir -> Error");
+//	        	System.out.println(e.getMessage());
+//	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();	    
+//	        	attr.addFlashAttribute("Sucesso", e.getMessage());        
+//	        }
+//	        System.out.println(nomeClasse);
+//	    	return new RedirectView("/" + nomeClasse + "/listar"	,true) ;						
+//	    }
+	  
 	    
 	    
 //	    @GetMapping("/")
