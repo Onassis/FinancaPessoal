@@ -55,6 +55,7 @@ public class ContaService  extends ServicoAbstrato<ContaRepositorio,Conta,Long> 
 
 	@Override
 	public void antesDeExcluir(Long id) throws NegocioException {
+		System.out.println("Antes de Excluir ->  Conta");
 		boolean existeLancamento = repositorio.existsByContaLancamento (id);
 		if (existeLancamento) {
 			throw new NegocioException("Conta/Cartão possui lançamento e não pode ser excluida");

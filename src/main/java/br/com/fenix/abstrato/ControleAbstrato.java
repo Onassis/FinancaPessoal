@@ -42,50 +42,37 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 									   ID> implements IControle<T ,ID>{
 	
 
-    	@Value("${server.servlet.context-path}")
-    	private String contextPath;
+//    	@Value("${server.servlet.context-path}")
+//    	private String contextPath;
 	    
+    	protected T entidade; 	    
         protected S servico; 
-        // Método para retornar o nome da classe T
-        public String getNomeClasseT() {
-            // Supondo que você tenha uma instância de T
-            T instancia = getInstanciaT();
-            return instancia.getClass().getSimpleName();
-        }
 
-        // Método abstrato que deve ser implementado pelas subclasses para fornecer uma instância de T
-        protected abstract T getInstanciaT();
 
         public ControleAbstrato(S servico) {
 			super();
-			this.servico = servico;
+			this.servico = servico;			
 		}
-        public String nomeClasse(Class<?> classe) {
-        	return classe.getName().toLowerCase();
-        }
 		@Override
-	 	public String nomeEntidade(T entidade) {
+	 	public String nomeEntidade() {
 	    	 return entidade.getClass().getSimpleName().toLowerCase(); 
 	    }
 	    @Override
-		public String nomeCadastro(T entidade) {
-	    	String nomeEntidade = nomeEntidade(entidade); 
-
-	    	return nomeEntidade.concat("/cad_").concat(nomeEntidade);	    
+		public String nomeCadastro() {
+	    	return nomeEntidade().concat("/cad_").concat(nomeEntidade());	    
 	    }
 	    @Override
-	    public String nomeListar(T entidade) {
-	    	String nomeEntidade = entidade.getClass().getSimpleName().toLowerCase(); 
-	    	return nomeEntidade.concat("/listar_").concat(nomeEntidade);	 
+	    public String nomeListar() {
+	    	return nomeEntidade().concat("/listar_").concat(nomeEntidade());	 
 	    }	
 	    
 	    @Override
-		public String urlListar(T entidade) {			
-	    	String nomeEntidade = "/" + entidade.getClass().getSimpleName().toLowerCase(); 
-	    	return nomeEntidade.concat("/listar");	 
+		public String urlListar() {			
+	    	String nomeEntidade = "/" + nomeEntidade(); 
+	    	return nomeEntidade.concat("/listar_").concat(nomeEntidade());	 
 		}
 	    @Override
-		public String  urlCadastrar(T entidade) {			
+		public String  urlCadastrar() {			
 	    	String nomeEntidade = "/" + entidade.getClass().getSimpleName().toLowerCase().concat("/cadastrar");
 	    	System.out.println(nomeEntidade);
 	    	return nomeEntidade;	 
@@ -93,32 +80,41 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	    
 		@Override
 	    @GetMapping("/cadastrar")  	
-	    public ModelAndView cadastrar(T entidade) {
-	       	return new ModelAndView(nomeCadastro(entidade),nomeEntidade(entidade),entidade);
+	    public String cadastrar(T entidade) {
+	       	return nomeCadastro();
 	    }
 		@Override
 		@GetMapping("/listar")  
-		public ModelAndView listarView(T entidade) {
+		public String listarView(ModelMap model) {
 			System.out.println("Listar");
-			Iterable<T> dados = servico.listar();
-			return new ModelAndView(nomeListar(entidade),nomeEntidade(entidade),dados) ;	    	
+			String nomeEntidade = nomeEntidade();
+			model.addAttribute(nomeEntidade, servico.listar());
+			return urlListar();
+//			return "conta/listar_conta";
 		}
+		
+		
 	    @Override
 	    @GetMapping("/editar/{id}")  
-		public ModelAndView atualizarView(@PathVariable ID id) {    	
-	    	Optional<T>  entidadeOp = servico.buscarPorId(id);   	
-	    	T entidade = entidadeOp.get();
-	    	System.out.println("atualiza");
-			return new ModelAndView(nomeCadastro(entidade),nomeEntidade(entidade),entidade) ;		  			  
+		public String atualizarView(@PathVariable ID id,ModelMap model) {
+	    	 try {
+		    	Optional<T>  entidadeOp = servico.buscarPorId(id);   		
+		    	model.addAttribute(nomeEntidade(),entidadeOp.get());
+		    	System.out.println("atualiza");
+				return nomeCadastro() ;		  			  	    		
+	    	} catch (RegistroNaoExisteException e) {
+	    		model.addAttribute("Erro", e.getMessage());          	
+		        return listarView(model);
+	    	}
 		}  	  
 	  	
 	    @Override
 	    @PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
 	    @Transactional 
-	    public ModelAndView salvar(@Valid @ModelAttribute  T entidade,BindingResult result, RedirectAttributes attr) { 	
+	    public String salvar(@Valid @ModelAttribute  T entidade,BindingResult result, RedirectAttributes attr) { 	
 	    	if (result.hasErrors()) {
-	    		System.out.println("Controle Abstrato -> Salvar -> error " + urlCadastrar(entidade));
-	    		return new ModelAndView(urlCadastrar(entidade),nomeEntidade(entidade),entidade);
+	    		System.out.println("Controle Abstrato -> Salvar -> error " + urlCadastrar());
+	    		return  nomeCadastro();
 			}
 	        try {
 	        	
@@ -132,76 +128,87 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	    	      	System.out.println("ControleAbstrato-> Editar");
 	            	servico.atualizar(entidade);
 			    	attr.addFlashAttribute("Sucesso", "Registro alterado com sucesso.");
-		    		return new ModelAndView("redirect:" + urlListar(entidade),nomeEntidade(entidade),entidade);
+		    		return "redirect:" + urlListar();
 	            }	            	            	
 	        } catch (Exception e) {
 	        	System.out.println("ControleAbstrato-> Criar -> Error");
 		    	attr.addFlashAttribute("Erro", e.getMessage());        	
-		    	attr.addFlashAttribute(nomeEntidade(entidade), entidade);
+		    	attr.addFlashAttribute(nomeEntidade(), entidade);
 		   	 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 	        }
 	       
-	    	return new ModelAndView("redirect:" + urlCadastrar(entidade));				
+	    	return nomeCadastro();				
 			
 	    	
 	    }
 	    
-	    @Override
-	    @Transactional 
-	    public RedirectView salvar2(@Valid @ModelAttribute  T entidade,BindingResult result, RedirectAttributes attr) { 	
-	    	if (result.hasErrors()) {
-	    		System.out.println("Controle Abstrato -> Salvar -> error " + urlCadastrar(entidade));
-	    	   	attr.addFlashAttribute(nomeEntidade(entidade), entidade);
-	    		return new RedirectView( urlCadastrar(entidade),true) ;
-			}
-	        try {
-	        	
-	            if (entidade.isNew()) {
-	    	      	System.out.println("ControleAbstrato-> Criar");
-			        servico.criar(entidade);
-			    	attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");		
-	            }  
-	            else {
-	    	      	System.out.println("ControleAbstrato-> Editar");
-	            	servico.atualizar(entidade);
-			    	attr.addFlashAttribute("Sucesso", "Registro alterado com sucesso.");			   
-		    		return new RedirectView(urlListar(entidade),true) ;			  
-	            }
-	                        	
-	        } 
-	        
-	        catch (NegocioException e) {
-	        	System.out.println("ControleAbstrato-> Criar -> Error");
-	        	attr.addFlashAttribute("Erro", e.toString());       
-	           	attr.addFlashAttribute(nomeEntidade(entidade), entidade);
-	        	 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
-    		return new RedirectView( urlCadastrar(entidade),true) ;
-	    	
-	    }
 	    
 	    @Override
-	    @GetMapping("/deletar/{id}")  
-	    @Transactional
-	    @ResponseStatus(code = HttpStatus.NO_CONTENT)	    
-	    public ModelAndView excluirPorId(@PathVariable ID id , RedirectAttributes attr) { 
-	    	String nomeClasse = getNomeClasseT();
+	    @GetMapping("/excluir/{id}")      
+	    public String excluirPorId(@PathVariable ID id , ModelMap model) { 
+	      	System.out.println("ControleAbstrato-> Excluir ");
+	  
+
 	       	try {
 	        	servico.excluirPorId(id);
-		    	attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");			        		        		    	
+	        	model.addAttribute("Sucesso", "Registro excluido com sucesso.");
 	        }	        
 	    	catch (NegocioException e) {
 	        	System.out.println("ControleAbstrato-> Excluir -> Error");
 	        	System.out.println(e.getMessage());
-	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();	    
-	        	attr.addFlashAttribute("Erro", e.getMessage());        
+	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+	        	model.addAttribute("Erro", e.getMessage());     
 	        }
-	        System.out.println(nomeClasse);
-	    	return new ModelAndView("redirect:/conta/listar") ;						
-	    	
+	       	finally {
+		      	System.out.println("ControleAbstrato-> Excluir  -> Redirect Conta/listar");
+		    	return listarView(model) ;						
+				
+			}	    	
 	    }
-//	    public  RedirectView excluirPorId(@PathVariable ID id) {
-//	    	String nomeClasse = getNomeClasseT();
+//		@Override
+//		public ModelAndView listarView() {
+//			System.out.println("Listar");
+//			Iterable<T> dados = servico.listar();
+//			return new ModelAndView(nomeListar(),nomeEntidade(),dados) ;	    	
+//		}
+	    
+//	    @Override
+//	    @Transactional 
+//	    public RedirectView salvar2(@Valid @ModelAttribute  T entidade,BindingResult result, RedirectAttributes attr) { 	
+//	    	if (result.hasErrors()) {
+//	    		System.out.println("Controle Abstrato -> Salvar -> error " + urlCadastrar());
+//	    	   	attr.addFlashAttribute(nomeEntidade(), entidade);
+//	    		return new RedirectView( urlCadastrar(),true) ;
+//			}
+//	        try {
+//	        	
+//	            if (entidade.isNew()) {
+//	    	      	System.out.println("ControleAbstrato-> Criar");
+//			        servico.criar(entidade);
+//			    	attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");		
+//	            }  
+//	            else {
+//	    	      	System.out.println("ControleAbstrato-> Editar");
+//	            	servico.atualizar(entidade);
+//			    	attr.addFlashAttribute("Sucesso", "Registro alterado com sucesso.");			   
+//		    		return new RedirectView(urlListar(),true) ;			  
+//	            }
+//	                        	
+//	        } 
+//	        
+//	        catch (NegocioException e) {
+//	        	System.out.println("ControleAbstrato-> Criar -> Error");
+//	        	attr.addFlashAttribute("Erro", e.toString());       
+//	           	attr.addFlashAttribute(nomeEntidade(), entidade);
+//	        	 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//        }
+//    		return new RedirectView( urlCadastrar(),true) ;
+//	    	
+//	    }
+	    
+//	    @GetMapping("/deletar/{id}")  
+//	    @Transactional	   
+//	    public  ModelAndView excluirPorId2(@PathVariable ID id) {
 //	       	try {
 //	        	servico.excluirPorId(id);
 //		    	attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");			        		        		    	
@@ -211,9 +218,13 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 //	        	System.out.println(e.getMessage());
 //	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();	    
 //	        	attr.addFlashAttribute("Sucesso", e.getMessage());        
-//	        }
-//	        System.out.println(nomeClasse);
-//	    	return new RedirectView("/" + nomeClasse + "/listar"	,true) ;						
+//	        } 
+//	       	finally {
+//	          	System.out.println("ControleAbstrato-> Excluir2  -> Redirect Conta/listar");
+////		    	return new RedirectView("/" + nomeClasse + "/listar"	,true) ;						
+//		    	return listarView2() ;			       		
+//	       	}
+//		
 //	    }
 	  
 	    

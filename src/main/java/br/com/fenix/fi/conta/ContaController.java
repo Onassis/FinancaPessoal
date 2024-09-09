@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
 
-@RestController
+@Controller
 @RequestMapping("/conta")
 public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> implements IControle<Conta,Long>   {
 
@@ -31,9 +32,16 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
   MoedaRepositorio moedaRP;
 
 	
-	public ContaController( ContaService servico) {
+	public ContaController( ContaService servico ) {
 		super(servico);
+		this.entidade = new Conta();				
 	}
+	@Override
+	public Conta novaInstacia() {
+		this.entidade = new Conta();
+		return this.entidade;
+	}
+
 	@ModelAttribute("tipoConta")
 	public List<Option>  listaTipoConta() {
 		   List<Option> options = Stream.of(TipoConta.values())
@@ -62,11 +70,9 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
 		 }					
 		 return options;
 	}
-	@Override
-	protected Conta getInstanciaT() {
-		// TODO Auto-generated method stub
-		return new Conta();
-	}
+
+
+
 
 
 }

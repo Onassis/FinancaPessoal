@@ -68,7 +68,7 @@
 											<td colspan="2" align="center">
 												 <a id="btn_editar" th:href="@{/conta/editar/{id} (id=${c.id}) }" title="Editar"	 
 												    class="fa-regular fa-pen-to-square icon-dark"></a>           
-          										 <a id="btn_deletar" th:href="@{/conta/deletar/{id} (id=${c.id}) }" title="Excluir"          										     
+          										 <a id="btn_deletar" th:href="@{/conta/excluir/{id} (id=${c.id}) }" title="Excluir"          										     
             										class="fa-regular fa-trash-can icon-dark btn-delete"></a>
         									</td>								
 										</tr>
@@ -94,8 +94,11 @@
 	 				event.preventDefault();
 //	 				$("#deleteModal .modal-header .modal-title").text("Excluir Favorecido");	 				
 	 				$("#deleteModal").modal("hide");
-//	 				document.location.href = $("#btnExcluirModal").attr('href');
-	 				 location.reload();
+	 				url = $("#btnExcluirModal").attr('href');
+	 				
+	 				console.log (url); 
+	 				
+	 				document.location.href = $("#btnExcluirModal").attr('href');
 	 			});
 	 	})
 </script>	 			
