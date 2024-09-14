@@ -68,7 +68,7 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 	    @Override
 	    @Transactional
 	    public T atualizar(T entidade)  throws NegocioException {	    	
-	    	antesDeSalvar(entidade);
+	    	antesDeAlterar(entidade);
 		    entidade =  repositorio.save (entidade);
 		    depoisDeSalvar(entidade);
 		    return entidade;		    

@@ -32,16 +32,12 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
   MoedaRepositorio moedaRP;
 
 	
-	public ContaController( ContaService servico ) {
+	public ContaController( ContaService servico) {
 		super(servico);
-		this.entidade = new Conta();				
+		this.servico = servico;
+//		this.entidade = new Conta();
 	}
-	@Override
-	public Conta novaInstacia() {
-		this.entidade = new Conta();
-		return this.entidade;
-	}
-
+	
 	@ModelAttribute("tipoConta")
 	public List<Option>  listaTipoConta() {
 		   List<Option> options = Stream.of(TipoConta.values())
@@ -69,6 +65,12 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
 			   options.add( new Option(i, i)); 
 		 }					
 		 return options;
+	}
+
+	@Override
+	public Conta novaInstacia() {
+		// TODO Auto-generated method stub
+		return new Conta();
 	}
 
 
