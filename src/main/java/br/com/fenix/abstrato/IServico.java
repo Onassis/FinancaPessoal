@@ -23,10 +23,10 @@ public interface IServico<T,ID> {
 	 void excluirPorId(ID id) throws NegocioException;
 	 void excluirTodos();
 	 
-	 void antesDeSalvar(T entidade)  throws NegocioException;
+	 T antesDeSalvar(T entidade)  throws NegocioException;
 	 void depoisDeSalvar(T entidade)  throws NegocioException;
 	 
-	 void antesDeAlterar(T entidade)  throws NegocioException;
+	 T antesDeAlterar(T entidade)  throws NegocioException;
 	 void depoisDeAlterar(T entidade)  throws NegocioException;
 
 	 void antesDeExcluir(ID id)  throws NegocioException;

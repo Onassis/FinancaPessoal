@@ -18,8 +18,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 public interface IControle<T ,ID> {
 	 String nomeEntidade();
-	 String nomeCadastroHtml();
-	 String nomeListarHtml();
+	 String cadastroHtml();
+	 String listarHtml();
 	 String urlListar();
 	 String urlCadastrar();
 	 T      novaInstacia();
@@ -38,8 +38,9 @@ public interface IControle<T ,ID> {
 //	 ModelAndView listarView();
 
 //	 ModelAndView excluirPorId(@PathVariable ID id, ModelMap model);
-	 ModelAndView excluirPorId(@PathVariable ID id);
-	 String excluirPorId2(@PathVariable ID id, RedirectAttributes attr);
+//	 ModelAndView excluirPorId(@PathVariable ID id);
+	
+	ModelAndView excluirPorId(ID id, ModelMap model);
 	 
 	 
 //	 String salvar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);

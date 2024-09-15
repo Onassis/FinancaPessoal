@@ -52,11 +52,11 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	    	 return novaInstacia().getClass().getSimpleName().toLowerCase(); 
 	    }
 	    @Override
-		public String nomeCadastroHtml() {
+		public String cadastroHtml() {
 	    	return nomeEntidade().concat("/cad_").concat(nomeEntidade());	    
 	    }
 	    @Override
-	    public String nomeListarHtml() {
+	    public String listarHtml() {
 	    	return nomeEntidade().concat("/listar_").concat(nomeEntidade());	 
 	    }	
 	    
@@ -75,7 +75,7 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 		@Override
 	    @GetMapping("/cadastrar")  	
 	    public ModelAndView cadastrar(T entidade) {
-	       	return new ModelAndView(nomeCadastroHtml(),nomeEntidade(),entidade);
+	       	return new ModelAndView(cadastroHtml(),nomeEntidade(),entidade);
 	    }
 		@Override
 		@GetMapping("/listar")  
@@ -85,8 +85,8 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 			System.out.println("Listar");
 			String nomeEntidade = nomeEntidade();
 			mv.addObject(nomeEntidade, servico.listar());
-			
-			mv.setViewName(nomeListarHtml());
+			mv.addObject(model);
+			mv.setViewName(listarHtml());
 			return mv;
 		}
 		
@@ -98,7 +98,7 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	    	if (result.hasErrors()) {
 	    		System.out.println("Controle Abstrato -> Salvar -> error " + urlCadastrar());
 	    		mv.addObject(nomeEntidade(), entidade);
-	    		mv.setViewName(nomeCadastroHtml());
+	    		mv.setViewName(cadastroHtml());
 	    		return mv;	    	
 			}
 	        try {
@@ -109,7 +109,7 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 //			    	attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");
 			        mv.addObject(nomeEntidade(), novaInstacia());
 		    		mv.addObject("Sucesso", "Registro inserido com sucesso.");
-		    		mv.setViewName(nomeCadastroHtml());
+		    		mv.setViewName(cadastroHtml());
 		    		return mv;	    	
 
 	            }  
@@ -127,7 +127,7 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	            }	            	            	
 	        } catch (Exception e) {
 	        	System.out.println("ControleAbstrato-> Criar -> Error");
-	    		mv.setViewName(nomeCadastroHtml());	        	
+	    		mv.setViewName(cadastroHtml());	        	
 	    		mv.addObject("Erro", e.getMessage());
 //		    	attr.addFlashAttribute("Erro", e.getMessage());        	
 		    	attr.addFlashAttribute(nomeEntidade(), entidade);
@@ -148,25 +148,22 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	    	 try {
 		    	Optional<T>  entidadeOp = servico.buscarPorId(id);   		
 		 		mv.addObject(nomeEntidade(), entidadeOp.get());
-			    mv.setViewName(nomeCadastroHtml());
+			    mv.setViewName(cadastroHtml());
 	    	} catch (RegistroNaoExisteException e) {
 	    		System.out.println("ControleAbstrato-> atualizarView -> Error");
 	    		mv.addObject("Erro", e.getMessage());          	
-			    mv.setViewName(nomeListarHtml());
+			    mv.setViewName(listarHtml());
 	    	}
     	  return mv;				  			  	    		
 	    	 
 		}  	  
 	    @Override
-	    @GetMapping("/excluir2/{id}")      
-	    public String  excluirPorId2(@PathVariable ID id,  RedirectAttributes attr) {
+	    @GetMapping("/excluir/{id}")      
+	    public ModelAndView  excluirPorId(@PathVariable ID id, ModelMap model) {
 	    	System.out.println("ControleAbstrato-> Excluir ");	    	
-//	    	ModelAndView mv = new ModelAndView();
-//	    	RedirectView rv = new RedirectView(urlListar(), false, true, false);
 	       	try {
 	        	servico.excluirPorId(id);
-	           	attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");
-//	        	model.addAttribute("Sucesso", "Registro excluido com sucesso.");
+	        	model.addAttribute("Sucesso", "Registro excluido com sucesso.");
 	        }	
 	     	      	catch (DataAccessException e) {
 	    	        	System.out.println("ControleAbstrato-> Excluir -> DataAccessException");
@@ -195,55 +192,60 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,
 	                System.err.println("Sql State --->" + sqlEx.getSQLState());
 	            }
 	            System.out.println("Mensagem ->" + rootCause.getMessage());
-	         	attr.addFlashAttribute("Erro", e.getMessage());
+	            model.addAttribute("Erro", e.getMessage());
 	        	System.out.println(e.getMessage());
 	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
        		}
 	    	catch (NegocioException e) {
-	        	System.out.println("ControleAbstrato-> Excluir -> Error");
+	        	System.out.println("ControleAbstrato-> Excluir -> NegocioException");
 	        	System.out.println(e.getMessage());
 	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-	           	attr.addFlashAttribute("Erro", e.getMessage());
+	        	   model.addAttribute("Erro", e.getMessage());
 	        }
 	       	finally {
 		      	System.out.println("ControleAbstrato-> Excluir  -> Redirect Conta/listar");
 		      	System.out.println(urlListar());
-		    	return "redirect:/conta/listar" ;										
+		    	return listarView(model) ;										
 			}	    	
 	    }
-	    @Override
-	    @GetMapping("/excluir/{id}")      
-	    public ModelAndView  excluirPorId(@PathVariable ID id ) {
-	    	System.out.println("ControleAbstrato-> Excluir ");	    	
-	    	ModelAndView mv = new ModelAndView();
-	    	RedirectView rv = new RedirectView(urlListar(), false, true, false);
-	       	try {
-	        	servico.excluirPorId(id);
-//	        	model.addAttribute("Sucesso", "Registro excluido com sucesso.");
-	        }	        
-	       	catch (DataAccessException e) {
-	        	System.out.println("ControleAbstrato-> Excluir -> DataAccessException");
-	       		
-	        	System.out.println(e.getMessage());
-	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-////	       		ServerErrorMessage error = ((PSQLException) e.getCause()).getServerErrorMessage();
-//	       		ServerErrorMessage error;
-//	       		//= e.getCause();
-//	       		System.out.println(error.getTable());
-//	       		System.out.println(error.getColumn());
-//	       		System.out.println(error.getConstraint());
-	       		}
-	    	catch (NegocioException e) {
-	        	System.out.println("ControleAbstrato-> Excluir -> Error");
-	        	System.out.println(e.getMessage());
-	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-	//        	model.addAttribute("Erro", e.getMessage());     
-	        }
-	       	finally {
-		      	System.out.println("ControleAbstrato-> Excluir  -> Redirect Conta/listar");
-		    return mv;										
-			}	    	
-	    }
+//	    @Override
+//	    @GetMapping("/excluir/{id}")      
+//	    public ModelAndView  excluirPorId(@PathVariable ID id ) {
+//	    	System.out.println("ControleAbstrato-> Excluir ");	
+//	    	System.out.println(urlListar());
+//	    	ModelAndView mv = new ModelAndView();
+//	    	RedirectView rv = new RedirectView(urlListar(), false, true, false);
+//	       	try {
+//	        	servico.excluirPorId(id);
+////	        	model.addAttribute("Sucesso", "Registro excluido com sucesso.");
+//	        	mv.addObject("Sucesso", "Registro excluido com sucesso.");
+//	        }	        
+//	       	catch (DataAccessException e) {
+//	        	System.out.println("ControleAbstrato-> Excluir -> DataAccessException");
+//	       		
+//	        	System.out.println(e.getMessage());
+//	         	mv.addObject("Erro", e.getMessage()); 
+//	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//////	       		ServerErrorMessage error = ((PSQLException) e.getCause()).getServerErrorMessage();
+////	       		ServerErrorMessage error;
+////	       		//= e.getCause();
+////	       		System.out.println(error.getTable());
+////	       		System.out.println(error.getColumn());
+////	       		System.out.println(error.getConstraint());
+//	       		}
+//	    	catch (NegocioException e) {
+//	        	System.out.println("ControleAbstrato-> Excluir -> Error");
+//	        	System.out.println(e.getMessage());
+//	        	TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//	//        	model.addAttribute("Erro", e.getMessage()); 
+//	         	mv.addObject("Erro", e.getMessage()); 
+//	        	
+//	        }
+//	       	finally {
+//		      	System.out.println("ControleAbstrato-> Excluir  -> Redirect conta/listar");
+//		    return mv;										
+//			}	    	
+//	    }
 //	  	
 //	    @Override
 //	    @PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
