@@ -1,6 +1,7 @@
 
 package br.com.fenix.abstrato;
 
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,16 +13,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 
 public interface IControleDTO<T,DTO,ID> {
-	 String nomeEntidade(T entidade);
-	 String nomeCadastro(T entidade);
-	 String nomeListar(T entidade);	 
-	 ModelAndView cadastrar(T entidade);
+  	String urlCadastrar();
+	String urlListar();
+	String cadastroHtml();
+	String listarHtml();
+
+	String nomeEntidade();
+		
+	 ModelAndView cadastrar(DTO dto);
+	 
 	 ModelAndView atualizarView(@PathVariable ID id);
-	 ModelAndView listarView(T entidade);
-	 T buscarPorId(@PathVariable ID id);	 
+
+	 
+	 DTO  buscarPorId(@PathVariable ID id);
+	 
 	 Iterable<T> listar();
 	 String   criar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
 	 T atualizar(@RequestBody T entidade);
 	 void excluirPorId(@PathVariable ID id);
-	void excluirTodos();
+	 void excluirTodos();
+	ModelAndView listarView(ModelMap model);
+	
 }
