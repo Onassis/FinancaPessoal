@@ -33,12 +33,8 @@ import org.postgresql.util.*;
 
 public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persistable<ID>,ID> implements IControle<T ,ID>{
 
-
-	//    	@Value("${server.servlet.context-path}")
-	//    	private String contextPath;
-
-	//    	protected T entidade;   
 	protected S servico; 
+	
 	@Autowired
 	private DataSource dataSource;
 

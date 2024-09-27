@@ -1,26 +1,21 @@
 package br.com.fenix.abstrato;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
-import br.com.fenix.fi.conta.Conta;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceContext;
-import jakarta.validation.Valid;
 
 public abstract class ServicoAbstratoDto<R extends CrudRepository<T,ID>,
 										 T extends Persistable<ID>,
@@ -29,13 +24,23 @@ public abstract class ServicoAbstratoDto<R extends CrudRepository<T,ID>,
 	@Autowired
 	private EntityManagerFactory emf;
 	
-	
-	   
+
 	protected R repositorio  ;
+	
+	private Class<T> entidadeClass;
+	
+	private Class<DTO> dtoClass;
 	
 
 	public ServicoAbstratoDto(R repositorio) {
 		this.repositorio = repositorio;
+	}
+	
+	public ServicoAbstratoDto(R repositorio, Class<T> entidadeClass, Class<DTO> dtoClass) {
+		super();
+		this.repositorio = repositorio;
+		this.entidadeClass = entidadeClass;
+		this.dtoClass = dtoClass;
 	}
     @Override
     public EntityTransaction geradorTransacao() {
@@ -43,6 +48,24 @@ public abstract class ServicoAbstratoDto<R extends CrudRepository<T,ID>,
 		return  em.getTransaction();
 		
     }
+//	As a workaround, you can create an object of a type parameter through reflection:
+//
+//		public static <E> void append(List<E> list, Class<E> cls) throws Exception {
+//		    E elem = cls.newInstance();   // OK
+//		    list.add(elem);
+//		}
+	
+	@Override
+	 public T criarInstancia() {
+		  try {
+			 return   entidadeClass.getDeclaredConstructor().newInstance(); 
+          } catch (Exception e) {
+              System.out.println(e.getMessage());
+              return null;
+          }
+	 }
+	
+
  //   BeanUtils.copyProperties(car, carDto);
 //
     @Override
@@ -61,15 +84,37 @@ public abstract class ServicoAbstratoDto<R extends CrudRepository<T,ID>,
 		return 	Optional.ofNullable(this.repositorio.findById(id)
 				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
 	}
+	
 	@Override
 	public DTO buscaDTOPorId (ID id) throws RegistroNaoExisteException {
 		T entidade = buscarPorId(id).get();
 		return EntidadeToDTO(entidade);
 	}
-//	@Override
-//	public Iterable<DTO> listar () throws RegistroNaoExisteException {
-//		return null; //  this.repositorio.findAll() ;
-//	}
+	@Override
+	public  List<DTO> listar () throws RegistroNaoExisteException {
+	       List<T> entidades  = new ArrayList<>();
+	       repositorio.findAll().forEach(entidades::add);
+	   
+	        return entidades.stream().map(entity -> {
+	            DTO dto = null;
+	            try {
+	                dto = dtoClass.getDeclaredConstructor().newInstance();
+	                BeanUtils.copyProperties(entity, dto);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	            return dto;
+	        }).collect(Collectors.toList());
+	    
+// 		  Iterable<T>  dados = this.repositorio.findAll();
+//          List<DTO> dtos = new ArrayList<>();
+//	        for (T dado : dados ) {
+//	            dtos.add(EntidadeToDTO(dado) );
+//	        }
+//	        return dtos;
+								
+		
+	}
 	@Override
 	public T criar(DTO dto)  throws Exception {
 		EntityTransaction tx = geradorTransacao();

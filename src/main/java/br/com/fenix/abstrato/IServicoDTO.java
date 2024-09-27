@@ -1,5 +1,7 @@
 package br.com.fenix.abstrato;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -23,7 +25,9 @@ public interface IServicoDTO<T,DTO, ID> {
      /*
       * Cria novas intancias das classe pela classe concreta  
       */
-	 T criarInstancia();  
+	 T criarInstancia();
+	 
+
 	 DTO criaDTO();
 	 /*
       * Busca no Banco  
@@ -31,7 +35,7 @@ public interface IServicoDTO<T,DTO, ID> {
 	 
 	 Optional<T>  buscarPorId(ID id) throws RegistroNaoExisteException;
 	 DTO buscaDTOPorId(ID id) throws RegistroNaoExisteException;
-	 Iterable<T> listar() throws RegistroNaoExisteException;
+	 List<DTO> listar() throws RegistroNaoExisteException;
 	 Page<T> listarPagina(Pageable pageable);	 
 	 /*
       * Convercação Entidade -> DTO e DTO -> Entidade   
