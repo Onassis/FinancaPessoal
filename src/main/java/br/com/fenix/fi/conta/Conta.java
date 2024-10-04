@@ -94,11 +94,12 @@ public class Conta extends EntidadeAuditavel<Long> {
 	}
    @Override  
    public String getAjuda() {
-	   switch (this.tipoConta) {
-		   case CC :   return  apelido + ":" + instituicao + " -> " +  numero ;
-		   case CR :   return  apelido + ":" + instituicao + " -> " + agencia + "/" + numero ;
-		   default:    return  apelido  ;
-	   	}   
+	   return  apelido; 
+//	   switch (this.tipoConta) {
+//		   case CC :   return  apelido + " -> "  +  instituicao + "/" +  numero ;
+//		   case CR :   return  apelido + " -> " + instituicao + " :  " + agencia + "/" + numero ;
+//		   default:    return  apelido  ;
+//	   	}   
    }
    public boolean isCredito() { 
 	   return tipoConta == TipoConta.CR; 

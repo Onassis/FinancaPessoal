@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import br.com.fenix.abstrato.ControleAbstratoRest;
 import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.abstrato.IControleRest;
-import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
+import br.com.fenix.favorecido.Favorecido;
 import br.com.fenix.icontroller.IControleFavorecidoRest;
 import groovy.console.ui.SystemOutputInterceptor;
 import jakarta.validation.Valid;

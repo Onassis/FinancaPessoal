@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head><meta charset="UTF-8"></head>
+<main id="main" class="main" layout:fragment="corpo">
+     <div class="row">
+          <div class="col-lg-12">
+            <ol class="breadcrumb">
+              <li><i class="fa fa-home"></i><a href="home.html"> Home </a></li>
+              <li>  <i class="fa fa-bars"></i> Listar ? </li>
+            </ol>
+          </div>
+     </div>		
+	<nav class="navbar navbar-expand-md bg-light">
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<i class="oi oi-caret-right"></i>
+						<span>Lista de ?</span>
+					</li>
+				</ul>
+			</div>
+			<a id="btnadd" class="btn btn-primary btn-md" rel="modal:open" th:href="@{/conta/cadastrar}" role="button"> 
+			 	<span 	class="oi oi-plus" title="Cadastro" aria-hidden="true"></span> 
+			 	<span>Nova ?</span>
+			</a>
+	</nav>
+	
+		
+
+			<div th:replace="~{fragments/alert}"></div>
+<!-------------------------------------------------- Lista ------------------------------------------------>	
+	  	<div class="Containner">
+	  	<div class="row">
+				<div class="card">
+					<div class="table-responsive" >				
+							<table class="table table-bordered table-striped table-hover ">
+								<thead class="thead-light">
+									<tr>
+							 			<th pages:sort="Cabeçalho 1 ">cabeçalho</th>
+							 			<th pages:sort="Cabeçalho 2 ">cabeçalho</th>
+										<th><i class="icon_cogs"></i> Ação</th>
+									</tr>
+									</thead>
+								 	  <tbody th:remove="all-but-first">
+										 <tr th:each="c : ${conta}">
+											<td th:text="${c.apelido}"> </td>
+											<td th:text="${c?.tipoConta?.descricao}">Auxiliar Contábil</td>
+																
+											<td colspan="2" align="center">
+												 <a id="btn_editar" th:href="@{/objeto/editar/{id} (id=${c.id}) }" title="Editar"	 
+												    class="fa-regular fa-pen-to-square icon-dark"></a>           
+          										 <a id="btn_deletar" th:href="@{/objeto/excluir/{id} (id=${c.id}) }" title="Excluir"          										     
+            										class="fa-regular fa-trash-can icon-dark btn-delete"></a>
+        									</td>								
+										</tr>
+									</tbody>
+							</table>
+					 	</div>							
+				</div>
+		</div>
+</div>		
+
+  <script th:src="@{/js/cadastro.js}"></script>
+	 			
+	</main>  
+</html>

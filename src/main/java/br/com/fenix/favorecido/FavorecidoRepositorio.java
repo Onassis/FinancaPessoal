@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.repositorio.dadosBasico;
+package br.com.fenix.favorecido;
 
 
 import java.util.List;
@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import br.com.fenix.abstrato.GenericRepository;
-import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
 
 
 @Repository

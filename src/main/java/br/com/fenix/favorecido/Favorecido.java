@@ -1,7 +1,8 @@
-package br.com.fenix.dominio.modelo.DadoBasico;
+package br.com.fenix.favorecido;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -13,6 +14,7 @@ import br.com.fenix.abstrato.EntidadeAuditavel;
 import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.dominio.converterRest.StringDeserializer;
 import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
+import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
 import br.com.fenix.fi.conta.Conta;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +36,7 @@ public class Favorecido extends EntidadeAuditavel<Long>  {
 	 */
 	@JsonDeserialize(using = StringDeserializer.class) 
     @NotBlank
+    @NotEmpty(message = "Nome deve ser informado.")
 	@Column(length = 60,nullable = false)
 	private String nome;
 

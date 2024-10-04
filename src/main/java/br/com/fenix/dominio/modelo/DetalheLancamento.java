@@ -16,7 +16,7 @@ import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.dominio.converterRest.MoneyDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.dominio.modelo.DadoBasico.Favorecido;
+import br.com.fenix.favorecido.Favorecido;
 import br.com.fenix.fi.conta.Conta;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

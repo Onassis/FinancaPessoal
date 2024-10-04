@@ -17,6 +17,7 @@ import br.com.fenix.dominio.converterRest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converterRest.StringDeserializer;
 import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.favorecido.Favorecido;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.seguranca.usuario.Usuario;
 import lombok.Getter;

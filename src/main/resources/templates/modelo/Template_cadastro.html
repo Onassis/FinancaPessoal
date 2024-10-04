@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head><meta charset="UTF-8"></head>
+
+<main id="main" class="main" layout:fragment="corpo">
+   
+   <section class="layout-content" >
+	
+	        <nav class="navbar navbar-expand-md bg-light">
+	            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+	                <ul class="navbar-nav mr-auto">
+	                    <li class="nav-item active">
+	                        <i class="oi oi-caret-right"></i>
+	                        <span>Cadastrar ?</span>
+	                    </li>
+	                </ul>
+	            </div>
+	            <a class="btn btn-primary btn-md" th:href="@{/conta/listar}" role="button">
+	                <span class="oi oi-spreadsheet" title="Cadastro" aria-hidden="true"></span>
+	                <span>Listar ?</span>
+	            </a>
+	        </nav>
+	
+	        <div class="container" id="cadastro">
+		
+    <div class="col-lg-6 bg-light">
+	 <div class="card">
+		 <div class="card-body">
+			 <h5 class="card-title">Cadastro de ?</h5>
+			<div th:replace="fragments/alert"></div>	 
+		
+   		<form id="CadastroForm" th:object="${dados}" th:action="@{/dados}"  class="row g-3 needs-validation"   method="POST">
+ 			<!-- ======= Incluir os campos do formulario  ======= -->
+ 						     		
+	   		<input type="hidden" id="id" th:field="*{id}"/>
+	        <input type="hidden" id="versao" th:field="*{versao}" />	
+	         <div class="text-center">	   		
+	        	<button type="submit" id="btnSalvar" class="btn btn-primary"  >Salvar</button>
+	        	<button onclick="history.go(-1);" class="btn btn-secondary">Voltar</button>
+	         </div>	  		
+    </form>
+    
+</div>
+</div>
+</div>
+  <script th:src="@{/js/cadastro.js}"></script>
+ </section>
+	</main>
+ 
+</html>
