@@ -22,7 +22,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 
-public abstract class ServicoAbstratoDto<R extends CrudRepository<T,ID>,
+public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 										 T extends Persistable<ID>,
 										 DTO extends Persistable<ID> ,ID> implements IServicoDTO< T,DTO, ID>   {
 	
@@ -34,7 +34,7 @@ public abstract class ServicoAbstratoDto<R extends CrudRepository<T,ID>,
 	protected R repositorio  ;
 	
 
-	public ServicoAbstratoDto(R repositorio) {
+	public ServicoAbstratoDTO(R repositorio) {
 		this.repositorio = repositorio;
 	}
     @Override

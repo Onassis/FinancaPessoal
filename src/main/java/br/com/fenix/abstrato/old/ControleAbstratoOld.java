@@ -1,4 +1,4 @@
-package br.com.fenix.abstrato;
+package br.com.fenix.abstrato.old;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.TypeVariable;

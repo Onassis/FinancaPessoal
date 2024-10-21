@@ -22,38 +22,21 @@ public interface IControle<T ,ID> {
 	 String listarHtml();
 	 String urlListar();
 	 String urlCadastrar();
+	 String urlEditar(ID id);
 	 T      novaInstacia();
-	 
-	 
-	 ModelAndView cadastrar(T entidade);
-	 
-	 ModelAndView listarView(ModelMap model);
+	 /*  ------------------------------------ CRUD METODOS --------------------------------------------- 
+	 /**
+	  * 
+	  * @param entidade
+	  * @return
+	  */
+	 String listarView(ModelMap model);
 
-	 ModelAndView salvar2(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-
+	 String cadastrar(T entidade);
 	 
+	 String atualizarView(@PathVariable ID id, ModelMap model, RedirectAttributes attr);
 	 
-	 ModelAndView atualizarView(@PathVariable ID id);
+	 String salvar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
 	 
-//	 ModelAndView listarView();
-
-//	 ModelAndView excluirPorId(@PathVariable ID id, ModelMap model);
-//	 ModelAndView excluirPorId(@PathVariable ID id);
-	
-	ModelAndView excluirPorId(ID id, ModelMap model);
-	 
-	 
-//	 String salvar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-		// RedirectView salvar2(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-	 
-	// ModelAndView   criar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-	 
-//	 ModelAndView salvar(T entidade);
-//	 ModelAndView cadastrar(T entidade);
-	 	 
-//	 Optional<T> buscarPorId(@PathVariable ID id);	 
-//	 Iterable<T> listar();
-
-//	 T atualizar(@RequestBody T entidade);
-//	void excluirTodos();
+	 String  excluirPorId(ID id,RedirectAttributes attr);
 }

@@ -246,6 +246,11 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
     <artifactId>guava</artifactId>
     <version>33.1.0-jre</version>
 </dependency>
+		<dependency>
+			<groupId>br.com.fenix</groupId>
+			<artifactId>TesteEmail</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
