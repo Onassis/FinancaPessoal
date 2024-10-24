@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -17,43 +18,25 @@ import org.springframework.web.servlet.view.RedirectView;
  */
 
 public interface IControle<T ,ID> {
-	 String nomeEntidade();
+	 String nomeClasse();
 	 String cadastroHtml();
 	 String listarHtml();
 	 String urlListar();
 	 String urlCadastrar();
-	 T      novaInstacia();
-	 
-	 
-	 ModelAndView cadastrar(T entidade);
-	 
-	 ModelAndView listarView(ModelMap model);
+	 String urlEditar(ID id);
+	 /*  ------------------------------------ CRUD METODOS --------------------------------------------- 
+	 /**
+	  * 
+	  * @param entidade
+	  * @return
+	  */
+	 String listarView(ModelMap model);
 
-	 ModelAndView salvar2(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-
+	 String cadastrar(T entidade);
 	 
-	 
-	 ModelAndView atualizarView(@PathVariable ID id);
-	 
-//	 ModelAndView listarView();
-
-//	 ModelAndView excluirPorId(@PathVariable ID id, ModelMap model);
-//	 ModelAndView excluirPorId(@PathVariable ID id);
-	
-	ModelAndView excluirPorId(ID id, ModelMap model);
-	 
-	 
-//	 String salvar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-		// RedirectView salvar2(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-	 
-	// ModelAndView   criar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-	 
-//	 ModelAndView salvar(T entidade);
-//	 ModelAndView cadastrar(T entidade);
+	 String atualizarView(@PathVariable ID id, ModelMap model,RedirectAttributes attr);
 	 	 
-//	 Optional<T> buscarPorId(@PathVariable ID id);	 
-//	 Iterable<T> listar();
-
-//	 T atualizar(@RequestBody T entidade);
-//	void excluirTodos();
+	 String salvar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
+	 
+	 String  excluirPorId(ID id,RedirectAttributes attr);
 }

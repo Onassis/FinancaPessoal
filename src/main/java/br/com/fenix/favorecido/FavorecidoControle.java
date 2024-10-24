@@ -30,15 +30,8 @@ public class FavorecidoControle extends ControleAbstrato<FavorecidoServico,Favor
 
 	public FavorecidoControle(FavorecidoServico servico) {
 		super(servico);
-		// TODO Auto-generated constructor stub
+		
 	}
-
-	@Override
-	public Favorecido novaInstacia() {
-		// TODO Auto-generated method stub
-		return new Favorecido();
-	} 
-
 
 
 	@ModelAttribute("contas")

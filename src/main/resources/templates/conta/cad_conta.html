@@ -27,7 +27,7 @@
 	 <div class="card">
 		 <div class="card-body">
 			 <h5 class="card-title">Cadastro de Conta</h5>
-			<div th:replace="fragments/alert"></div>	 
+			<div th:replace="~{fragments/alert}"></div>	 
 		
    		<form id="CadastroForm" th:object="${conta}" th:action="@{/conta}"  class="row g-3 needs-validation"   method="POST">  		
 	   		<div th:replace="~{fragments/forms::inputRow(object='conta', field='tipoConta', type='select',required='required',options= ${tipoConta},readOnly='readOnly',rowClass='col-md-12')}" />
@@ -35,8 +35,8 @@
 	      	<div th:replace="~{fragments/forms::inputRow(object='conta', field='instituicao', required='true',rowClass='col-md-12')}" />
 			<div th:replace="~{fragments/forms::inputRow(object='conta', field='agencia', rowClass='col-md-6')}" />
 			<div th:replace="~{fragments/forms::inputRow(object='conta', field='numero', rowClass='col-md-6')}" />
-			<div th:replace="~{fragments/forms :: inputRow (object='conta',field='diaVencimento', type='select',required='false',rowClass='col-md-6',options= ${diaMes})}"></div>
-			<div th:replace="~{fragments/forms :: inputRow (object='conta',field='diaComp', type='select',required='false',rowClass='col-md-6',options= ${diaMes})}"></div>
+			<div th:replace="~{fragments/forms :: inputRow (object='conta',field='diaVencimento', type='selectNumber',required='false',rowClass='col-md-6',options= ${diaMes})}"></div>
+			<div th:replace="~{fragments/forms :: inputRow (object='conta',field='diaComp', type='selectNumber',required='false',rowClass='col-md-6',options= ${diaMes})}"></div>
 			<div th:replace="~{fragments/forms::inputRow(object='conta', field='saldo',type='moeda',required='true',rowClass='col-md-6')}" />
 			<div th:replace="~{fragments/forms::inputRow(object='conta', field='moeda', type='select',required='required',options= ${moedas},readOnly='readOnly',rowClass='col-md-6')}" />
 			<div th:replace="~{fragments/forms::inputRow(object='conta', field='inativo', type='checkbox',rowClass='col-md-6')}" />      

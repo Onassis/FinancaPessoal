@@ -35,7 +35,6 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
 	public ContaController( ContaService servico) {
 		super(servico);
 		this.servico = servico;
-//		this.entidade = new Conta();
 	}
 	
 	@ModelAttribute("tipoConta")
@@ -67,11 +66,11 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
 		 return options;
 	}
 
-	@Override
-	public Conta novaInstacia() {
-		// TODO Auto-generated method stub
-		return new Conta();
-	}
+
+
+
+
+
 
 
 
