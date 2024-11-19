@@ -1,4 +1,4 @@
-package br.com.fenix.favorecido;
+package br.com.fenix.fi.favorecido;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

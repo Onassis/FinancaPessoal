@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.modelo.DadoBasico;
+package br.com.fenix.fi.automacao;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -17,8 +17,9 @@ import br.com.fenix.dominio.converterRest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converterRest.StringDeserializer;
 import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.favorecido.Favorecido;
+import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
 import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.seguranca.usuario.Usuario;
 import lombok.Getter;
 import lombok.Setter;
@@ -61,9 +62,24 @@ public class Automacao extends EntidadeAuditavel<Long>{
 	@ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY , optional = true)	
 	private Conta contaTransferencia;
 	
+	@Transient
+	private String[] criterios; 
+	
 	public Automacao() {
 		super();
 		ordem = 0;
 	}
-	
+	public String[] getCriterios() {
+	    if (criterio != null && !criterio.isEmpty()) {
+	        return criterio.split(";");
+	    }
+	    return new String[0];
+	}
+	public void setCriteriosFromLista(String[] criteriosArray) {
+        if (criteriosArray != null && criteriosArray.length > 0) {
+            this.criterio = String.join(",", criteriosArray);
+        } else {
+            this.criterio = "";
+        }
+    }
 }

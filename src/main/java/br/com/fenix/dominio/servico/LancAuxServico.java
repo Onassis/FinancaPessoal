@@ -35,6 +35,7 @@ import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.LancAuxRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.SaldoContaRepositorio;
+import br.com.fenix.fi.automacao.AutomacaoServico;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 import br.com.fenix.util.Coletor;

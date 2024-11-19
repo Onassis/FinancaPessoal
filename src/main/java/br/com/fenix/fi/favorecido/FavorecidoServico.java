@@ -1,4 +1,7 @@
-package br.com.fenix.favorecido;
+package br.com.fenix.fi.favorecido;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -7,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.com.fenix.abstrato.IServico;
 import br.com.fenix.abstrato.ServicoAbstrato;
 import br.com.fenix.api.exceptionhandle.NegocioException;
+import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 
 @Service
@@ -17,6 +21,14 @@ public class FavorecidoServico  extends ServicoAbstrato<FavorecidoRepositorio,Fa
 		super(repositorio);
 
 	}
+	public List<Option>  listaDeFavorecido() {
+		   List<Option> options = repositorio.findAll()
+		   		.stream()    
+				.map(favorecido  -> new Option(favorecido.getId(), favorecido.getNome()))
+	            .collect(Collectors.toList());
+			return options;
+			
+	}	
 
 	@Override
 	public void handleException(OperacaoDB op, Exception e) throws Exception {
@@ -28,28 +40,4 @@ public class FavorecidoServico  extends ServicoAbstrato<FavorecidoRepositorio,Fa
  	  throw e ;	
 	}
 
-	@Override
-	public Favorecido antesDeSalvar(Favorecido entidade) throws NegocioException {
-		return entidade;
-	}
-
-	@Override
-	public void depoisDeSalvar(Favorecido entidade) throws NegocioException {
-
-	}
-
-	@Override
-	public Favorecido antesDeAlterar(Favorecido entidade) throws NegocioException {
-		return entidade;
-	}
-
-	@Override
-	public void depoisDeAlterar(Favorecido entidade) throws NegocioException {
-
-	}
-
-	@Override
-	public void antesDeExcluir(Long id) throws NegocioException {
-
-	}
 }

@@ -1,6 +1,12 @@
 package br.com.fenix.dominio.enumerado;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import br.com.fenix.dominio.dto.Option;
 
 public enum TipoConta {
 	CC("CC", "Conta corrente"), 
@@ -31,6 +37,12 @@ public enum TipoConta {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	public static List<Option>  listaTipoConta() {
+		   List<Option> options = Stream.of(TipoConta.values())
+		            .map(tipo -> new Option(tipo.name(), tipo.getDescricao()))
+		            .collect(Collectors.toList());
+		return options;
 	}
 	
 	

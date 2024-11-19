@@ -26,23 +26,20 @@ import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
 
 @Controller
 @RequestMapping("/conta")
-public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> implements IControle<Conta,Long>   {
+public class ContaController  extends ControleAbstrato<ContaServico,Conta,Long> implements IControle<Conta,Long>   {
 
   @Autowired
   MoedaRepositorio moedaRP;
 
 	
-	public ContaController( ContaService servico) {
+	public ContaController( ContaServico servico) {
 		super(servico);
 		this.servico = servico;
 	}
 	
 	@ModelAttribute("tipoConta")
 	public List<Option>  listaTipoConta() {
-		   List<Option> options = Stream.of(TipoConta.values())
-		            .map(tipo -> new Option(tipo.name(), tipo.getDescricao()))
-		            .collect(Collectors.toList());
-		return options;
+		return TipoConta.listaTipoConta();
 	}
 	
 	@ModelAttribute("moedas")
@@ -65,15 +62,6 @@ public class ContaController  extends ControleAbstrato<ContaService,Conta,Long> 
 		 }					
 		 return options;
 	}
-
-
-
-
-
-
-
-
-
 
 
 }

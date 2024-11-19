@@ -1,6 +1,12 @@
 package br.com.fenix.dominio.enumerado;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import br.com.fenix.dominio.dto.Option;
 
 public enum TipoOperacao {
 	AP("AP", "Aplicação"), 
@@ -37,5 +43,11 @@ public enum TipoOperacao {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}		
+	}	
+	public static List<Option>  listaTipoOperacao() {
+		   List<Option> options = Stream.of(TipoOperacao.values())
+		            .map(tipo -> new Option(tipo.name(), tipo.getDescricao()))
+		            .collect(Collectors.toList());
+		return options;
+	}
 }

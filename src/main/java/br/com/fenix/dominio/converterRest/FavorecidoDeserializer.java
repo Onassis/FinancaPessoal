@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import br.com.fenix.favorecido.Favorecido;
-import br.com.fenix.favorecido.FavorecidoRepositorio;
+import br.com.fenix.fi.favorecido.Favorecido;
+import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 
 public class FavorecidoDeserializer extends StdDeserializer<Favorecido> {
 	/**

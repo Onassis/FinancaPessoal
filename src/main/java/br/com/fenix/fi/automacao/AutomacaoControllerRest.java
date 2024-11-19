@@ -1,4 +1,4 @@
-package br.com.fenix.controller;
+package br.com.fenix.fi.automacao;
 
 
 import java.util.ArrayList;
@@ -17,22 +17,20 @@ import br.com.fenix.abstrato.IControleRest;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
-import br.com.fenix.dominio.modelo.DadoBasico.Automacao;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
-import br.com.fenix.dominio.repositorio.dadosBasico.AutomacaoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
 import br.com.fenix.dominio.servico.CategoriaServico;
-import br.com.fenix.favorecido.Favorecido;
-import br.com.fenix.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
+import br.com.fenix.fi.favorecido.Favorecido;
+import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.icontroller.IControleFavorecidoRest;
 import jakarta.annotation.security.RolesAllowed;
 
 @RestController
 @PreAuthorize("hasRole('USER')")    
-@RequestMapping("/automacao")
+@RequestMapping("/api/automacao")
 public class AutomacaoControllerRest  extends ControleAbstratoRest<Automacao> implements IControleRest<Automacao> {
  
 //	@Autowired

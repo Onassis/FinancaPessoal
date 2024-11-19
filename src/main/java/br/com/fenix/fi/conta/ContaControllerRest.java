@@ -22,7 +22,7 @@ public class ContaControllerRest  extends ControleAbstratoRest<Conta> implements
     @Autowired
     MoedaRepositorio moedaRP;
     @Autowired
-    ContaService contaSV; 
+    ContaServico contaSV; 
     @Autowired
     private ContaRepositorioRest contaRP; 
     

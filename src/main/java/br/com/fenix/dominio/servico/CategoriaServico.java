@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,6 +18,7 @@ import br.com.fenix.dominio.DadosModelo.ModeloCategoria;
 import br.com.fenix.dominio.DadosModelo.ModeloSubCategoria;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.Node;
+import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
 import br.com.fenix.dominio.modelo.DadoBasico.MasterCategoria;
@@ -43,6 +45,14 @@ public class CategoriaServico {
         this.categoriaRP = categoriaRP;
 		this.subCategoriaRP = modSubCat;
     } 
+	public List<Option>  listaDeCategoriasOpt(TipoLancamento tipoLancamento) {
+		   List<Option> options =  listaDeCategorias(tipoLancamento)
+		   		.stream()    
+				.map(categoria  -> new Option(categoria.getId(), categoria.getDescricao()))
+	            .collect(Collectors.toList());
+			return options;			
+	}	
+
 
 	@Transactional(isolation = Isolation.DEFAULT)
 //	public  ArrayList<CategoriaDTO>  CriarPorModelo(TipoLancamento tipoLancamento) {

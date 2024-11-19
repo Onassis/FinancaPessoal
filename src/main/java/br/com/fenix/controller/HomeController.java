@@ -18,7 +18,7 @@ import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
-import br.com.fenix.fi.conta.ContaService;
+import br.com.fenix.fi.conta.ContaServico;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 

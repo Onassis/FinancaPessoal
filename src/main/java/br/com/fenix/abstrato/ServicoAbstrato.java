@@ -104,8 +104,28 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 	public void excluirTodos(){
 		repositorio.deleteAll();
 	}
+	@Override
+	public T antesDeSalvar(T entidade)  throws NegocioException { 
+	    return entidade;	
+	};
+	@Override
+	 public void depoisDeSalvar(T entidade)  throws NegocioException {
 
+	}
+	 
+	@Override
+	public T antesDeAlterar(T entidade)  throws NegocioException { 
+		return entidade;
+	}
+	@Override
+	 public void depoisDeAlterar(T entidade)  throws NegocioException{
+		
+	}
 
+	@Override
+	 public void antesDeExcluir(ID id)  throws NegocioException { 
+		
+	};
 
 
 
