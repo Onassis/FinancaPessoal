@@ -1,3 +1,10 @@
+function normalizeUrl(input) {
+		// Normalizar para remover acentos
+        const normalized = input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        // Remover caracteres especiais (exceto /) e converter para minúsculas
+    	return normalized.replace(/[^a-zA-Z0-9\s/]/g, "").toLowerCase();
+}
+
 function TestaCPF(strCPF) {
     var Soma;
     var Resto;

@@ -3,11 +3,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const criterioAdd = document.getElementById('criterioAdd');
     const input_criterio = document.getElementById('criterio');
     const criterioTableBody = document.getElementById('criterioTable');
-    
     const btnAddCriterio = document.getElementById('btnAddCriterio');
+
+    const submit = document.getElementById("btnSalvar");
+	submit.addEventListener("click", validate);
 
     let criterios = generateArray();
     updateTable();
+
+	function validate(e) {
+	  const criterioField = document.getElementById("criterio");
+	  let valid = true;
+	
+	  if (!criterioField.value) {
+		e.preventDefault(); 
+		console.log("erro de criterio");
+	  	const criterioAdd = document.getElementById("criterioAdd");
+		criterioAdd.classList.add("invalid");
+	    const nameError = document.getElementById("nameError");
+	    nameError.classList.add("visible");
+	    firstNameField.classList.add("invalid");
+	    nameError.setAttribute("aria-hidden", false);
+	    nameError.setAttribute("aria-invalid", true);
+	    
+	  }
+	  return valid;
+	}
 
     function generateArray() {
         // Pega o valor do input
@@ -21,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
    
     btnAddCriterio.addEventListener ('click', (event) => { 
         event.preventDefault();
+        
+		btnAddCriterio.classList.remove("invalid");
+		const nameError = document.getElementById("nameError");
+	    nameError.classList.remove("visible");
         addCriterio()
     });                
  
@@ -104,12 +129,20 @@ function editCriterio(event,index) {
 
     // Salva o valor original do critério
     const originalCriterio = criterios[index];
+    
+    // Obtém as dimensões da célula
+    const cellWidth = criterioCell.offsetWidth;
+    const cellHeight = criterioCell.offsetHeight;
 
     // Cria um input para edição
     const input = document.createElement('input');
     input.type = 'text';
     input.value = originalCriterio;
     input.className = 'edit-input';
+      // Ajusta o tamanho do input para coincidir com o da célula
+    input.style.width = `${cellWidth}px`;
+    input.style.height = `${cellHeight}px`;
+    input.style.boxSizing = 'border-box'; // Garante que padding/borda sejam inclusos
     
     // Substitui o conteúdo da célula pelo input
     criterioCell.innerHTML = '';

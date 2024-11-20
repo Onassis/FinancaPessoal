@@ -6,28 +6,18 @@
    
    <section class="layout-content" >
 	
-	        <nav class="navbar navbar-expand-md bg-light">
-	            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-	                <ul class="navbar-nav mr-auto">
-	                    <li class="nav-item active">
-	                        <i class="oi oi-caret-right"></i>
-	                        <span>Cadastrar automacao</span>
-	                    </li>
-	                </ul>
-	            </div>
-	            <a class="btn btn-primary btn-md" th:href="@{/automacao/listar}" role="button">
-	                <span class="oi oi-spreadsheet" title="Cadastro" aria-hidden="true"></span>
-	                <span>Listar automacao</span>
-	            </a>
-	        </nav>
+	  
+	  
+	  <div th:insert="fragments/navbar :: navbar('automação',true)"></div>
 	
-	        <div class="automacaoiner" id="cadastro">
 		
-    <div class="col-lg-6 bg-light">
+     <div class="col-lg-6 bg-light">
 		 <div class="card">
 			 <div class="card-body">
 				 <h5 class="card-title">Cadastro de automação</h5>
-				<div th:replace="~{fragments/alert}"></div>	 
+				
+				<div th:replace="~{fragments/alert}"></div>
+					 
 				<form id="CadastroForm" th:object="${automacao}" th:action="@{/automacao}"  class="row g-3 needs-validation"   method="POST">
 			   		<div th:replace="~{fragments/forms::inputRow(object='automacao', field='tipoOperacao', type='select',required='required',options= ${tipoOperacao},readOnly='readOnly',rowClass='col-md-12')}" />				   
 	      			<div th:replace="~{fragments/forms::inputRow(object='automacao', field='ordem', required='true',rowClass='col-md-12')}" />
@@ -35,9 +25,15 @@
 
 			   		<div th:replace="~{fragments/forms::inputRow(object='automacao', field='favorecido', type='select',options=${favorecidos},rowClass='col-md-6')}" />
 			   		<div th:replace="~{fragments/forms::inputRow(object='automacao', field='contaTransferencia', type='select',options= ${contas},rowClass='col-md-6')}" />
-	      			
-        			<input class="form-control" type="text" id="criterioAdd" name="criterioAdd">
-       
+	      			 <div> 
+	      				  	<label class="form-label">
+                       			<span th:text="Criterios"></span>
+                    		</label>
+        					<input class="form-control" type="text" id="criterioAdd" name="criterioAdd">
+        				 <span role="alert" id="nameError" aria-hidden="true">
+    						Informe ao menos um criterio
+  						</span>
+       				</div>
     			    <button id="btnAddCriterio" class="btn btn-primary">Adciona criterio</button>
     			    
 	      			<table id="criterioTable" class="table table-bordered table-striped table-hover ">

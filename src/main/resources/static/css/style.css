@@ -277,6 +277,19 @@ h6 {
   font-family: "Poppins", sans-serif;
   font-size: 20px;
 }
+#nameError {
+  display: none;
+  font-size: 15px;
+  color : red;
+}
+
+#nameError.visible {
+  display: block;
+}
+
+input.invalid {
+  border-color: red;
+}
 
 /* Close Button */
 .btn-close {

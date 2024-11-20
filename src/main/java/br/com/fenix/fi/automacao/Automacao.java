@@ -42,7 +42,8 @@ public class Automacao extends EntidadeAuditavel<Long>{
 	
 	@JsonDeserialize(using = StringDeserializer.class) 
     @NotBlank
-	@Column(length = 60)
+	/*@Column(length = 60)*/
+	@Column(columnDefinition = "TEXT")
 	private String criterio;
 	
     @Column(length = 2, nullable =  false)

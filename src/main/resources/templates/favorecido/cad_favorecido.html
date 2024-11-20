@@ -1,39 +1,42 @@
 ﻿<!DOCTYPE html>
 <html layout:decorate="~{layout}">
-<head><meta charset="UTF-8"></head>
+<head>
+<meta charset="UTF-8">
+</head>
 
 <main id="main" class="main" layout:fragment="corpo">
+
 	<section class="section">
-    <div class="col-lg-6 bg-light">
-	 <div class="card">
-		 <div class="card-body">
-	  		<h5 class="card-title">Cadastro de Favorecido</h5>	
-			<div th:replace="fragments/alert"></div>	
-           	<form id="editForm" th:object="${favorecido}" class="row g-3 needs-validation"   method="POST">
-			   	<div th:replace="~{fragments/forms::inputRow(object='favorecido', field='nome',  rowClass='col-md-12')}" />               	 				   
-	   			<div th:replace="~{fragments/forms::inputRow(object='favorecido', field='conta', type='select',options= ${contas},readOnly='readOnly',rowClass='col-md-12')}" />
-	   			<div th:replace="~{fragments/forms::inputRow(object='favorecido', field='subCategoria', type='select',required='required',options= ${categoriasDTO},rowClass='col-md-12')}" />
-	     
-         	    <div class="col-md-6">
-	                <input type="hidden" id="id" th:field="*{id}"/>
-         	    </div>
-	   			<input type="hidden" id="versao" th:field="*{versao}" />	
-	   			 <div class="col-md-6">
-	        			<button type="submit" id="btnSalvar" class="btn btn-primary"  >Salvar</button>
-       			 </div>	
-	         </form>
-           </div>
+		<div th:insert="fragments/navbar :: navbar('Favorecido',false)"></div>
+
+		<div class="col-lg-6 bg-light">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Cadastro de Favorecido</h5>
+					<div th:replace="fragments/alert"></div>
+					<form id="editForm" th:object="${favorecido}" th:action="@{/favorecido}" class="row g-3 needs-validation" method="POST">
+						<div
+							th:replace="~{fragments/forms::inputRow(object='favorecido', field='nome', required='required',rowClass='col-md-12')}" />
+						<div
+							th:replace="~{fragments/forms::inputRow(object='favorecido', field='conta', type='select',options= ${contas},readOnly='readOnly',rowClass='col-md-12')}" />
+						<div
+							th:replace="~{fragments/forms::inputRow(object='favorecido', field='subCategoria', type='select',options= ${categoriasDTO},rowClass='col-md-12')}" />
+
+						<div class="col-md-6">
+							<input type="hidden" id="id" th:field="*{id}" />
+						</div>
+						<input type="hidden" id="versao" th:field="*{versao}" />
+						<div class="text-center">
+							<button type="submit" id="btnSalvar" class="btn btn-primary">Salvar</button>
+							<button onclick="history.go(-1);" class="btn btn-secondary">Voltar</button>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
-	</div>
-	<script>
-		   jQuery(function() {
-			    	jQuery('form').bind('submit', function() {
-		        	jQuery(this).find(':disabled').removeAttr('disabled');
-    				});
-    		});
-	</script> 
- </section>
-	</main>
- 
+		<script th:src="@{/js/cadastro.js}"></script>
+	</section>
+</main>
+
 </html>
 

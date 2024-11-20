@@ -128,18 +128,4 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 	};
 
 
-
-	//	    @GetMapping("/")
-	//	    public String findAllPage(
-	//	            @RequestParam(value = "page", required = false, defaultValue = "0") int pageNumber,
-	//	            @RequestParam(value = "size", required = false, defaultValue = "5") int size,
-	//	            Model model,
-	//	            @RequestParam(value = "keyWord", defaultValue = "") String keyWord) {
-	//	        Page<Student> studentPage = studentRepo.findByNameContains(keyWord,PageRequest.of(pageNumber, size));
-	//	        model.addAttribute("students", studentPage.getContent());
-	//	        model.addAttribute("pages", new int[studentPage.getTotalPages()]);
-	//	        model.addAttribute("currentPage", pageNumber);
-	//	        model.addAttribute("keyWord", keyWord);
-	//	        return "index";
-	//	    }
 }
