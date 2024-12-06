@@ -34,13 +34,13 @@ import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import br.com.fenix.dominio.repositorio.DetalheLancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.FormaPgtoRepositorio;
-import br.com.fenix.dominio.servico.CategoriaServico;
 import br.com.fenix.dominio.servico.LancamentoServico;
+import br.com.fenix.fi.categoria.CategoriaServico;
+import br.com.fenix.fi.categoria.IControleCategoriaRest;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
-import br.com.fenix.icontroller.IControleCategoriaRest;
 import br.com.fenix.icontroller.IControleLancamentoRest;
 
 @RestController

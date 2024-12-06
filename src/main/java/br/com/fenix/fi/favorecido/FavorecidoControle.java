@@ -10,13 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import br.com.fenix.abstrato.ControleAbstrato;
-import br.com.fenix.abstrato.IControle;
+import br.com.fenix.abstrato.controle.ControleAbstrato;
+import br.com.fenix.abstrato.controle.IControle;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
-import br.com.fenix.dominio.servico.CategoriaServico;
+import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
 

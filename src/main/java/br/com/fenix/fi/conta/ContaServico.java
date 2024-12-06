@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import br.com.fenix.abstrato.IServico;
-import br.com.fenix.abstrato.ServicoAbstrato;
+import br.com.fenix.abstrato.servico.IServico;
+import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.Option;

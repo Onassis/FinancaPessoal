@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.fenix.abstrato.GenericRepository;
-import br.com.fenix.abstrato.GenericRepositoryAutenticado;
+import br.com.fenix.abstrato.repositorio.GenericRepository;
+import br.com.fenix.abstrato.repositorio.GenericRepositoryAutenticado;
 import br.com.fenix.dominio.enumerado.TipoConta;
 
 @Repository

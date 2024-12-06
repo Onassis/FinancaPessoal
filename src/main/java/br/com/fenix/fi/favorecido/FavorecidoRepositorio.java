@@ -6,7 +6,8 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import br.com.fenix.abstrato.GenericRepository;
+
+import br.com.fenix.abstrato.repositorio.GenericRepository;
 
 
 @Repository

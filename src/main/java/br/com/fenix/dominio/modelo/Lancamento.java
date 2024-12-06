@@ -11,11 +11,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.*;
-import br.com.fenix.abstrato.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
-import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
+import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.categoria.SubCategoria;
 import br.com.fenix.fi.favorecido.Favorecido;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -9,8 +9,8 @@ import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.abstrato.EntidadeAbstrata;
-import br.com.fenix.abstrato.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;

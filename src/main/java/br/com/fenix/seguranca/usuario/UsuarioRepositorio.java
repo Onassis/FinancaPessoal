@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.fenix.abstrato.GenericRepository;
+import br.com.fenix.abstrato.repositorio.GenericRepository;
 
 @EnableJpaRepositories
 @Repository

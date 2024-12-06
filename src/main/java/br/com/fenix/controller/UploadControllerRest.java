@@ -33,8 +33,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import br.com.fenix.abstrato.ControleAbstratoRest;
-import br.com.fenix.abstrato.IControleRest;
+
+import br.com.fenix.abstrato.controle.ControleAbstratoRest;
+import br.com.fenix.abstrato.controle.IControleRest;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.LancamentoDTO;
@@ -48,16 +49,16 @@ import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
 import br.com.fenix.dominio.repositorio.LancAuxRepositorio;
 import br.com.fenix.dominio.repositorio.LancamentoRepositorio;
 import br.com.fenix.dominio.repositorio.dadosBasico.FormaPgtoRepositorio;
-import br.com.fenix.dominio.servico.CategoriaServico;
 import br.com.fenix.dominio.servico.LancAuxServico;
 import br.com.fenix.dominio.servico.LancamentoServico;
 import br.com.fenix.fi.automacao.Automacao;
 import br.com.fenix.fi.automacao.AutomacaoRepositorio;
+import br.com.fenix.fi.categoria.CategoriaServico;
+import br.com.fenix.fi.categoria.IControleCategoriaRest;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
-import br.com.fenix.icontroller.IControleCategoriaRest;
 import br.com.fenix.icontroller.IControleLancamentoRest;
 import br.com.fenix.util.Coletor;
 
@@ -112,12 +113,12 @@ public class UploadControllerRest  {
 	public Iterable<Favorecido> listarFavorecido() {		
 	 return favorecidoRP.findAll();  
 	}
-	
+*/	
 	@ModelAttribute("contas")
 	public List<Conta> listarConta() {		
 		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC);
 	}	
- */	
+ 	
 	@ModelAttribute("contaCartao")
 	public List<Conta> listarCartao() {		
 		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CR);
@@ -129,7 +130,7 @@ public class UploadControllerRest  {
     	UploadDTO dado = new UploadDTO();		
 		return new ModelAndView("upload/upload","upload",dado) ;		  			  
 	}	
-    @GetMapping("/Cartao")
+    @GetMapping("/cartao")
 	public ModelAndView listarUploadCSVView() {
 		// TODO Auto-generated method stub    	
     	UploadDTO dado = new UploadDTO();		
@@ -176,7 +177,7 @@ public class UploadControllerRest  {
 	  }
       
       @Transactional
-	  @PostMapping("/Cartao")  	  
+	  @PostMapping("/cartao")  	  
 	  public String FileUploadCSV(@RequestParam("conta") long  contaId,
 			  					 @RequestParam("mesCarga") String  mesCarga,
 			  					 @RequestParam("saldoIni") BigDecimal  saldoIni,

@@ -10,7 +10,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let criterios = generateArray();
     updateTable();
+  
+    
+    function clickTabela() { 		
+	     document.querySelectorAll('#criterioTable td').forEach(td => {
+            td.addEventListener('click', function() {
+                const largura = td.offsetWidth;
+                const altura = td.offsetHeight;
+                const valorAtual = td.innerText;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = valorAtual;
+                input.style.width = `${largura}px`;
+                input.style.height = `${altura}px`;
 
+                input.addEventListener('blur', function() {
+                    td.innerText = input.value;
+                });
+
+                td.innerText = '';
+                td.appendChild(input);
+                input.focus();
+            });
+        })
+        };
 	function validate(e) {
 	  const criterioField = document.getElementById("criterio");
 	  let valid = true;
@@ -65,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		// Cria o elemento do cabeçalho
     	var thead = document.createElement('thead');
 
-    
+  	  
     	// Cria uma linha para o cabeçalho
     	var linha = document.createElement('tr');
     
@@ -97,10 +120,18 @@ document.addEventListener('DOMContentLoaded', () => {
         criterios.forEach((criterio, index) => {
             const row = document.createElement('tr');
             const criterioCell = document.createElement('td');
-            criterioCell.textContent = criterio;
+  			criterioCell.textContent = criterio;
+//  			criterioCell.width = '500px';
+  			criterioCell.width = '80%';
+  			
+            criterioCell.addEventListener('click', (event)  => editCriterio(event,index));
+
+          
             row.appendChild(criterioCell);
 		
             const actionsCell = document.createElement('td');
+            actionsCell.width = '20%';
+              
             const editButton = document.createElement('a');
             //editButton.textContent = 'Editar';
             // Add multiple classes
@@ -118,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.appendChild(actionsCell);
             criterioTableBody.appendChild(row);
         });
+          
     }
 
  
@@ -130,9 +162,12 @@ function editCriterio(event,index) {
     // Salva o valor original do critério
     const originalCriterio = criterios[index];
     
+    const teste =  document.querySelectorAll('#criterioTable td');
+     
+    
     // Obtém as dimensões da célula
-    const cellWidth = criterioCell.offsetWidth;
-    const cellHeight = criterioCell.offsetHeight;
+    const cellWidth = teste.offsetWidth ; 
+    const cellHeight = teste.offsetHeight;
 
     // Cria um input para edição
     const input = document.createElement('input');
@@ -140,8 +175,11 @@ function editCriterio(event,index) {
     input.value = originalCriterio;
     input.className = 'edit-input';
       // Ajusta o tamanho do input para coincidir com o da célula
-    input.style.width = `${cellWidth}px`;
-    input.style.height = `${cellHeight}px`;
+    //input.width = `${cellWidth}px`;
+    //input.height = `${cellHeight}px`;
+   input.style.width = '100%'
+   //'500px';
+    
     input.style.boxSizing = 'border-box'; // Garante que padding/borda sejam inclusos
     
     // Substitui o conteúdo da célula pelo input

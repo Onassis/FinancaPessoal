@@ -1,7 +1,7 @@
 package br.com.fenix.icontroller;
 
-import br.com.fenix.abstrato.IControleRest;
-import br.com.fenix.dominio.modelo.Orcamento;
+import br.com.fenix.abstrato.controle.IControleRest;
+import br.com.fenix.fi.orcamento.Orcamento;
 
 
 public interface IControleOrcamentoRest extends IControleRest<Orcamento> {

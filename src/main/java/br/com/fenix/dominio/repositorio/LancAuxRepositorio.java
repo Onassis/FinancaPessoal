@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import br.com.fenix.abstrato.GenericRepository;
 import br.com.fenix.dominio.modelo.Lancamento;
+import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.dominio.modelo.LancAux;
 
 

@@ -13,8 +13,8 @@ import jakarta.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.abstrato.EntidadeAbstrata;
-import br.com.fenix.abstrato.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.dominio.converterRest.MoedaDeserializer;
 import br.com.fenix.dominio.converterRest.MoneyDeserializer;

@@ -24,8 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import br.com.fenix.abstrato.IControle;
-import br.com.fenix.abstrato.ServicoAbstrato;
+import br.com.fenix.abstrato.controle.IControle;
+import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.util.DbUtil;

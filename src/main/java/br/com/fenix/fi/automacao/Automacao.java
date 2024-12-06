@@ -10,14 +10,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import br.com.fenix.abstrato.EntidadeAbstrata;
-import br.com.fenix.abstrato.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.dominio.converterRest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converterRest.StringDeserializer;
 import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
+import br.com.fenix.fi.categoria.SubCategoria;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.seguranca.usuario.Usuario;

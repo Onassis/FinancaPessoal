@@ -1,8 +1,8 @@
 package br.com.fenix.dominio.modelo.DadoBasico;
 
+import br.com.fenix.abstrato.base.EntidadeAbstrata;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import br.com.fenix.abstrato.EntidadeAbstrata;
 import lombok.Getter;
 import lombok.Setter;
 

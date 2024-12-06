@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import br.com.fenix.abstrato.ControleAbstratoRest;
-import br.com.fenix.abstrato.GenericRepository;
-import br.com.fenix.abstrato.IControleRest;
+import br.com.fenix.abstrato.controle.ControleAbstratoRest;
+import br.com.fenix.abstrato.controle.IControleRest;
+import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.fi.favorecido.Favorecido;
-import br.com.fenix.icontroller.IControleFavorecidoRest;
+import br.com.fenix.fi.favorecido.IControleFavorecidoRest;
 import groovy.console.ui.SystemOutputInterceptor;
 import jakarta.validation.Valid;
 

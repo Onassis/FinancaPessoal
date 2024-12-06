@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
-import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
-import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
-import br.com.fenix.dominio.repositorio.dadosBasico.SubCategoriaRepositorio;
+import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.categoria.CategoriaRepositorio;
+import br.com.fenix.fi.categoria.SubCategoria;
+import br.com.fenix.fi.categoria.SubCategoriaRepositorio;
 
 
 public class SubCategoriaDeserializer extends StdDeserializer<SubCategoria> {

@@ -7,8 +7,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import br.com.fenix.abstrato.IServico;
-import br.com.fenix.abstrato.ServicoAbstrato;
+import br.com.fenix.abstrato.servico.IServico;
+import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.OperacaoDB;

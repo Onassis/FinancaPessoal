@@ -26,7 +26,6 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 		 <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <version>3.3.1</version>
         </dependency>
 		<!--~~(org.springframework.boot:spring-boot-starter-thymeleaf failed. Unable to download metadata. Tried repositories:
 https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake)~~>-->
@@ -83,7 +82,6 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>8.0.1.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.expressly</groupId>
@@ -253,6 +251,10 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		    <plugin>
+				  <groupId>org.apache.maven.plugins</groupId>
+  				  <artifactId>maven-war-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,7 +1,7 @@
 package br.com.fenix.dominio.DadosModelo;
 
 
-import br.com.fenix.abstrato.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAbstrata;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

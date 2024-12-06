@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.fenix.abstrato.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAbstrata;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

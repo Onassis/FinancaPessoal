@@ -25,17 +25,21 @@
 
 			   		<div th:replace="~{fragments/forms::inputRow(object='automacao', field='favorecido', type='select',options=${favorecidos},rowClass='col-md-6')}" />
 			   		<div th:replace="~{fragments/forms::inputRow(object='automacao', field='contaTransferencia', type='select',options= ${contas},rowClass='col-md-6')}" />
-	      			 <div> 
+	      			<div>
 	      				  	<label class="form-label">
                        			<span th:text="Criterios"></span>
                     		</label>
-        					<input class="form-control" type="text" id="criterioAdd" name="criterioAdd">
-        				 <span role="alert" id="nameError" aria-hidden="true">
+                    		<div class="input-group"> 
+	      			 			<input class="form-control" type="text" id="criterioAdd" name="criterioAdd" placeholder="Informe o criterio ">
+	      			 			
+        						<button id="btnAddCriterio" class="btn btn-primary"><i class="fas fa-save"></i> Adciona criterio</button>
+        					
+    			    		</div>
+    			    	 <span role="alert" id="nameError" aria-hidden="true">
     						Informe ao menos um criterio
   						</span>
-       				</div>
-    			    <button id="btnAddCriterio" class="btn btn-primary">Adciona criterio</button>
-    			    
+	      			</div>	
+       				
 	      			<table id="criterioTable" class="table table-bordered table-striped table-hover ">
 						<thead class="thead-light">	<div class="row">
 								<tr>

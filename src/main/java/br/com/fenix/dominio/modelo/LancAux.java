@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.abstrato.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converterRest.ContaDeserializer;
 import br.com.fenix.dominio.converterRest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converterRest.MoneyDeserializer;
@@ -15,7 +15,7 @@ import br.com.fenix.dominio.converterRest.NumericBooleanDeserializer;
 import br.com.fenix.dominio.converterRest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.dominio.modelo.DadoBasico.SubCategoria;
+import br.com.fenix.fi.categoria.SubCategoria;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.favorecido.Favorecido;
 import jakarta.persistence.CascadeType;

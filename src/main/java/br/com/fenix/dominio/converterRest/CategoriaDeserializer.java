@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import br.com.fenix.dominio.modelo.DadoBasico.Categoria;
-import br.com.fenix.dominio.repositorio.dadosBasico.CategoriaRepositorio;
+import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.categoria.CategoriaRepositorio;
 
 
 public class CategoriaDeserializer extends StdDeserializer<Categoria> {
