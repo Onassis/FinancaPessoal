@@ -171,7 +171,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		 return sPrestacao; 
 	 }
 	 
-	 public boolean criterio(String criterio) { 
+	 public boolean hasCriterio(String criterio) { 
 		 return lancamentoInformacao.toUpperCase().contains(criterio.toUpperCase());
 	 }
 /*	public void setVencSubCategoria( SubCategoria subCategoria ) {

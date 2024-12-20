@@ -147,10 +147,13 @@ public class LancAuxServico {
 
 
 		
-		//---------------- Ajusta os Lançamentos -------------------------------------------------- 		
-		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
-					autoSC.automatizar(lancDTO);
- 		}
+		//---------------- Ajusta os Lançamentos --------------------------------------------------
+		
+		autoSC.automatizaLactoHash(coletorLanc);
+		
+//		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
+//					autoSC.automatizarHash(lancDTO);
+// 		}
 			
 		return coletorLanc;
 	}	
@@ -170,7 +173,7 @@ public class LancAuxServico {
 //---------------- Ajusta os Lançamentos -------------------------------------------------- 
 		
 		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
-			autoSC.automatizar(lancDTO);
+			autoSC.automatizarHash(lancDTO);
 		}
 		
 		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
@@ -202,7 +205,7 @@ public class LancAuxServico {
 //---------------- Ajusta os Lançamentos --------------------------------------------------// 
 		
 		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
-			autoSC.automatizar(lancDTO);
+			autoSC.automatizarHash(lancDTO);
 		}
 		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
 			lancSC.conciliar(lancDTO);

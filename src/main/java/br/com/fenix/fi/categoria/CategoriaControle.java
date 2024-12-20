@@ -127,7 +127,7 @@ public class CategoriaControle extends ControleAbstrato<CategoriaServico,Categor
    public SubCategoria criarSubCategoria(@PathVariable long id, @Validated @RequestBody SubCategoria subCategoria){
    	System.out.println("Post criar  subcategoria");
    	System.out.println(subCategoria.toString());
-   	subCategoria.setCategoria( buscarPorId(id));
+   	subCategoria.setCategoria(servico.buscarPorId(id).get());
        return subCategoriaRP.save (subCategoria);
    }
   
@@ -156,10 +156,10 @@ public class CategoriaControle extends ControleAbstrato<CategoriaServico,Categor
    	subCategoriaRP.deleteById(id2);
    }
 
-	@Override
-	public Categoria criar(Categoria entidade) {
-		// TODO Auto-generated method stub
-		return super.criar(entidade);
-	}
+//	@Override
+//	public Categoria criar(Categoria entidade) {
+//		// TODO Auto-generated method stub
+//		return super.criar(entidade);
+//	}
 
 }
