@@ -16,6 +16,7 @@ import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.dominio.modelo.LancAux;
 import br.com.fenix.util.Coletor;
+import br.com.fenix.util.Singularizer;
 import br.com.fenix.util.TextProcessor;
 
 @Service
@@ -38,12 +39,14 @@ public class AutomacaoServico  extends ServicoAbstrato<AutomacaoRepositorio,Auto
 		automacoes = repositorio.findAll();
 		String normalizedTexto;
 		for (Automacao auto  : automacoes) {
-			normalizedTexto = TextProcessor.normalizaTexto(auto.getCriterio().toLowerCase()); 
+			normalizedTexto = Singularizer.converterParaSingular(auto.getCriterio().toLowerCase());
+			normalizedTexto = TextProcessor.normalizaTexto(normalizedTexto); 
 		    automacaoMap.put(normalizedTexto.hashCode(), auto);	
 
 			System.out.println("Categoria" + auto.getSubCategoria().getDescricao());
 			for (String criterio : auto.getCriterios()) { 
- 				System.out.println("criterio" + criterio);		
+ 				System.out.println("criterio" + criterio);
+ 				criterio = Singularizer.converterParaSingular(criterio);
 				normalizedTexto = TextProcessor.normalizaTexto(criterio);
 			    automacaoMap.put(normalizedTexto.hashCode(), auto);	
 			}			
@@ -67,15 +70,16 @@ public class AutomacaoServico  extends ServicoAbstrato<AutomacaoRepositorio,Auto
 
 	public void automatizarHash ( LancAux lancDTO) {
 		
-		 String descricao = TextProcessor.normalizaTexto(lancDTO.getLancamentoInformacao());
+		 String descricao = Singularizer.converterParaSingular(lancDTO.getLancamentoInformacao());
+		 String normalize = TextProcessor.normalizaTexto(descricao);
 		 
-		 Automacao auto = automacaoMap.get(descricao.hashCode());
+		 Automacao auto = automacaoMap.get(normalize.hashCode());
 		 if (auto != null) {
 			 setAutomacao (lancDTO,auto);
 			 return;
 		 }
 		 
-		  Map<String, Integer>  criterioLacto = TextProcessor.processText(descricao);
+		  Map<String, Integer>  criterioLacto = TextProcessor.processText(normalize);
 		 
 		  for (Map.Entry<String, Integer> entry : criterioLacto.entrySet()) {
 			  String key = entry.getKey();
