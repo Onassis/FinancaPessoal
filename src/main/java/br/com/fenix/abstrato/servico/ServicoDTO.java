@@ -4,6 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -36,9 +37,23 @@ public class ServicoDTO <R extends CrudRepository<T,ID>,T,
 
 
 	
-//	public List<DTO> listarDto2() {
+	public List<DTO> listarDto2() {
 //		// TODO Auto-generated method stub
-//		return  repositorio.findAll()
+		Iterable<T> lista = repositorio.findAll();
+		List<DTO> listaDto = StreamSupport.stream(lista.spliterator(), false).map(entidade -> {
+			try {
+				// Invoca o construtor do DTO passando a entidade
+				return dtoClass.getConstructor(entidade.getClass()).newInstance(entidade);
+			} catch (Exception e) {
+				throw new RuntimeException("Erro ao converter entidade para DTO", e);
+			}
+		}).collect(Collectors.toList());
+		return listaDto;
+	}		
+//		return  
+//				((Collection<DTO>) StreamSupport.stream(lista.spliterator(), false))
+//				
+//				
 //				.stream()
 //				.map(Class<DTO>::new) // Construtor do DTO recebe a entidade
 //	            .collect(Collectors.toList());
@@ -53,9 +68,9 @@ public class ServicoDTO <R extends CrudRepository<T,ID>,T,
 ////                })
 ////                     
 ////                .collect(Collectors.toList()));
-////		
-//				
-//	}
+//		
+				
+
 //    public <T extends Persistable<ID>, ID, D extends AbstrataDTO<T, ID>> List<D> listarTodos(Class<D> dtoClass) {
 //        return repositorio.findAll()
 //                .stream().spliterator()
