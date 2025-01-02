@@ -44,8 +44,8 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 	
 	protected S servico; 
 	
-	@Autowired
-	private DataSource dataSource;
+//	@Autowired
+//	private DataSource dataSource;
 
 
 	public ControleAbstrato(S servico) {
@@ -116,8 +116,8 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 		   return cadastroHtml();
 		
 	}
-
-	private String inserir(T entidade,RedirectAttributes attr) {
+    @Override
+	public String inserir(T entidade,RedirectAttributes attr) {
 		try {	
 			servico.criar(entidade);				
 			attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");
@@ -130,7 +130,8 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 		 			
 		return "redirect:".concat(urlCadastrar());	
 	}
-	private String alterar(T entidade,RedirectAttributes attr) {
+    @Override
+   	public String alterar(T entidade,RedirectAttributes attr) {
 		try {	
 			servico.atualizar(entidade);		
 			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
@@ -169,5 +170,6 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 		}		
 		return  "redirect:".concat(urlListar());													    	
 	}
+
 }
 

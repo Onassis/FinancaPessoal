@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
-import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
+import br.com.fenix.fi.moeda.Moeda;
+import br.com.fenix.fi.moeda.MoedaRepositorio;
 
 @Component
 public class StringToMoedaConverter implements Converter<String,Moeda> {

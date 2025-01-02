@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.dominio.converterRest.ContaDeserializer;
-import br.com.fenix.dominio.converterRest.MoneyDeserializer;
+import br.com.fenix.dominio.converter.rest.ContaDeserializer;
+import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
 import br.com.fenix.fi.conta.Conta;
 
 

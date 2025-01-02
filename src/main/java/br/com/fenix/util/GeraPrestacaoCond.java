@@ -13,10 +13,10 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.fenix.dominio.dto.LancamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.lancamento.LancamentoDTO;
 import lombok.Data;
 import lombok.Getter;
 

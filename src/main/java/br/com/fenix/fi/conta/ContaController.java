@@ -22,7 +22,7 @@ import br.com.fenix.abstrato.controle.ControleAbstrato;
 import br.com.fenix.abstrato.controle.IControle;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
-import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
+import br.com.fenix.fi.moeda.MoedaRepositorio;
 
 @Controller
 @RequestMapping("/conta")

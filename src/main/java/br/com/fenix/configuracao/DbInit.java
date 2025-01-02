@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.fenix.dominio.DadosModelo.ModeloCategoria;
+import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
 import br.com.fenix.seguranca.usuario.*;
 import br.com.fenix.seguranca.usuario.Usuario.Role;

@@ -20,11 +20,10 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import br.com.fenix.abstrato.controle.ControleAbstrato;
 import br.com.fenix.abstrato.controle.IControle;
-import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
+import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
@@ -32,6 +31,7 @@ import br.com.fenix.fi.conta.ContaServico;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.favorecido.FavorecidoServico;
+import br.com.fenix.fi.moeda.MoedaRepositorio;
 
 @Controller
 @RequestMapping("/automacao")

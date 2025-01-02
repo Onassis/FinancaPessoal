@@ -38,5 +38,9 @@ public interface IControle<T ,ID> {
 	 	 
 	 String salvar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
 	 
+	 
+	 String inserir(T entidade,RedirectAttributes attr);
+	 String alterar(T entidade,RedirectAttributes attr) ;
+		 
 	 String  excluirPorId(ID id,RedirectAttributes attr);
 }

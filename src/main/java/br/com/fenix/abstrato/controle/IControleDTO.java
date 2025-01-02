@@ -8,30 +8,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.validation.Valid;
+
 /*
  * Interface de controle restfull 
  */
 
-public interface IControleDTO<T,DTO,ID> {
-  	String urlCadastrar();
-	String urlListar();
-	String cadastroHtml();
-	String listarHtml();
-
-	String nomeEntidade();
+public interface IControleDTO<T,DTO,ID> extends IControle<T,ID>{
+//	String nomeClasse();
+//  	String urlCadastrar();
+//	String urlListar();
+//	String cadastroHtml();
+//	String listarHtml();
+//
+//	String nomeEntidade();
+//	String listarView(ModelMap model);
 		
-	 ModelAndView cadastrar(DTO dto);
+	DTO entidadeToDto(T t);
+    T dtoToEntidade(DTO dto);
+    DTO  buscarPorId(@PathVariable ID id);
 	 
-	 ModelAndView atualizarView(@PathVariable ID id);
+	 Iterable<DTO> listarDTO();
 
-	 
-	 DTO  buscarPorId(@PathVariable ID id);
-	 
-	 Iterable<T> listar();
-	 String   criar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
-	 T atualizar(@RequestBody T entidade);
-	 void excluirPorId(@PathVariable ID id);
-	 void excluirTodos();
-	ModelAndView listarView(ModelMap model);
+//	String urlEditar(ID id);
+	String cadastrarDTO(DTO dto);
+//	String atualizarView(ID id, ModelMap model, RedirectAttributes attr);
+//	String salvar(@Valid T entidade, BindingResult result, RedirectAttributes attr);
+	String excluirPorId(ID id, RedirectAttributes attr);
+	String salvarDTO(@Valid DTO dto, BindingResult result, RedirectAttributes attr);
 	
 }

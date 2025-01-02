@@ -12,17 +12,17 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fenix.abstrato.repositorio.GenericRepository;
-import br.com.fenix.dominio.DadosModelo.ModeloCategoria;
-import br.com.fenix.dominio.DadosModelo.ModeloSubCategoria;
-import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.Node;
-import br.com.fenix.dominio.dto.OrcamentoDTO;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.fi.automacao.OrcamentoDTO;
 import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaRepositorio;
 import br.com.fenix.fi.categoria.SubCategoria;
 import br.com.fenix.fi.categoria.SubCategoriaRepositorio;
+import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
+import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 
 @Service
 public class OrcamentoServico {

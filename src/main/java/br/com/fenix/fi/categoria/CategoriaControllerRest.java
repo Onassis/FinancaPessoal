@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import br.com.fenix.abstrato.controle.ControleAbstratoRest;
 import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
-import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 
 @RestController

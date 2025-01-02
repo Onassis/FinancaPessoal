@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.fenix.abstrato.controle.ControleAbstrato;
+import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
+import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
-import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
@@ -32,10 +35,13 @@ import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoServico;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/categoria")
-public class CategoriaControle extends ControleAbstrato<CategoriaServico,Categoria,Long> implements IControle<Categoria,Long>   {
+public class CategoriaControle extends 
+			ControleAbstratoDTO<CategoriaServico,Categoria,CategoriaDTO,Long> 
+			implements IControleDTO<Categoria,CategoriaDTO,Long>   {
 	@Autowired
 	ContaRepositorio contaRP;
 	@Autowired
@@ -156,10 +162,41 @@ public class CategoriaControle extends ControleAbstrato<CategoriaServico,Categor
    	subCategoriaRP.deleteById(id2);
    }
 
-//	@Override
-//	public Categoria criar(Categoria entidade) {
-//		// TODO Auto-generated method stub
-//		return super.criar(entidade);
-//	}
+
+@Override
+public CategoriaDTO entidadeToDto(Categoria t) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public Categoria dtoToEntidade(CategoriaDTO dto) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public CategoriaDTO buscarPorId(Long id) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public Iterable<CategoriaDTO> listarDTO() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String salvarDTO(@Valid CategoriaDTO dto, BindingResult result, RedirectAttributes attr) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
 
 }

@@ -14,7 +14,7 @@ import br.com.fenix.abstrato.servico.IServico;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
-import br.com.fenix.dominio.modelo.LancAux;
+import br.com.fenix.fi.upload.LancAux;
 import br.com.fenix.util.Coletor;
 import br.com.fenix.util.Singularizer;
 import br.com.fenix.util.TextProcessor;
@@ -79,7 +79,7 @@ public class AutomacaoServico  extends ServicoAbstrato<AutomacaoRepositorio,Auto
 			 return;
 		 }
 		 
-		  Map<String, Integer>  criterioLacto = TextProcessor.processText(normalize);
+		 Map<String, Integer>  criterioLacto = TextProcessor.processText(normalize);
 		 
 		  for (Map.Entry<String, Integer> entry : criterioLacto.entrySet()) {
 			  String key = entry.getKey();

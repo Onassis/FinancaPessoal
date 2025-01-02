@@ -16,25 +16,24 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.abstrato.servico.IServico;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
-import br.com.fenix.dominio.DadosModelo.ModeloCategoria;
-import br.com.fenix.dominio.DadosModelo.ModeloSubCategoria;
-import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.dto.Node;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
+import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
+import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 
 @Service
 public class CategoriaServico extends ServicoAbstrato<CategoriaRepositorio,Categoria,Long> implements IServico<Categoria,Long> {
 
 
-	@Repository
-    public interface ModeloSubCategoriaRepositorio extends GenericRepository<ModeloSubCategoria> {
-
-    }
+//	@Repository
+//    public interface ModeloSubCategoriaRepositorio extends GenericRepository<ModeloSubCategoria> {
+//
+//    }
 	
 
 	@Autowired

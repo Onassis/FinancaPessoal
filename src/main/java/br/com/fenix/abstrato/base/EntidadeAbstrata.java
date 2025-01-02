@@ -10,7 +10,7 @@ import lombok.Data;
 
 @MappedSuperclass
 @Data
-public abstract class EntidadeAbstrata<ID> implements Persistable<ID>  {
+public abstract class EntidadeAbstrata<ID> implements Persistable<ID>,  Serializable  {
 	/**
 	 * 
 	 */
@@ -26,7 +26,7 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>  {
 	@Id @Nullable
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(updatable = false)
-	private ID  id;
+	protected ID  id;
 
    @Override
 	public boolean isNew() {

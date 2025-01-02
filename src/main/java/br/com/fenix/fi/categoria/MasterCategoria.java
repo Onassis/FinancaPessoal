@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
-import br.com.fenix.dominio.dto.CategoriaDTO;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 
 

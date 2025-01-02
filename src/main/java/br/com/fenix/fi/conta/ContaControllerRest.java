@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.fenix.abstrato.controle.ControleAbstratoRest;
-import br.com.fenix.dominio.modelo.DadoBasico.Moeda;
-import br.com.fenix.dominio.repositorio.dadosBasico.MoedaRepositorio;
+import br.com.fenix.fi.moeda.Moeda;
+import br.com.fenix.fi.moeda.MoedaRepositorio;
 
 @RestController
 @RequestMapping("/api/conta")

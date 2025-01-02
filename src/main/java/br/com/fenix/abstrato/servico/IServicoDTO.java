@@ -15,8 +15,10 @@ import jakarta.persistence.EntityTransaction;
  * Interface de Servico
  */
 
-public interface IServicoDTO<T,DTO, ID> {
-
+public interface IServicoDTO<T,DTO, ID> extends IServico<T,ID> {
+	 
+	Iterable<DTO> listarDto() ;
+	 
 //	
 //	 EntityTransaction geradorTransacao(); 
 //	 

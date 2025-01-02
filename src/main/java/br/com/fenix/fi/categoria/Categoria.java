@@ -15,8 +15,8 @@ import lombok.ToString;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.fenix.dominio.DadosModelo.ModeloCategoria;
-import br.com.fenix.dominio.DadosModelo.ModeloSubCategoria;
+import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
+import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
