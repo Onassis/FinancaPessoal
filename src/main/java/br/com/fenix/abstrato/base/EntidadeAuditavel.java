@@ -38,7 +38,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
-public abstract class EntidadeAuditavel<P> extends EntidadeAbstrata<P>   {
+public abstract class EntidadeAuditavel<ID> extends EntidadeAbstrata<ID>   {
     /**
 	 * 
 	 */

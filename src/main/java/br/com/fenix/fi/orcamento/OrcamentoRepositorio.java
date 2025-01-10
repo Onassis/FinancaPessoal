@@ -11,7 +11,7 @@ public interface OrcamentoRepositorio   extends GenericRepository<Orcamento>{
 
 	@Override
 	@Query("from Orcamento o  right join subCategoria s where o.criadoPor.id = ?#{ principal.id}")
-	Iterable<Orcamento> findAll();
+	List<Orcamento> findAll();
 	
 
 	@Query("select o, s from Orcamento o  right join fetch subCategoria s where o.ano = ?1 and o.criadoPor.id = ?#{ principal.id}")

@@ -15,6 +15,6 @@ public interface FavorecidoRepositorio extends GenericRepository<Favorecido> {
 	
 	@Override
 	@Query("from Favorecido f where f.criadoPor.id = ?#{ principal.id}")
-	public List<Favorecido> findAll();
+	List<Favorecido> findAll();
 	
 }

@@ -39,8 +39,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/categoria")
-public class CategoriaControle extends 
-			ControleAbstratoDTO<CategoriaServico,Categoria,CategoriaDTO,Long> 
+public class CategoriaControle extends 	ControleAbstratoDTO<CategoriaServico,Categoria,CategoriaDTO,Long> 
 			implements IControleDTO<Categoria,CategoriaDTO,Long>   {
 	@Autowired
 	ContaRepositorio contaRP;
@@ -161,20 +160,6 @@ public class CategoriaControle extends
    	buscarSubCategoriaPorId(id2);
    	subCategoriaRP.deleteById(id2);
    }
-
-
-@Override
-public CategoriaDTO entidadeToDto(Categoria t) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-
-@Override
-public Categoria dtoToEntidade(CategoriaDTO dto) {
-	// TODO Auto-generated method stub
-	return null;
-}
 
 
 @Override

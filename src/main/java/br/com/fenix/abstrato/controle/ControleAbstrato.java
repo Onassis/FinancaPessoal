@@ -43,9 +43,9 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 	
 	protected S servico; 
+
 	
-//	@Autowired
-//	private DataSource dataSource;
+	
 
 
 	public ControleAbstrato(S servico) {
@@ -87,21 +87,26 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 	}
 
 	  
-	@Override
+
 	@GetMapping("/cadastrar")  	
+	@Override
 	public String cadastrar(T entidade) {
 		return  cadastroHtml() ;
 	}
 
+
+	@GetMapping("/listar")
 	@Override
-	@GetMapping("/listar")  
 	public String  listarView(ModelMap model) {
 		model.addAttribute(nomeClasse(), servico.listar());
 		return listarHtml();
 	}
-	@Override
+	public String atualizarView2(@PathVariable ID id, ModelMap model,RedirectAttributes attr) {
+		return null;
+	}
+
 	@GetMapping("/editar/{id}")
-	public String atualizarView(@PathVariable ID id, ModelMap model,RedirectAttributes attr) {
+	public String atualizarView( ID id, ModelMap model,RedirectAttributes attr) {
 		 if (model.containsAttribute("Erro")) {
 			   return cadastroHtml();
 		 }
@@ -146,8 +151,9 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 		return "redirect:".concat(urlListar());	
 	}
 	
-	@Override
+	
 	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+	@Override
 	public String salvar(@Valid @ModelAttribute  T entidade,BindingResult result, RedirectAttributes attr) {
 		if (result.hasErrors()) {
 			return cadastrar(entidade) ;	    	
@@ -158,8 +164,9 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 		}
 		return alterar (entidade,attr); 
 	}
+
+	@GetMapping("/excluir/{id}")   
 	@Override
-	@GetMapping("/excluir/{id}")      
 	public String  excluirPorId(@PathVariable ID id, RedirectAttributes attr) {
 		try {
 			servico.excluirPorId(id);
@@ -170,6 +177,8 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 		}		
 		return  "redirect:".concat(urlListar());													    	
 	}
+
+
 
 }
 

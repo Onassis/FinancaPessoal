@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 
 import br.com.fenix.abstrato.base.AbstrataDTO;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 
-public class ServicoDTO <R extends CrudRepository<T,ID>,T, 
-				DTO ,ID> extends ServicoAbstrato<R,T,ID> implements IServicoDTO<T,DTO,ID> {
+public abstract class ServicoDTO <R extends CrudRepository<T,ID>,T, 
+				 DTO extends Persistable<ID> ,ID> extends ServicoAbstrato<R,T,ID> implements IServicoDTO<T,DTO,ID> {
 
 //	private final Class<T> DTOClass = 
 //			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2];
@@ -23,31 +24,19 @@ public class ServicoDTO <R extends CrudRepository<T,ID>,T,
 		super(repositorio);
 	}
 
-	@Override
-	public void handleException(OperacaoDB op, Exception e) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
-	public Iterable<DTO> listarDto() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	
-	public List<DTO> listarDto2() {
-//		// TODO Auto-generated method stub
+	public List<DTO> listarDto() {
 		Iterable<T> lista = repositorio.findAll();
-		List<DTO> listaDto = StreamSupport.stream(lista.spliterator(), false).map(entidade -> {
-			try {
-				// Invoca o construtor do DTO passando a entidade
-				return dtoClass.getConstructor(entidade.getClass()).newInstance(entidade);
-			} catch (Exception e) {
-				throw new RuntimeException("Erro ao converter entidade para DTO", e);
-			}
-		}).collect(Collectors.toList());
+		List<DTO> listaDto = StreamSupport.stream(lista.spliterator(), false)
+				.map(entidade -> {
+					try {
+						// Invoca o construtor do DTO passando a entidade
+						return  EntidadeToDTO(entidade);
+					} catch (Exception e) {
+						throw new RuntimeException("Erro ao converter entidade para DTO", e);
+					}
+				}).collect(Collectors.toList());
 		return listaDto;
 	}		
 //		return  
@@ -69,6 +58,39 @@ public class ServicoDTO <R extends CrudRepository<T,ID>,T,
 ////                     
 ////                .collect(Collectors.toList()));
 //		
+
+
+//	@Override
+//	public void handleException(OperacaoDB op, Exception e) throws Exception {
+//		// TODO Auto-generated method stub
+//		
+//	}
+
+
+	@Override
+	public DTO EntidadeToDTO(T entidade) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//
+//	@Override
+//	public T DTOtoEntidade(DTO dto) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
+//	@Override
+//	public DTO EntidadeToDTO(T entidade) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public T DTOtoEntidade(DTO dto) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 				
 
 //    public <T extends Persistable<ID>, ID, D extends AbstrataDTO<T, ID>> List<D> listarTodos(Class<D> dtoClass) {

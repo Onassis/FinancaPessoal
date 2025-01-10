@@ -18,11 +18,10 @@ public interface CategoriaRepositorio extends GenericRepository<Categoria> {
 	  
 
 	  @Query("select c from Categoria c JOIN FETCH c.subCategoria s where c.criadoPor.id = ?#{ principal?.id } and c.tipoLancamento = ?1 order by c.descricao,s.descricao" )
-	  Iterable<Categoria> findByTipoLancamentoOrderByDescricaoAsc(TipoLancamento tipoLancamento);
+	  List<Categoria> findByTipoLancamentoOrderByDescricaoAsc(TipoLancamento tipoLancamento);
 	
-	  @Query("select c from Categoria c LEFT JOIN FETCH c.subCategoria s where c.criadoPor.id = ?#{ principal?.id } order by c.descricao,s.descricao" )  
-	
-	  Iterable<Categoria> findByAllOrderByDescricaoAsc();
+	  @Query("select c from Categoria c LEFT JOIN FETCH c.subCategoria s where c.criadoPor.id = ?#{ principal?.id } order by c.descricao,s.descricao" )  	
+	  List<Categoria> findByAllOrderByDescricaoAsc();
 	  
 	  @Query("select s from SubCategoria s where s.criadoPor.id = ?#{ principal?.id } and s.id = ?1" )
 	  Optional<SubCategoria> findBySubCategoriaId(Long  id);

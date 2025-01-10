@@ -6,8 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-
+import org.springframework.data.domain.Persistable;
 
 import jakarta.persistence.EntityTransaction;
 
@@ -15,10 +14,11 @@ import jakarta.persistence.EntityTransaction;
  * Interface de Servico
  */
 
-public interface IServicoDTO<T,DTO, ID> extends IServico<T,ID> {
+public interface IServicoDTO<T, DTO extends Persistable<ID>, ID> extends IServico<T,ID> {
 	 
-	Iterable<DTO> listarDto() ;
-	 
+	List<DTO> listarDto() ;
+	DTO EntidadeToDTO(T entidade);
+	T   DTOtoEntidade(DTO dto); 
 //	
 //	 EntityTransaction geradorTransacao(); 
 //	 

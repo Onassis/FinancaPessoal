@@ -43,4 +43,5 @@ public interface IControle<T ,ID> {
 	 String alterar(T entidade,RedirectAttributes attr) ;
 		 
 	 String  excluirPorId(ID id,RedirectAttributes attr);
+
 }

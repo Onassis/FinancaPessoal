@@ -28,13 +28,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
+import br.com.fenix.abstrato.servico.ServicoDTO;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import jakarta.validation.Valid;
 
-public abstract class ControleAbstratoDTO<S extends ServicoAbstrato, 	  T extends Persistable<ID>, 
-                                          DTO extends Persistable<ID>,                          ID> 
-										 extends ControleAbstrato<S,T,ID> 
-										 implements IControleDTO<T,DTO ,ID> {
+public abstract class ControleAbstratoDTO<S extends ServicoDTO,
+										  T extends Persistable, 
+                                          DTO extends Persistable, 
+                                          ID> 
+										 extends ControleAbstrato
+										 implements IControleDTO {
 	
 //		private final Class<T> entityClass = 
 //			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
@@ -45,42 +48,86 @@ public abstract class ControleAbstratoDTO<S extends ServicoAbstrato, 	  T extend
 //    	private DataSource dataSource;
     	
     
-	    public ControleAbstratoDTO(S servico) {
- 	       super(servico);
-	    }
+	public ControleAbstratoDTO(S servico) {
+	       super(servico);
+	     }
+
+@Override 
+public String atualizarView2( ID id, ModelMap model,RedirectAttributes attr) {
+	return null;
+}
+	@Override
+	public String cadastrarDTO(Persistable dto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String salvarDTO(@Valid Persistable dto, BindingResult result, RedirectAttributes attr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String atualizarView(Object id, ModelMap model, RedirectAttributes attr) {
+		// TODO Auto-generated method stub
+		return super.atualizarView(id, model, attr);
+	}
+
+	@Override
+	public String alterar(Persistable entidade, RedirectAttributes attr) {
+		// TODO Auto-generated method stub
+		return super.alterar(entidade, attr);
+	}
+
 
 	    
-		@Override
-		@GetMapping("/cadastrar")  	
-		public String cadastrarDTO(DTO dto) {
-			return  cadastroHtml() ;
-		}
-		@Override
-		@GetMapping("/listar")  
-		public String  listarView(ModelMap model) {
-	//		model.addAttribute(nomeClasse(), servico.listarDto());
-			return listarHtml();
-		}
-
-		@Override
-		@GetMapping("/editar/{id}")
-		public String atualizarView(@PathVariable ID id, ModelMap model,RedirectAttributes attr) {
-			 if (model.containsAttribute("Erro")) {
-				   return cadastroHtml();
-			 }
-			 try {
-			   Optional<T>  entidadeOp = servico.buscarPorId(id);
-			   DTO dto =  entidadeToDto(entidadeOp.get());
-			   model.addAttribute(nomeClasse() , dto);
-		   } 
-		   catch (RegistroNaoExisteException e) {
-			   attr.addFlashAttribute("Erro", e.getMessage());   	
-			   return "redirect:".concat(urlListar());
-		   }		
-			   return cadastroHtml();
-			
-		}
-		
+////		@Override
+////		@GetMapping("/cadastrar")  	
+////		public String cadastrarDTO(DTO dto) {
+////			return  cadastroHtml() ;
+////		}
+//		@Override
+//		@GetMapping("/listar")  
+//		public String  listarView(ModelMap model) {
+//	//		model.addAttribute(nomeClasse(), servico.listarDto());
+//			return listarHtml();
+//		}
+//		@Override
+//		public String atualizarView(@PathVariable ID id, ModelMap model,RedirectAttributes attr) {
+//			 if (model.containsAttribute("Erro")) {
+//				   return cadastroHtml();
+//			 }
+//			 try {
+//			   Optional<T>  entidadeOp = servico.buscarPorId(id);
+//			   model.addAttribute(nomeClasse() , entidadeOp.get());
+//		   } 
+//		   catch (RegistroNaoExisteException e) {
+//			   attr.addFlashAttribute("Erro", e.getMessage());   	
+//			   return "redirect:".concat(urlListar());
+//		   }		
+//			   return cadastroHtml();
+//			
+//		}
+//		@Override
+//		@GetMapping("/editar/{id}")
+//		public String atualizarView(ID id, ModelMap model,RedirectAttributes attr) {
+//			 if (model.containsAttribute("Erro")) {
+//				   return cadastroHtml();
+//			 }
+//			 try {
+//			   Optional<T>  entidadeOp = servico.buscarPorId(id);
+//			 //  DTO dto =  servico. EntidadeToDTO(entidadeOp.get());
+//			 //  model.addAttribute(nomeClasse() , dto);
+//		   } 
+//		   catch (RegistroNaoExisteException e) {
+//			   attr.addFlashAttribute("Erro", e.getMessage());   	
+//			   return "redirect:".concat(urlListar());
+//		   }		
+//			   return cadastroHtml();
+//			
+//		}
+//		
 
 
 //		private String inserir(T entidade,RedirectAttributes attr) {

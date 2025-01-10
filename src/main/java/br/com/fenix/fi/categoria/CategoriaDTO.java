@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.base.AbstrataDTO;
 import br.com.fenix.abstrato.base.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.rest.StringDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 
@@ -19,7 +20,7 @@ import br.com.fenix.dominio.enumerado.TipoLancamento;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CategoriaDTO extends AbstrataDTO<MasterCategoria,Long>  {
+public class CategoriaDTO  extends EntidadeAuditavel<Long> {
 		/**
 		 * 
 		 */
@@ -106,8 +107,5 @@ public class CategoriaDTO extends AbstrataDTO<MasterCategoria,Long>  {
 		}
 
 
-
-		
-		
 	    
 }
