@@ -3,7 +3,6 @@ package br.com.fenix.fi.categoria;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,9 +13,6 @@ import br.com.fenix.dominio.enumerado.TipoLancamento;
 @Repository
 public interface CategoriaRepositorio extends GenericRepository<Categoria> {
 	
-	
-	  
-
 	  @Query("select c from Categoria c JOIN FETCH c.subCategoria s where c.criadoPor.id = ?#{ principal?.id } and c.tipoLancamento = ?1 order by c.descricao,s.descricao" )
 	  List<Categoria> findByTipoLancamentoOrderByDescricaoAsc(TipoLancamento tipoLancamento);
 	

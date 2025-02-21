@@ -21,7 +21,7 @@ import br.com.fenix.abstrato.servico.IServico;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
-import br.com.fenix.abstrato.servico.ServicoDTO;
+import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.Node;
@@ -36,7 +36,7 @@ import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 
 
 @Service
-public class CategoriaServico extends ServicoDTO<CategoriaRepositorio,Categoria,CategoriaDTO,Long> implements IServicoDTO<Categoria,CategoriaDTO,Long> {
+public class CategoriaServico extends ServicoAbstratoDTO<CategoriaRepositorio,Categoria,CategoriaDTO,Long> implements IServicoDTO<Categoria,CategoriaDTO,Long> {
 
 	@Autowired
 	ModeloCategoriaRepositorio modeloCategoriaRP;

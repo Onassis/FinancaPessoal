@@ -52,7 +52,6 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 		return this.repositorio.findAll();
 	}
 	@Override
-	//	@Transactional
 	public T criar( T entidade ) throws Exception {
 		EntityTransaction tx = geradorTransacao();
 		try {				
@@ -70,7 +69,6 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 
 
 	@Override
-	//	@Transactional
 	public T atualizar(T entidade)  throws Exception {	
 		EntityTransaction tx = geradorTransacao();
 		try {				
@@ -104,28 +102,25 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 	public void excluirTodos(){
 		repositorio.deleteAll();
 	}
+	
 	@Override
-	public T antesDeSalvar(T entidade)  throws NegocioException { 
-	    return entidade;	
-	};
-	@Override
-	 public void depoisDeSalvar(T entidade)  throws NegocioException {
-
-	}
-	 
-	@Override
-	public T antesDeAlterar(T entidade)  throws NegocioException { 
+	public T  antesDeSalvar(T entidade) throws NegocioException {
 		return entidade;
 	}
 	@Override
-	 public void depoisDeAlterar(T entidade)  throws NegocioException{
-		
+	public T antesDeAlterar(T entidade) throws NegocioException {		
+		return entidade;
 	}
 
 	@Override
-	 public void antesDeExcluir(ID id)  throws NegocioException { 
-		
-	};
+	public void depoisDeSalvar(T entidade) throws NegocioException {	
+	}
 
+	@Override
+	public void depoisDeAlterar(T entidade) throws NegocioException {	
+	}
 
+	@Override
+	public void antesDeExcluir(ID id) throws NegocioException {		
+	}
 }

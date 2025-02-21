@@ -1,5 +1,7 @@
 package br.com.fenix.abstrato.servico;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -9,6 +11,9 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 
 import br.com.fenix.abstrato.servico.IServicoDTO;
+import br.com.fenix.api.exceptionhandle.NegocioException;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
+import br.com.fenix.dominio.enumerado.OperacaoDB;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -16,13 +21,10 @@ import jakarta.persistence.EntityTransaction;
 public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 										 T extends Persistable<ID>,
 										 DTO extends Persistable<ID> ,ID>
-implements IServicoDTO< T,DTO, ID>   {
-	
-	@Autowired
-	private EntityManagerFactory emf;
+                      extends ServicoAbstrato<R,T ,ID>  
+					  implements IServicoDTO< T,DTO, ID>   {
 	
 
-	protected R repositorio  ;
 	
 	private Class<T> entidadeClass;
 	
@@ -30,15 +32,16 @@ implements IServicoDTO< T,DTO, ID>   {
 	
 
 	public ServicoAbstratoDTO(R repositorio) {
-		this.repositorio = repositorio;
+//		this.repositorio = repositorio;
+		super(repositorio);
 	}
 	
-	public void ServicoAbstratoDto(R repositorio, Class<T> entidadeClass, Class<DTO> dtoClass) {
-//		super();
-		this.repositorio = repositorio;
-		this.entidadeClass = entidadeClass;
-		this.dtoClass = dtoClass;
-	}
+//	public void ServicoAbstratoDto(R repositorio, Class<T> entidadeClass, Class<DTO> dtoClass) {
+////		super();
+//		this.repositorio = repositorio;
+//		this.entidadeClass = entidadeClass;
+//		this.dtoClass = dtoClass;
+//	}
 //    public EntityTransaction geradorTransacao() {
 //    	EntityManager em = emf.createEntityManager();
 //		return  em.getTransaction();
@@ -63,31 +66,38 @@ implements IServicoDTO< T,DTO, ID>   {
 
  //   BeanUtils.copyProperties(car, carDto);
 //
-//    @Override
-//    public T DTOtoEntidade (DTO dto) throws NegocioException {
-//    	T entidade = criarInstancia(); 
-//    	BeanUtils.copyProperties(dto,entidade);
-//    	return entidade; 
-//    }; 
-//    @Override
-//    public T DTOtoEntidade (DTO dto, T entidade) throws NegocioException {    	
-//    	BeanUtils.copyProperties(dto,entidade);
-//    	return entidade; 
-//    }; 
+    @Override
+    public T DTOtoEntidade (DTO dto) throws NegocioException {
+    	T entidade = criarInstancia(); 
+    	BeanUtils.copyProperties(dto,entidade);
+    	return entidade; 
+    }; 
+    @Override
+    public T DTOtoEntidade (DTO dto, T entidade) throws NegocioException {    	
+    	BeanUtils.copyProperties(dto,entidade);
+    	return entidade; 
+    }; 
 //	@Override
 //	public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
 //		return 	Optional.ofNullable(this.repositorio.findById(id)
 //				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
 //	}
 //	
-//	@Override
-//	public DTO buscaDTOPorId (ID id) throws RegistroNaoExisteException {
-//		T entidade = buscarPorId(id).get();
-//		return EntidadeToDTO(entidade);
-//	}
-//	@Override
-//	public  List<DTO> listar () throws RegistroNaoExisteException {
-//	       List<T> entidades  = new ArrayList<>();
+	@Override
+	public DTO buscaDTOPorId (ID id) throws RegistroNaoExisteException {
+		T entidade = buscarPorId(id).get();
+		return EntidadeToDTO(entidade);
+	}
+	@Override
+	public  List<DTO> listarDto () throws RegistroNaoExisteException {
+	       
+		  Iterable<T>  dados = this.repositorio.findAll();
+	      List<DTO> dtos = new ArrayList<>();
+	        for (T dado : dados ) {
+	            dtos.add(EntidadeToDTO(dado) );
+	        }
+	        return dtos;
+//						
 //	       repositorio.findAll().forEach(entidades::add);
 //	   
 //	        return entidades.stream().map(entity -> {
@@ -109,16 +119,19 @@ implements IServicoDTO< T,DTO, ID>   {
 ////	        return dtos;
 //								
 //		
-//	}
-//	@Override
-//	public T criar(DTO dto)  throws Exception {
+	}
+	@Override
+	public T criar(DTO dto)  throws Exception {
+		T entidade= criarInstancia();
+		entidade = DTOtoEntidade(dto,entidade);
+		return criar(entidade);
 //		EntityTransaction tx = geradorTransacao();
 //		T entidade= criarInstancia();
 //		try {				
 //			tx.begin();
 //			
 //		 	entidade = DTOtoEntidade(dto,entidade);
-//			
+//			criar(entidade);
 //			entidade = antesDeSalvar(entidade);
 //			entidade =  repositorio.save (entidade);
 //			depoisDeSalvar(entidade);
@@ -128,7 +141,7 @@ implements IServicoDTO< T,DTO, ID>   {
 //			handleException(OperacaoDB.INS,e);
 //		}
 //		return entidade;		    
-//	}
+	}
 ////
 ////
 //	@Override

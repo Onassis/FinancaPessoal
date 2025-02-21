@@ -3,7 +3,6 @@ package br.com.fenix.fi.favorecido;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +37,31 @@ public class FavorecidoServico  extends ServicoAbstrato<FavorecidoRepositorio,Fa
 		  }		  
 	
  	  throw e ;	
+	}
+	@Override
+	public Favorecido antesDeSalvar(Favorecido entidade) throws NegocioException {
+		// TODO Auto-generated method stub
+		return entidade;
+	}
+	@Override
+	public void depoisDeSalvar(Favorecido entidade) throws NegocioException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Favorecido antesDeAlterar(Favorecido entidade) throws NegocioException {
+		// TODO Auto-generated method stub
+		return entidade;
+	}
+	@Override
+	public void depoisDeAlterar(Favorecido entidade) throws NegocioException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void antesDeExcluir(Long id) throws NegocioException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -3,12 +3,14 @@ package br.com.fenix.fi.categoria;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,9 +56,15 @@ public class CategoriaControle extends 	ControleAbstratoDTO<CategoriaServico,Cat
 		super(servico);
 		
 	}
+	
+	@ModelAttribute("opTiposLancamento")	
+    public List<Option> getOptionsFromTipoLancamento() {
+        return Stream.of(TipoLancamento.values())
+                     .map(tipo -> new Option(tipo.getTipoLancamento(), tipo.getDescricao()))
+                     .collect(Collectors.toList());
+    }
 
-
-	@ModelAttribute("contas")
+	@ModelAttribute("opContas")
 	@Cacheable(value="conta", sync = true)
 	public List<Option>  listaDeContas() {
 		   List<Option> options = contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC)
@@ -162,25 +170,12 @@ public class CategoriaControle extends 	ControleAbstratoDTO<CategoriaServico,Cat
    }
 
 
-@Override
-public CategoriaDTO buscarPorId(Long id) {
-	// TODO Auto-generated method stub
-	return null;
-}
 
 
-@Override
-public Iterable<CategoriaDTO> listarDTO() {
-	// TODO Auto-generated method stub
-	return null;
-}
 
 
-@Override
-public String salvarDTO(@Valid CategoriaDTO dto, BindingResult result, RedirectAttributes attr) {
-	// TODO Auto-generated method stub
-	return null;
-}
+
+
 
 
 

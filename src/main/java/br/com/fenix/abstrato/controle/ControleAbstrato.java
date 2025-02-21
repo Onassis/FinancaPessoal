@@ -101,9 +101,7 @@ public abstract class ControleAbstrato<S extends ServicoAbstrato,T extends Persi
 		model.addAttribute(nomeClasse(), servico.listar());
 		return listarHtml();
 	}
-	public String atualizarView2(@PathVariable ID id, ModelMap model,RedirectAttributes attr) {
-		return null;
-	}
+
 
 	@GetMapping("/editar/{id}")
 	public String atualizarView( ID id, ModelMap model,RedirectAttributes attr) {

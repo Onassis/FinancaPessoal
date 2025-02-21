@@ -36,6 +36,7 @@ public class CategoriaDTO  extends EntidadeAuditavel<Long> {
 		@JsonDeserialize(using = StringDeserializer.class) 
 	    @Enumerated(EnumType.STRING)
 		private TipoLancamento tipoLancamento;
+		
         private String tipoCategoria;
 	    
 		private Long idCategoria; 
