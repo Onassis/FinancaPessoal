@@ -44,13 +44,12 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstratoDTO,
 	
 	private final Class<T> dtoClass = 
 			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2];
+	
 	protected S servico; 
 
 
 	public ControleAbstratoDTO(S servico) {
-		super();
-		this.servico = servico;			
-
+		this.servico = servico;					
 	}
 	@Override
 	public String nomeClasse() {
@@ -107,7 +106,11 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstratoDTO,
 	@GetMapping("/listar")
 	@Override
 	public String  listarView(ModelMap model) {
-		model.addAttribute(nomeClasse(), servico.listar());
+		System.out.println("listarView"); 
+		System.out.println(servico);
+		
+		 List<DTO> dtos = servico.listarDto();
+		model.addAttribute(nomeClasseDTO(), dtos);
 		return listarHtml();
 	}
 

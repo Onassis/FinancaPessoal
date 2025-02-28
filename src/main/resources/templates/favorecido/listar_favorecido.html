@@ -32,7 +32,7 @@
 						</thead>
 						<tbody>
 
-							<tr th:each="f : ${favorecido}">
+							<tr th:each="f : ${favorecidodto}">
 								<td th:text="${f.nome}">nome</td>
 								<td th:text="${f?.conta?.apelido}">nome</td>
 								<td th:text="${f?.subCategoria?.descricao}">categoria</td>

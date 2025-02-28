@@ -22,9 +22,9 @@ import jakarta.validation.Valid;
 public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> implements IServico< T,ID>   {
 	
 	@Autowired
-	private EntityManagerFactory emf;
+	protected EntityManagerFactory emf;
 	
-	protected R repositorio  ;
+	protected final  R repositorio  ;
 	
 
 	public ServicoAbstrato(R repositorio) {
@@ -35,6 +35,9 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
     	EntityManager em = emf.createEntityManager();
 		return  em.getTransaction();
 		
+    }
+    public R getRepositorio() {
+    	return this.repositorio;
     }
 	@Override
 	public Page<T> listarPagina(Pageable pageable) {

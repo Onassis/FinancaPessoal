@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.fenix.abstrato.controle.ControleAbstrato;
+import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
+import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
@@ -22,15 +24,16 @@ import br.com.fenix.fi.conta.ContaRepositorio;
 
 @Controller
 @RequestMapping("/favorecido")
-public class FavorecidoControle extends ControleAbstrato<FavorecidoServico,Favorecido,Long> implements IControle<Favorecido,Long>   {
+public class FavorecidoControle extends ControleAbstratoDTO<FavorecidoServico,Favorecido,FavorecidoDTO,Long> 
+								implements IControleDTO<Favorecido,FavorecidoDTO,Long>   {
 	@Autowired
 	ContaRepositorio contaRP;
 	@Autowired
 	CategoriaServico categoriaSC;
 
+	@Autowired
 	public FavorecidoControle(FavorecidoServico servico) {
 		super(servico);
-		
 	}
 
 
