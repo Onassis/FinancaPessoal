@@ -21,10 +21,9 @@ import br.com.fenix.dominio.enumerado.OperacaoDB;
 import jakarta.persistence.EntityTransaction;
 
 @Service
-public class FavorecidoServico  extends ServicoAbstratoDTO<FavorecidoRepositorio,Favorecido,FavorecidoDTO, Long> implements IServicoDTO<Favorecido,FavorecidoDTO,Long> {
+public class FavorecidoServico  extends ServicoAbstrato<FavorecidoRepositorio,Favorecido, Long> implements IServico<Favorecido,Long> {
 
 
-	@Autowired
 	public FavorecidoServico(FavorecidoRepositorio repositorio) {
 		super(repositorio);
 		
@@ -73,100 +72,5 @@ public class FavorecidoServico  extends ServicoAbstratoDTO<FavorecidoRepositorio
 //		// TODO Auto-generated method stub
 //		
 //	}
-	@Override
-	public EntityTransaction geradorTransacao() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Optional<Favorecido> buscarPorId(Long id) throws RegistroNaoExisteException {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
-	@Override
-	public Iterable<Favorecido> listar() throws RegistroNaoExisteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Favorecido> listarPagina(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Favorecido criar(Favorecido entidade) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Favorecido atualizar(Favorecido entidade) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void excluirPorId(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void excluirTodos() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Favorecido antesDeSalvar(Favorecido entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void depoisDeSalvar(Favorecido entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Favorecido antesDeAlterar(Favorecido entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void depoisDeAlterar(Favorecido entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void antesDeExcluir(Long id) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public List<FavorecidoDTO> listarDto() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public FavorecidoDTO EntidadeToDTO(Favorecido entidade) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Favorecido DTOtoEntidade(FavorecidoDTO dto) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Favorecido DTOtoEntidade(FavorecidoDTO dto, Favorecido entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public FavorecidoDTO buscaDTOPorId(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Favorecido criar(FavorecidoDTO dto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -14,6 +14,7 @@ import br.com.fenix.abstrato.controle.ControleAbstrato;
 import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
 import br.com.fenix.abstrato.controle.IControleDTO;
+import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
@@ -30,10 +31,19 @@ public class FavorecidoControle extends ControleAbstratoDTO<FavorecidoServico,Fa
 	ContaRepositorio contaRP;
 	@Autowired
 	CategoriaServico categoriaSC;
+	
+	private GenericConverter<Favorecido, FavorecidoDTO> converter;
 
-	@Autowired
+
+
 	public FavorecidoControle(FavorecidoServico servico) {
 		super(servico);
+		this.converter = new GenericConverter<>(Favorecido.class, FavorecidoDTO.class);
+	}
+	@Override
+	public GenericConverter<Favorecido, FavorecidoDTO> getConverter() {
+
+		return this.converter;
 	}
 
 
@@ -56,4 +66,6 @@ public class FavorecidoControle extends ControleAbstratoDTO<FavorecidoServico,Fa
 			   			   			   
 	   return options;
 	}
+
+
 }

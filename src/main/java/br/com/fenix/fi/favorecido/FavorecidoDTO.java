@@ -27,6 +27,7 @@ public class FavorecidoDTO extends EntidadeAbstrata<Long> {
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	@JsonDeserialize(using = StringDeserializer.class) 
@@ -40,5 +41,5 @@ public class FavorecidoDTO extends EntidadeAbstrata<Long> {
 	
 	@JsonDeserialize( using = SubCategoriaDeserializer.class  )		
     private SubCategoria subCategoria;
-
+	private long versao;
 }

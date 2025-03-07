@@ -29,6 +29,7 @@ import br.com.fenix.abstrato.controle.ControleAbstrato;
 import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
 import br.com.fenix.abstrato.controle.IControleDTO;
+import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
@@ -168,6 +169,12 @@ public class CategoriaControle extends 	ControleAbstratoDTO<CategoriaServico,Cat
    	buscarSubCategoriaPorId(id2);
    	subCategoriaRP.deleteById(id2);
    }
+
+@Override
+public GenericConverter<Categoria, CategoriaDTO> getConverter() {
+	// TODO Auto-generated method stub
+	return null;
+}
 
 
 

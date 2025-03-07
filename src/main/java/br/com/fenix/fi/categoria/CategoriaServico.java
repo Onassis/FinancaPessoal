@@ -36,7 +36,7 @@ import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 
 
 @Service
-public class CategoriaServico extends ServicoAbstratoDTO<CategoriaRepositorio,Categoria,CategoriaDTO,Long> implements IServicoDTO<Categoria,CategoriaDTO,Long> {
+public class CategoriaServico extends ServicoAbstrato<CategoriaRepositorio,Categoria,Long> implements IServico<Categoria,Long> {
 
 	@Autowired
 	ModeloCategoriaRepositorio modeloCategoriaRP;
@@ -141,117 +141,7 @@ public class CategoriaServico extends ServicoAbstratoDTO<CategoriaRepositorio,Ca
 	public void handleException(OperacaoDB op, Exception e) throws Exception {
 		// TODO Auto-generated method stub
 		
+
+	
 	}
-
-
-//	@Override
-//	public EntityTransaction geradorTransacao() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-
-	@Override
-	public Optional<Categoria> buscarPorId(Long id) throws RegistroNaoExisteException {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
-
-
-	@Override
-	public Iterable<Categoria> listar() throws RegistroNaoExisteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Page<Categoria> listarPagina(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Categoria criar(Categoria entidade) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Categoria atualizar(Categoria entidade) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void excluirPorId(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void excluirTodos() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public Categoria antesDeSalvar(Categoria entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void depoisDeSalvar(Categoria entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public Categoria antesDeAlterar(Categoria entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void depoisDeAlterar(Categoria entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void antesDeExcluir(Long id) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public List<CategoriaDTO> listarDto() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public CategoriaDTO EntidadeToDTO(Categoria entidade) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public Categoria DTOtoEntidade(CategoriaDTO dto) {
-		// TODO Auto-generated method stub
-		return null;
-	}			
 }

@@ -1,8 +1,11 @@
 package br.com.fenix.abstrato.controle;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.sql.DataSource;
 
@@ -28,12 +31,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import jakarta.validation.Valid;
 
-public abstract   class ControleAbstratoDTO<S extends ServicoAbstratoDTO,
+public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 										  T extends Persistable, 
                                           DTO extends Persistable, 
                                           ID> 										
@@ -48,9 +52,16 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstratoDTO,
 	protected S servico; 
 
 
-	public ControleAbstratoDTO(S servico) {
-		this.servico = servico;					
+  //
+
+
+    public ControleAbstratoDTO(S servico) {
+		this.servico = servico;
+	//	this.converter = converter;					
+		
 	}
+    public abstract  GenericConverter<T, DTO> getConverter(); 
+    
 	@Override
 	public String nomeClasse() {
 		return entityClass.getSimpleName().toLowerCase(); 
@@ -87,11 +98,8 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstratoDTO,
 		String nomeEntidade = "/" +  nomeClasse().concat("/editar/").concat(id.toString());
 		return nomeEntidade;	 
 	}
-
-
-	
 	@Override
-	public String cadastrar(T entidade) {
+	public String cadastrar() {
 		System.out.println("cadastrar " +  cadastroHtml());
 		return  cadastroHtml() ;
 	}
@@ -108,29 +116,30 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstratoDTO,
 	public String  listarView(ModelMap model) {
 		System.out.println("listarView"); 
 		System.out.println(servico);
-		
-		 List<DTO> dtos = servico.listarDto();
+	    Iterable<T> dados = servico.listar();
+	    List<DTO> dtos = StreamSupport.stream(dados.spliterator(), false)
+                    .map(dado -> getConverter().convertToDto(dado))
+                    .collect(Collectors.toList());
 		model.addAttribute(nomeClasseDTO(), dtos);
 		return listarHtml();
 	}
 
 	@Override
+	@GetMapping("/editar/{id}")
 	public String atualizarView(ID id, ModelMap model, RedirectAttributes attr) {
-		// TODO Auto-generated method stub
 		 if (model.containsAttribute("Erro")) {
 			   return cadastroHtml();
 		 }
 		 try {
 		   Optional<T>  entidadeOp = servico.buscarPorId(id);
-		   DTO dto = (DTO) servico.EntidadeToDTO(entidadeOp.get()); 
+		    DTO dto =  getConverter().convertToDto(entidadeOp.get()); 
 		   
 		   model.addAttribute(nomeClasseDTO() , dto);
-	   } 
-	   catch (RegistroNaoExisteException e) {
-		   attr.addFlashAttribute("Erro", e.getMessage());   	
-		   return "redirect:".concat(urlListar());
-	   }		
-		   return cadastroHtml();
+		 } catch (RegistroNaoExisteException e) {
+			 attr.addFlashAttribute("Erro", e.getMessage());   	
+			 return "redirect:".concat(urlListar()); 
+			 }		
+	   return cadastroHtml();
 	}
 	@Override
 	public String inserir(T entidade, RedirectAttributes attr) {
@@ -163,25 +172,31 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstratoDTO,
 	}
 
 	@Override
-	public String excluirPorId(ID id, RedirectAttributes attr) {
-		// TODO Auto-generated method stub
-		return null;
+	@GetMapping("/excluir/{id}")   
+	public String excluirPorId(@PathVariable ID id, RedirectAttributes attr) {
+		try {
+			servico.excluirPorId(id);
+			attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");
+		}	
+		catch (Exception e) {
+			attr.addFlashAttribute("Erro", e.getMessage()); 
+		}		
+		return  "redirect:".concat(urlListar());	
 	}
 	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
 	@Override
 	public String salvarDTO(@Valid DTO dto, BindingResult result, RedirectAttributes attr) {
-	
-//		public String salvar(@Valid @ModelAttribute  T entidade,BindingResult result, RedirectAttributes attr) {
-//			if (result.hasErrors()) {
-//				return cadastrar(entidade) ;	    	
-//			}
-//			
-//			if (entidade.isNew()) { 
-//				return inserir(entidade,attr); 
-//			}
-//			return alterar (entidade,attr); 
-		return null;
+		if (result.hasErrors()) {
+			return cadastrar() ;	    	
+ 		}
+		if (dto.isNew()) { 
+			T entidade = getConverter().convertToEntity(dto);
+			return inserir(entidade,attr); 
 		}
-
-
+		
+		Optional<T>  entidadeOp = servico.buscarPorId(dto.getId()); 
+		T entidade = entidadeOp.get(); 
+		entidade = getConverter().updateEntity(entidade,dto); 		
+		return alterar (entidade,attr); 
+	}
 }

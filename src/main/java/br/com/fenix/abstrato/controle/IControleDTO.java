@@ -32,7 +32,7 @@ public interface IControleDTO<T,DTO,ID> {
 	  */
 	 String listarView(ModelMap model);
 
-	 String cadastrar(T entidade);
+	 String cadastrar();
 	 
 	 String atualizarView(@PathVariable ID id, ModelMap model,RedirectAttributes attr);
 	 	 
