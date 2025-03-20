@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,22 +20,29 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import br.com.fenix.abstrato.controle.ControleAbstrato;
+import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
+import br.com.fenix.abstrato.controle.IControleDTO;
+import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
+import br.com.fenix.fi.favorecido.Favorecido;
+import br.com.fenix.fi.favorecido.FavorecidoDTO;
 import br.com.fenix.fi.moeda.MoedaRepositorio;
 
 @Controller
 @RequestMapping("/conta")
-public class ContaController  extends ControleAbstrato<ContaServico,Conta,Long> implements IControle<Conta,Long>   {
+public class ContaController  extends ControleAbstratoDTO<ContaServico,Conta,ContaDTO,Long> implements IControleDTO<Conta,ContaDTO,Long>   {
 
   @Autowired
   MoedaRepositorio moedaRP;
 
+  private GenericConverter<Conta, ContaDTO> converter; 
 	
 	public ContaController( ContaServico servico) {
 		super(servico);
 		this.servico = servico;
+		this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
 	}
 	
 	@ModelAttribute("tipoConta")
@@ -62,6 +70,14 @@ public class ContaController  extends ControleAbstrato<ContaServico,Conta,Long> 
 		 }					
 		 return options;
 	}
+
+
+	@Override
+	public GenericConverter<Conta, ContaDTO> getConverter() {		
+		return this.converter;
+	}
+
+
 
 
 }

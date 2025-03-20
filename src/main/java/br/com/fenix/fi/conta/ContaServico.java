@@ -24,12 +24,17 @@ import lombok.AllArgsConstructor;
 @Service
 public class ContaServico extends ServicoAbstrato<ContaRepositorio,Conta,Long> implements IServico<Conta,Long> {
 
-
+//   @Autowired
+//   private ContaRepositorio contaRp;
 	
+   
 	public ContaServico(ContaRepositorio repositorio) {
 		super(repositorio);
 	}
-
+//   
+//	public CrudRepository<Conta,Long> getRp() {
+//		return this.contaRp;
+//	}
 	public List<Option>  listaDeContas(TipoConta tipoConta) {
 		   List<Option> options = repositorio.findByTipoContaOrderByApelidoAsc(tipoConta).stream()    
 				.map(conta -> new Option(conta.getId(), conta.getAjuda()))
@@ -40,13 +45,11 @@ public class ContaServico extends ServicoAbstrato<ContaRepositorio,Conta,Long> i
 
 	@Override
 	public void handleException(OperacaoDB op,Exception e) throws Exception {
-		  if ( e instanceof 	ConstraintViolationException) { 
-			  throw new NegocioException("Já ha um conta/cartão com esse apelido");
+		
+		  if ( e.getMessage().contains("contaapelido")) {
+			  throw new NegocioException("Já existe um conta/cartão com esse apelido");				  			  
 		  }
-		  if ( e instanceof 	DataIntegrityViolationException) { 
-			  if (op == OperacaoDB.UPT) { 
-				  throw new NegocioException("Já ha um conta/cartão com esse apelido");				  
-			  }
+		  if (op == OperacaoDB.DEL) { 
 			  throw new NegocioException("Conta/Cartão possui lançamento e não pode ser excluida");
 		  }
 		  

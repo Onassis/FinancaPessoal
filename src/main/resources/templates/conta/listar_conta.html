@@ -50,7 +50,7 @@
 									</tr>
 									</thead>
 								 	  <tbody th:remove="all-but-first">
-										 <tr th:each="c : ${conta}">
+										 <tr th:each="c : ${contaDTO}">
 											<td th:text="${c.apelido}"> </td>
 											<td th:text="${c?.tipoConta?.descricao}">Auxiliar Contábil</td>
 											<td th:text="${c.instituicao}">Contabilidade</td>

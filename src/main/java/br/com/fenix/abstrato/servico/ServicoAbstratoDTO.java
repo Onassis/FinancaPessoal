@@ -22,7 +22,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
-public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
+public abstract class ServicoAbstratoDTO<
+//R extends CrudRepository<T,ID>,
 										 T extends Persistable<ID>,
 										 DTO extends Persistable<ID> ,ID>
                //       extends ServicoAbstrato<R,T ,ID>  
@@ -31,23 +32,27 @@ public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 	@Autowired
 	protected EntityManagerFactory emf;
 	
-	protected final R repositorio;
+//	protected final R repositorio;
+	
+	
+	public abstract  CrudRepository<T,ID> getRp();
+	
 	
 	
 	private final Class<T> entidadeClass = 
-			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
 	private final Class<T> dtoClass = 
-			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2];
+			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 
-	public ServicoAbstratoDTO(R repositorio) {
+	public ServicoAbstratoDTO() {
 		super();
-		this.repositorio = repositorio;		
+//		this.repositorio = repositorio;		
 	}
-	public ServicoAbstratoDTO(R repositorio, EntityManagerFactory emf ) {
-			this.repositorio = repositorio;
-			this.emf = emf;
-	}
+//	public ServicoAbstratoDTO(R repositorio, EntityManagerFactory emf ) {
+//			this.repositorio = repositorio;
+//			this.emf = emf;
+//	}
     @Override
     public EntityTransaction geradorTransacao() {
     	EntityManager em = emf.createEntityManager();
@@ -61,13 +66,13 @@ public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 
 	@Override
 	public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
-		return 	Optional.ofNullable(this.repositorio.findById(id)
+		return 	Optional.ofNullable(getRp().findById(id)
 				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
 	}
 	@Override
 	public Iterable<T> listar () throws RegistroNaoExisteException {
 		System.err.println("Listar");
-		return repositorio.findAll();
+		return getRp().findAll();
 	}
 //	@Override
 //	public T criar( T entidade ) throws Exception {
@@ -92,7 +97,7 @@ public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 		try {				
 			tx.begin();	
 			entidade = antesDeAlterar(entidade);
-			entidade =  repositorio.save (entidade);
+			entidade =  getRp().save (entidade);
 			depoisDeSalvar(entidade);
 			tx.commit();
 		} catch (Exception e) {
@@ -108,7 +113,7 @@ public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 		try {				
 			tx.begin();	
 			antesDeExcluir(id);
-			repositorio.deleteById(id);
+			getRp().deleteById(id);
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
@@ -118,7 +123,7 @@ public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 	@Override
 	@Transactional
 	public void excluirTodos(){
-		repositorio.deleteAll();
+		getRp().deleteAll();
 	}
 	
 	@Override
@@ -198,7 +203,7 @@ public abstract class ServicoAbstratoDTO<R extends CrudRepository<T,ID>,
 	@Override
 	public  List<DTO> listarDto () throws RegistroNaoExisteException {
 	       
-		  Iterable<T>  dados = repositorio.findAll();
+		  Iterable<T>  dados = getRp().findAll();
 	      List<DTO> dtos = new ArrayList<>();
 	        for (T dado : dados ) {
 	            dtos.add(EntidadeToDTO(dado) );

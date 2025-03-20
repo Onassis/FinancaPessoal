@@ -10,6 +10,7 @@ import java.util.stream.StreamSupport;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Conventions;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
@@ -57,10 +58,12 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 
     public ControleAbstratoDTO(S servico) {
 		this.servico = servico;
-	//	this.converter = converter;					
-		
+	//	this.converter = converter;
+
 	}
     public abstract  GenericConverter<T, DTO> getConverter(); 
+ //   public abstract  ServicoAbstrato<T,ID> getServico();
+    
     
 	@Override
 	public String nomeClasse() {
@@ -68,8 +71,15 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 	}
 	@Override
 	public String nomeClasseDTO() {
-		return dtoClass.getSimpleName().toLowerCase(); 
+//		return dtoClass.getSimpleName().toLowerCase(); 
+		return getVariableName(dtoClass);
+
 	}
+	
+	public String getVariableName(Class<?> clazz) {
+        String className = clazz.getSimpleName();
+        return Character.toLowerCase(className.charAt(0)) + className.substring(1);
+    }
 
 	@Override
 	public String cadastroHtml() {
@@ -98,18 +108,26 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 		String nomeEntidade = "/" +  nomeClasse().concat("/editar/").concat(id.toString());
 		return nomeEntidade;	 
 	}
-	@Override
-	public String cadastrar() {
-		System.out.println("cadastrar " +  cadastroHtml());
-		return  cadastroHtml() ;
-	}
-
-	@Override
+	/*
+	 * Quando um nome não é especificado explicitamente, um nome padrão é escolhido 
+	 * com base no tipo de objeto, conforme explicado no Javadoc para Conventions. 
+	 * Você sempre pode atribuir um nome explícito usando o método Addattribute 
+	 * sobrecarregado ou através do atributo de nome no
+	 *  @modelattribute (para um valor de retorno).
+	 * 
+	 * 
+	 * */
+	
 	@GetMapping("/cadastrar")
-	public String cadastrarDTO(DTO dto, ModelMap model) {
-		model.addAttribute(nomeClasseDTO() , dto);
+	public String cadastrar(DTO dto) {
+//		ModelMap model = new ModelMap();
+//		model.addAttribute(nomeClasseDTO() , dto);
+//		System.out.println("Abstratct cadastra r=>  " +  cadastroHtml());
+	System.out.println("Abstratct nome classe  " + Conventions.getVariableName(dto));
+//		System.out.println("Abstratct nome classe  " + nomeClasseDTO());
 		return  cadastroHtml() ;
-	}
+	} 
+
 
 	@GetMapping("/listar")
 	@Override
@@ -142,35 +160,52 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 	   return cadastroHtml();
 	}
 	@Override
-	public String inserir(T entidade, RedirectAttributes attr) {
+	public String inserir(DTO dto, RedirectAttributes attr) {
 		try {	
+			T entidade = getConverter().convertToEntity(dto);
 			servico.criar(entidade);				
 			attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");
 		}
 		catch (Exception e) {
 			System.out.println("ControleAbstrato-> Salvar Inserir -> Exception");			
 			attr.addFlashAttribute("Erro", e.getMessage());
-			attr.addFlashAttribute(nomeClasse(), entidade );
+			attr.addFlashAttribute(nomeClasseDTO(), dto );
 		}
 		 			
 		return "redirect:".concat(urlCadastrar());	
 	}
 	@Override
-	public String alterar(T entidade, RedirectAttributes attr) {
+	public String alterar(DTO dto, RedirectAttributes attr) {
 		try {	
+			Optional<T>  entidadeOp = servico.buscarPorId(dto.getId()); 
+			T entidade = entidadeOp.get(); 
+			entidade = getConverter().updateEntity(entidade,dto); 
 			servico.atualizar(entidade);		
 			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
 		}
 		catch (Exception e) {
 			System.out.println("ControleAbstrato-> Salvar -> Exception");
 			attr.addFlashAttribute("Erro", e.getMessage());			
-			attr.addFlashAttribute(nomeClasse() ,entidade);
-			return "redirect:".concat(urlEditar((ID) entidade.getId()));		
+			attr.addFlashAttribute(nomeClasseDTO(), dto );			
+//			attr.addFlashAttribute(nomeClasse() ,entidade);
+			return "redirect:".concat(urlEditar((ID) dto.getId()));		
 			}
 		 			
 		return "redirect:".concat(urlListar());	
 	}
 
+
+	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+	@Override
+	public String salvarDTO(@Valid @ModelAttribute DTO dto, BindingResult result, RedirectAttributes attr) {
+		if (result.hasErrors()) {
+			return cadastrar(dto);
+ 		}
+		if (dto.isNew()) { 
+			return inserir(dto,attr); 
+		}		
+		return alterar (dto,attr); 
+	}
 	@Override
 	@GetMapping("/excluir/{id}")   
 	public String excluirPorId(@PathVariable ID id, RedirectAttributes attr) {
@@ -182,21 +217,5 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 			attr.addFlashAttribute("Erro", e.getMessage()); 
 		}		
 		return  "redirect:".concat(urlListar());	
-	}
-	@PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-	@Override
-	public String salvarDTO(@Valid DTO dto, BindingResult result, RedirectAttributes attr) {
-		if (result.hasErrors()) {
-			return cadastrar() ;	    	
- 		}
-		if (dto.isNew()) { 
-			T entidade = getConverter().convertToEntity(dto);
-			return inserir(entidade,attr); 
-		}
-		
-		Optional<T>  entidadeOp = servico.buscarPorId(dto.getId()); 
-		T entidade = entidadeOp.get(); 
-		entidade = getConverter().updateEntity(entidade,dto); 		
-		return alterar (entidade,attr); 
 	}
 }

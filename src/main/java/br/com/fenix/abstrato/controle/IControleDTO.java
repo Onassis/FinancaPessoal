@@ -32,15 +32,15 @@ public interface IControleDTO<T,DTO,ID> {
 	  */
 	 String listarView(ModelMap model);
 
-	 String cadastrar();
+	 String cadastrar(DTO dto);
 	 
 	 String atualizarView(@PathVariable ID id, ModelMap model,RedirectAttributes attr);
 	 	 
 //	 String salvar(@RequestBody T entidade,BindingResult result, RedirectAttributes attr);
 	 
 	 
-	 String inserir(T entidade,RedirectAttributes attr);
-	 String alterar(T entidade,RedirectAttributes attr) ;
+	 String inserir(DTO dto,RedirectAttributes attr);
+	 String alterar(DTO dto,RedirectAttributes attr) ;
 		 
 //	 String  excluirPorId(ID id,RedirectAttributes attr);
 
@@ -48,7 +48,7 @@ public interface IControleDTO<T,DTO,ID> {
 	String excluirPorId(ID id, RedirectAttributes attr);
 	
 	String salvarDTO(@Valid DTO dto, BindingResult result, RedirectAttributes attr);
-	String cadastrarDTO(DTO dto,ModelMap model);
+//	String cadastrarDTO(DTO dto,ModelMap model);
 
 
 }

@@ -7,20 +7,20 @@
 <main id="main" class="main" layout:fragment="corpo">
 
 	<section class="section">
-		<div th:insert="fragments/navbar :: navbar('Favorecido',false)"></div>
+		<div th:insert="~{fragments/navbar :: navbar('Favorecido',false)}"></div>
 
 		<div class="col-lg-6 bg-light">
 			<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">Cadastro de Favorecido</h5>
-					<div th:replace="fragments/alert"></div>
-					<form id="editForm" th:object="${favorecidodto}" th:action="@{/favorecido}" class="row g-3 needs-validation" method="POST">
+					<div th:replace="~{fragments/alert}"></div>
+					<form id="editForm" th:object="${favorecidoDTO}" th:action="@{/favorecido}" class="row g-3 needs-validation" method="POST">
 						<div
-							th:replace="~{fragments/forms::inputRow(object='favorecidodto', field='nome', required='required',rowClass='col-md-12')}" />
+							th:replace="~{fragments/forms::inputRow(object='favorecidoDTO', field='nome', required='required',rowClass='col-md-12')}" />
 						<div
-							th:replace="~{fragments/forms::inputRow(object='favorecidodto', field='conta', type='select',options= ${contas},readOnly='readOnly',rowClass='col-md-12')}" />
+							th:replace="~{fragments/forms::inputRow(object='favorecidoDTO', field='conta', type='select',options= ${contas},rowClass='col-md-12')}" />
 						<div
-							th:replace="~{fragments/forms::inputRow(object='favorecidodto', field='subCategoria', type='select',options= ${categoriasDTO},rowClass='col-md-12')}" />
+							th:replace="~{fragments/forms::inputRow(object='favorecidoDTO', field='subCategoria', type='select',options= ${categoriasDTO},rowClass='col-md-12')}" />
 
 						<div class="col-md-6">
 							<input type="hidden" id="id" th:field="*{id}" />
@@ -28,13 +28,18 @@
 						<input type="hidden" id="versao" th:field="*{versao}" />
 						<div class="text-center">
 							<button type="submit" id="btnSalvar" class="btn btn-primary">Salvar</button>
-							<button onclick="history.go(-1);" class="btn btn-secondary">Voltar</button>
+							 <a  th:href="@{/favorecido/listar}" class="btn btn-secondary">Voltar</a>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 		<script th:src="@{/js/cadastro.js}"></script>
+		<script type="text/javascript">
+   			 $(".alert").delay(5000).slideUp(200, function () {
+     		   $(this).alert('close');
+  				  });
+		</script>
 	</section>
 </main>
 

@@ -307,7 +307,10 @@ public class LancamentoServico {
     	data = lancDTO.getDataVenc(); 
     } else {
      	 data = lancamento.getDataDoc();
-    	 data = lancDTO.getContaLancamento().getDataSaldo(data);    	
+     	 
+// Verificar ??????????????????????????
+     	 
+//    	 data = lancDTO.getContaLancamento().getDataSaldo(data);    	
     }
 // ------------------------------------------------------------------------------         
     valorPrestacao = lancDTO.getLancamentoTotal().divide(new BigDecimal(nroPrestacao)); 

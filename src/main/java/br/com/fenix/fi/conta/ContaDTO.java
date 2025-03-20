@@ -29,7 +29,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
+@Data
+@ToString
+@NoArgsConstructor
 public class ContaDTO extends EntidadeAbstrata<Long> {
    /**
 	 * 
@@ -72,6 +74,8 @@ public class ContaDTO extends EntidadeAbstrata<Long> {
    @Column(columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
    private BigDecimal saldo;
    
+   private long versao;
+   
    @Transient
    private String ajuda ;
 
@@ -86,74 +90,75 @@ public class ContaDTO extends EntidadeAbstrata<Long> {
    public boolean isCredito() { 
 	   return tipoConta == TipoConta.CR; 
    }
-   
-   public LocalDate getDataSaldo() {
-	   return getDataSaldo(LocalDate.now());
-   }
-   
-   public LocalDate getDataFatura( LocalDate data) {
-	   
-	    LocalDate datVenc=data;
-	    int diaCompra; 
-	    
-		if ( !isCredito() ) {
-			return data;
-		}
-		diaCompra = data.getDayOfMonth();
-		
-		datVenc = LocalDate.of(datVenc.getYear(), datVenc.getMonthValue(), diaVencimento);
-		if  (!datVenc.isAfter(data) )	{
-			datVenc = datVenc.plusMonths(1);
-		}
-		if ( diaCompra  >=  this.diaComp) 
-		{
-			datVenc = datVenc.plusMonths(1);
-		}
-		return datVenc;
-   }
-   public LocalDate getDataSaldo( LocalDate dataSaldo) {	
-		if ( isCredito() ) {	
-			if ( !dataSaldo.isAfter(LocalDate.now()) ) { 
-				dataSaldo = LocalDate.of(LocalDate.now().getYear(), 
-		    			 			 LocalDate.now().getMonthValue(), 
-		    			 			dataSaldo.getDayOfMonth());
-			}
-			if ( dataSaldo.getDayOfMonth() -  this.diaVencimento > 9) {
-				dataSaldo.plusMonths(1);
-				dataSaldo = LocalDate.of(dataSaldo.getYear(), dataSaldo.getMonth(), diaVencimento);
-			}
-			else 
- 		
-			dataSaldo = LocalDate.of(dataSaldo.getYear(), dataSaldo.getMonth(), diaVencimento); 
-		}
-		else {
-		    if ( dataSaldo.isAfter(LocalDate.now()) ) { 
-		    	dataSaldo = LocalDate.now();
-		    }
-		
-			dataSaldo = LocalDate.of(dataSaldo.getYear(), dataSaldo.getMonth(), 1);
-		}	
-
-		return dataSaldo; 		
-	
-}
    public boolean isContaCartao() {
 	   return this.tipoConta == TipoConta.CR; // Cartaa de credito 
    }
    public boolean isContaCorrente() {
 	   return this.tipoConta == TipoConta.CC; // Cartaa de credito 
    }
-   public LocalDate dataSaldoAnterior (LocalDate data) {
-	   
-		if ( isContaCartao()) { 		
-			if ( ( data.getDayOfMonth() -  diaVencimento) <=  9) {
-				data.plusMonths(1);
-				return  LocalDate.of(data.getYear(), data.getMonth(), diaVencimento );
-			}
-			else 				
-		 	  return  LocalDate.of(data.getYear(), data.getMonth(), diaVencimento);
-		
-		}
-		return 	LocalDate.of(data.getYear(), data.getMonth(), 1 );
-  }
+   
+//   public LocalDate getDataSaldo() {
+//	   return getDataSaldo(LocalDate.now());
+//   }
+//   
+//   public LocalDate getDataFatura( LocalDate data) {
+//	   
+//	    LocalDate datVenc=data;
+//	    int diaCompra; 
+//	    
+//		if ( !isCredito() ) {
+//			return data;
+//		}
+//		diaCompra = data.getDayOfMonth();
+//		
+//		datVenc = LocalDate.of(datVenc.getYear(), datVenc.getMonthValue(), diaVencimento);
+//		if  (!datVenc.isAfter(data) )	{
+//			datVenc = datVenc.plusMonths(1);
+//		}
+//		if ( diaCompra  >=  this.diaComp) 
+//		{
+//			datVenc = datVenc.plusMonths(1);
+//		}
+//		return datVenc;
+//   }
+//   public LocalDate getDataSaldo( LocalDate dataSaldo) {	
+//		if ( isCredito() ) {	
+//			if ( !dataSaldo.isAfter(LocalDate.now()) ) { 
+//				dataSaldo = LocalDate.of(LocalDate.now().getYear(), 
+//		    			 			 LocalDate.now().getMonthValue(), 
+//		    			 			dataSaldo.getDayOfMonth());
+//			}
+//			if ( dataSaldo.getDayOfMonth() -  this.diaVencimento > 9) {
+//				dataSaldo.plusMonths(1);
+//				dataSaldo = LocalDate.of(dataSaldo.getYear(), dataSaldo.getMonth(), diaVencimento);
+//			}
+//			else 
+// 		
+//			dataSaldo = LocalDate.of(dataSaldo.getYear(), dataSaldo.getMonth(), diaVencimento); 
+//		}
+//		else {
+//		    if ( dataSaldo.isAfter(LocalDate.now()) ) { 
+//		    	dataSaldo = LocalDate.now();
+//		    }
+//		
+//			dataSaldo = LocalDate.of(dataSaldo.getYear(), dataSaldo.getMonth(), 1);
+//		}	
+//
+//		return dataSaldo; 		
+//	
+//}
+
+//   public LocalDate dataSaldoAnterior (LocalDate data) {
+//	   
+//		if ( isContaCartao()) { 		
+//			if ( ( data.getDayOfMonth() -  diaVencimento) <=  9) {
+//				data.plusMonths(1);
+//				return  LocalDate.of(data.getYear(), data.getMonth(), diaVencimento );
+//			}
+//			else 				
+//		 	  return  LocalDate.of(data.getYear(), data.getMonth(), diaVencimento);
+//		
+//		}
+//		return 	LocalDate.of(data.getYear(), data.getMonth(), 1 );
+//  }
 }

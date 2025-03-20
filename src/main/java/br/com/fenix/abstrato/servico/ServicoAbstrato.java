@@ -26,6 +26,9 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 	
 	protected final  R repositorio  ;
 	
+	
+//	abstract CrudRepository<T,ID> getRp();
+	
 
 	public ServicoAbstrato(R repositorio) {
 		this.repositorio = repositorio;
