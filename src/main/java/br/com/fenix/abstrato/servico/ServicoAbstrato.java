@@ -19,43 +19,35 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 
-public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> implements IServico< T,ID>   {
+public abstract class ServicoAbstrato<T ,ID> implements IServico< T,ID>   {
 	
 	@Autowired
 	protected EntityManagerFactory emf;
+		
+	public abstract  CrudRepository<T,ID> getRp(); 
 	
-	protected final  R repositorio  ;
-	
-	
-//	abstract CrudRepository<T,ID> getRp();
-	
-
-	public ServicoAbstrato(R repositorio) {
-		this.repositorio = repositorio;
+	public ServicoAbstrato() {
 	}
+    
     @Override
     public EntityTransaction geradorTransacao() {
     	EntityManager em = emf.createEntityManager();
-		return  em.getTransaction();
-		
+		return  em.getTransaction();		
     }
-    public R getRepositorio() {
-    	return this.repositorio;
-    }
+  
 	@Override
 	public Page<T> listarPagina(Pageable pageable) {
 		return null;
 	}
 
-
 	@Override
 	public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
-		return 	Optional.ofNullable(this.repositorio.findById(id)
+		return 	Optional.ofNullable(getRp().findById(id)
 				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
 	}
 	@Override
 	public Iterable<T> listar () throws RegistroNaoExisteException {
-		return this.repositorio.findAll();
+		return getRp().findAll();
 	}
 	@Override
 	public T criar( T entidade ) throws Exception {
@@ -63,7 +55,7 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 		try {				
 			tx.begin();
 			entidade = antesDeSalvar(entidade);
-			entidade =  repositorio.save (entidade);
+			entidade =  getRp().save (entidade);
 			depoisDeSalvar(entidade);
 			tx.commit();
 		} catch (Exception e) {
@@ -80,7 +72,7 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 		try {				
 			tx.begin();	
 			entidade = antesDeAlterar(entidade);
-			entidade =  repositorio.save (entidade);
+			entidade =  getRp().save (entidade);
 			depoisDeSalvar(entidade);
 			tx.commit();
 		} catch (Exception e) {
@@ -96,7 +88,7 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 		try {				
 			tx.begin();	
 			antesDeExcluir(id);
-			repositorio.deleteById(id);
+			getRp().deleteById(id);
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
@@ -106,7 +98,7 @@ public abstract class ServicoAbstrato<R extends CrudRepository<T,ID>,T ,ID> impl
 	@Override
 	@Transactional
 	public void excluirTodos(){
-		repositorio.deleteAll();
+		getRp().deleteAll();
 	}
 	
 	@Override

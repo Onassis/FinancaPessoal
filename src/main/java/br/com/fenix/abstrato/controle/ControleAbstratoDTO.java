@@ -38,31 +38,37 @@ import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import jakarta.validation.Valid;
 
-public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
-										  T extends Persistable, 
-                                          DTO extends Persistable, 
-                                          ID> 										
-										 implements IControleDTO<T,DTO,ID> {
+public abstract   class ControleAbstratoDTO<T extends Persistable, 
+                                            DTO extends Persistable, 
+                                            ID> 										
+										   implements IControleDTO<T,DTO,ID> {
 	
 	private final Class<T> entityClass = 
-			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	
 	private final Class<T> dtoClass = 
-			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2];
+			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 	
-	protected S servico; 
+//	protected S servico; 
+	
+	
+	
 
 
   //
+	  public ControleAbstratoDTO() {
+		}
 
-
-    public ControleAbstratoDTO(S servico) {
-		this.servico = servico;
-	//	this.converter = converter;
-
-	}
+//    public ControleAbstratoDTO(S servico) {
+//		this.servico = servico;
+//	//	this.converter = converter;
+//
+//	}
     public abstract  GenericConverter<T, DTO> getConverter(); 
- //   public abstract  ServicoAbstrato<T,ID> getServico();
+    
+    public abstract  ServicoAbstratoDTO<T,DTO,ID> getServico(); 
+    
+    
     
     
 	@Override
@@ -75,7 +81,9 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 		return getVariableName(dtoClass);
 
 	}
-	
+	/*
+	 * Retorna o nome da classe no padrão java(Javadoc para Conventions)
+	 */
 	public String getVariableName(Class<?> clazz) {
         String className = clazz.getSimpleName();
         return Character.toLowerCase(className.charAt(0)) + className.substring(1);
@@ -120,11 +128,6 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 	
 	@GetMapping("/cadastrar")
 	public String cadastrar(DTO dto) {
-//		ModelMap model = new ModelMap();
-//		model.addAttribute(nomeClasseDTO() , dto);
-//		System.out.println("Abstratct cadastra r=>  " +  cadastroHtml());
-	System.out.println("Abstratct nome classe  " + Conventions.getVariableName(dto));
-//		System.out.println("Abstratct nome classe  " + nomeClasseDTO());
 		return  cadastroHtml() ;
 	} 
 
@@ -132,12 +135,14 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 	@GetMapping("/listar")
 	@Override
 	public String  listarView(ModelMap model) {
-		System.out.println("listarView"); 
-		System.out.println(servico);
-	    Iterable<T> dados = servico.listar();
-	    List<DTO> dtos = StreamSupport.stream(dados.spliterator(), false)
-                    .map(dado -> getConverter().convertToDto(dado))
-                    .collect(Collectors.toList());
+//		System.out.println("listarView"); 
+		
+//	    Iterable<T> dados = getServico().listar();
+//	    List<DTO> dtos = StreamSupport.stream(dados.spliterator(), false)
+//                    .map(dado -> getConverter().convertToDto(dado))
+//                    .collect(Collectors.toList());
+	    List<DTO> dtos = (List<DTO>) getServico().listarDto ();
+//	    System.out.println("ControeAbstractDTo -> ListarView: " + nomeClasseDTO() );
 		model.addAttribute(nomeClasseDTO(), dtos);
 		return listarHtml();
 	}
@@ -149,8 +154,8 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 			   return cadastroHtml();
 		 }
 		 try {
-		   Optional<T>  entidadeOp = servico.buscarPorId(id);
-		    DTO dto =  getConverter().convertToDto(entidadeOp.get()); 
+//		   Optional<T>  entidadeOp = getServico().buscarPorId(id);
+		    DTO dto = (DTO) getServico().buscaDTOPorId(id); 
 		   
 		   model.addAttribute(nomeClasseDTO() , dto);
 		 } catch (RegistroNaoExisteException e) {
@@ -163,7 +168,7 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 	public String inserir(DTO dto, RedirectAttributes attr) {
 		try {	
 			T entidade = getConverter().convertToEntity(dto);
-			servico.criar(entidade);				
+			getServico().criar(entidade);				
 			attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");
 		}
 		catch (Exception e) {
@@ -177,10 +182,10 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 	@Override
 	public String alterar(DTO dto, RedirectAttributes attr) {
 		try {	
-			Optional<T>  entidadeOp = servico.buscarPorId(dto.getId()); 
-			T entidade = entidadeOp.get(); 
-			entidade = getConverter().updateEntity(entidade,dto); 
-			servico.atualizar(entidade);		
+//			Optional<T>  entidadeOp = (Optional<T>) getServico().buscarPorId(dto.getId());
+//			T entidade = entidadeOp.get(); 
+//			entidade = getConverter().updateEntity(entidade,dto); 
+//			getServico().atualizar(entidade);		
 			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
 		}
 		catch (Exception e) {
@@ -210,7 +215,7 @@ public abstract   class ControleAbstratoDTO<S extends ServicoAbstrato,
 	@GetMapping("/excluir/{id}")   
 	public String excluirPorId(@PathVariable ID id, RedirectAttributes attr) {
 		try {
-			servico.excluirPorId(id);
+			getServico().excluirPorId(id);
 			attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");
 		}	
 		catch (Exception e) {

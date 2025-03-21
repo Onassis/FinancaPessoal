@@ -38,7 +38,8 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
 		  + "where b.criado_por_id = a.criado_por_id and  b.conta_id = a.conta_id and data < :data  )" , nativeQuery = true)
 	Optional<SaldoConta> findByContaDataSaldoAnterior( Long usuario,Long conta,LocalDate data);
 	
-	
+    Optional<SaldoConta> findTopByContaAndDataLessThanOrderByDataDesc(Conta conta, LocalDate data);
+    
 
 	@Query(value = "select * from f_atualiza_saldo(:usuario,:conta,:datasaldo,:saldoinicial)", nativeQuery = true)
 	boolean f_atualiza_saldo(

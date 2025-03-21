@@ -24,6 +24,8 @@ import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
 import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.abstrato.dto.GenericConverter;
+import br.com.fenix.abstrato.servico.ServicoAbstrato;
+import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.fi.favorecido.Favorecido;
@@ -32,19 +34,34 @@ import br.com.fenix.fi.moeda.MoedaRepositorio;
 
 @Controller
 @RequestMapping("/conta")
-public class ContaController  extends ControleAbstratoDTO<ContaServico,Conta,ContaDTO,Long> implements IControleDTO<Conta,ContaDTO,Long>   {
+public class ContaController  extends ControleAbstratoDTO<Conta,ContaDTO,Long> implements IControleDTO<Conta,ContaDTO,Long>   {
 
   @Autowired
   MoedaRepositorio moedaRP;
+  
+  @Autowired
+  ContaServico servico; 
 
   private GenericConverter<Conta, ContaDTO> converter; 
 	
-	public ContaController( ContaServico servico) {
-		super(servico);
-		this.servico = servico;
+//	public ContaController( ContaServico servico) {
+//		super(servico);
+//		this.servico = servico;
+//		this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
+//	}
+	public ContaController( ) {
 		this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
 	}
-	
+	@Override
+	public ServicoAbstratoDTO getServico() {
+		
+		return servico;
+	}
+	@Override
+	public GenericConverter<Conta, ContaDTO> getConverter() {
+			return this.converter;
+	}
+
 	@ModelAttribute("tipoConta")
 	public List<Option>  listaTipoConta() {
 		return TipoConta.listaTipoConta();
@@ -70,14 +87,5 @@ public class ContaController  extends ControleAbstratoDTO<ContaServico,Conta,Con
 		 }					
 		 return options;
 	}
-
-
-	@Override
-	public GenericConverter<Conta, ContaDTO> getConverter() {		
-		return this.converter;
-	}
-
-
-
-
+	
 }

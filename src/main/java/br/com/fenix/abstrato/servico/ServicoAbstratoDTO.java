@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
@@ -22,22 +24,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
-public abstract class ServicoAbstratoDTO<
-//R extends CrudRepository<T,ID>,
-										 T extends Persistable<ID>,
-										 DTO extends Persistable<ID> ,ID>
-               //       extends ServicoAbstrato<R,T ,ID>  
-					  implements IServicoDTO< T,DTO, ID>   {
-	
-	@Autowired
-	protected EntityManagerFactory emf;
-	
-//	protected final R repositorio;
-	
-	
-	public abstract  CrudRepository<T,ID> getRp();
-	
-	
+public abstract class ServicoAbstratoDTO< T   extends Persistable,
+										  DTO extends Persistable,
+										 ID> 
+					  					implements IServicoDTO< T,DTO, ID>   {
 	
 	private final Class<T> entidadeClass = 
 			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -45,14 +35,19 @@ public abstract class ServicoAbstratoDTO<
 	private final Class<T> dtoClass = 
 			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 
+	@Autowired
+	protected EntityManagerFactory emf;
+	
+
+	public abstract  CrudRepository<T,ID> getRp();
+	
+    public abstract  GenericConverter<T, DTO> getConverter(); 
+	
+//	public abstract  GenericConverter<T, DTO> getConverter(); 
+
 	public ServicoAbstratoDTO() {
 		super();
-//		this.repositorio = repositorio;		
 	}
-//	public ServicoAbstratoDTO(R repositorio, EntityManagerFactory emf ) {
-//			this.repositorio = repositorio;
-//			this.emf = emf;
-//	}
     @Override
     public EntityTransaction geradorTransacao() {
     	EntityManager em = emf.createEntityManager();
@@ -74,22 +69,18 @@ public abstract class ServicoAbstratoDTO<
 		System.err.println("Listar");
 		return getRp().findAll();
 	}
-//	@Override
-//	public T criar( T entidade ) throws Exception {
-//		EntityTransaction tx = geradorTransacao();
-//		try {				
-//			tx.begin();
-//			entidade = antesDeSalvar(entidade);
-//			entidade =  repositorio.save (entidade);
-//			depoisDeSalvar(entidade);
-//			tx.commit();
-//		} catch (Exception e) {
-//			tx.rollback();
-//			handleException(OperacaoDB.INS,e);
-//		}
-//		return entidade;		    
-//	}
-
+	@Override
+	public  List<DTO> listarDto () throws RegistroNaoExisteException {
+	    List<DTO> dtos = StreamSupport.stream(listar().spliterator(), false)
+                .map(dado -> getConverter().convertToDto(dado))
+                .collect(Collectors.toList());
+//		  Iterable<T>  dados = getRp().findAll();
+//	      List<DTO> dtos = new ArrayList<>();
+//	        for (T dado : dados ) {
+//	            dtos.add(EntidadeToDTO(dado) );
+//	        }
+	        return dtos;
+	}
 
 	@Override
 	public T atualizar(T entidade)  throws Exception {	
@@ -148,24 +139,6 @@ public abstract class ServicoAbstratoDTO<
 	}
 
 	
-//	public void ServicoAbstratoDto(R repositorio, Class<T> entidadeClass, Class<DTO> dtoClass) {
-////		super();
-//		this.repositorio = repositorio;
-//		this.entidadeClass = entidadeClass;
-//		this.dtoClass = dtoClass;
-//	}
-//    public EntityTransaction geradorTransacao() {
-//    	EntityManager em = emf.createEntityManager();
-//		return  em.getTransaction();
-//		
-//    }
-//	As a workaround, you can create an object of a type parameter through reflection:
-//
-//		public static <E> void append(List<E> list, Class<E> cls) throws Exception {
-//		    E elem = cls.newInstance();   // OK
-//		    list.add(elem);
-//		}
-	
 	public T criarInstancia() {
 		  try {
 			 return   entidadeClass.getDeclaredConstructor().newInstance(); 
@@ -176,74 +149,58 @@ public abstract class ServicoAbstratoDTO<
 	 }
 	
 
- //   BeanUtils.copyProperties(car, carDto);
-//
-    @Override
-    public T DTOtoEntidade (DTO dto) throws NegocioException {
-    	T entidade = criarInstancia(); 
-    	BeanUtils.copyProperties(dto,entidade);
-    	return entidade; 
-    }; 
-    @Override
-    public T DTOtoEntidade (DTO dto, T entidade) throws NegocioException {    	
-    	BeanUtils.copyProperties(dto,entidade);
-    	return entidade; 
-    }; 
-//	@Override
-//	public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
-//		return 	Optional.ofNullable(this.repositorio.findById(id)
-//				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
-//	}
-//	
-	@Override
+//    @Override
+//    public T DTOtoEntidade (DTO dto) throws NegocioException {
+//    	T entidade = criarInstancia(); 
+//    	BeanUtils.copyProperties(dto,entidade);
+//    	return entidade; 
+//    }; 
+//    @Override
+//    public T DTOtoEntidade (DTO dto, T entidade) throws NegocioException {    	
+//    	BeanUtils.copyProperties(dto,entidade);
+//    	return entidade; 
+//    }; 
+
 	public DTO buscaDTOPorId (ID id) throws RegistroNaoExisteException {
-		T entidade = buscarPorId(id).get();
-		return EntidadeToDTO(entidade);
+		   Optional<T>  entidadeOp = buscarPorId(id);
+		    DTO dto =  getConverter().convertToDto(entidadeOp.get()); 
+		return dto;
 	}
+
 	@Override
-	public  List<DTO> listarDto () throws RegistroNaoExisteException {
-	       
-		  Iterable<T>  dados = getRp().findAll();
-	      List<DTO> dtos = new ArrayList<>();
-	        for (T dado : dados ) {
-	            dtos.add(EntidadeToDTO(dado) );
-	        }
-	        return dtos;
-//						
-//	       repositorio.findAll().forEach(entidades::add);
-//	   
-//	        return entidades.stream().map(entity -> {
-//	            DTO dto = null;
-//	            try {
-//	                dto = dtoClass.getDeclaredConstructor().newInstance();
-//	                BeanUtils.copyProperties(entity, dto);
-//	            } catch (Exception e) {
-//	                e.printStackTrace();
-//	            }
-//	            return dto;
-//	        }).collect(Collectors.toList());
-//	    
-//// 		  Iterable<T>  dados = this.repositorio.findAll();
-////          List<DTO> dtos = new ArrayList<>();
-////	        for (T dado : dados ) {
-////	            dtos.add(EntidadeToDTO(dado) );
-////	        }
-////	        return dtos;
-//								
-//		
+	public DTO atualizarDTO(DTO dto)  throws Exception {	
+		EntityTransaction tx = geradorTransacao();
+        T entidade=null;
+		try {				
+			tx.begin();	
+			 Optional<T>  entidadeOp = buscarPorId((ID) dto.getId());
+			
+			//T entidade = (T) entidadeOp.get(); 
+			entidade = getConverter().updateEntity(entidadeOp.get(),dto); 
+			entidade = atualizar(entidade);		
+			depoisDeSalvar(entidade);
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+			handleException(OperacaoDB.UPT,e);
+		}
+		dto = getConverter().convertToDto(entidade); 
+		return dto;
+
 	}
+
 	@Override
-	public T criar(DTO dto)  throws Exception {
+	public DTO criarDTO(DTO dto)  throws Exception {
 		T entidade= criarInstancia();
-		entidade = DTOtoEntidade(dto,entidade);
-		return criar(entidade);
+//		entidade = DTOtoEntidade(dto,entidade);
+//		return criar(entidade);
+		return dto;
+	}
+//	@Override
+//	public T criar( T entidade ) throws Exception {
 //		EntityTransaction tx = geradorTransacao();
-//		T entidade= criarInstancia();
 //		try {				
 //			tx.begin();
-//			
-//		 	entidade = DTOtoEntidade(dto,entidade);
-//			criar(entidade);
 //			entidade = antesDeSalvar(entidade);
 //			entidade =  repositorio.save (entidade);
 //			depoisDeSalvar(entidade);
@@ -253,29 +210,16 @@ public abstract class ServicoAbstratoDTO<
 //			handleException(OperacaoDB.INS,e);
 //		}
 //		return entidade;		    
-	}
-////
-////
-//	@Override
-//	//	@Transactional
-//	public T atualizar(DTO dto)  throws Exception {	
-//		EntityTransaction tx = geradorTransacao();
-//		T entidade=null;
-//		try {				
-//			tx.begin();	
-//			entidade = buscarPorId(dto.getId()).get() ; 
-//			entidade = DTOtoEntidade(dto,entidade);
-//			entidade = antesDeAlterar(entidade);
-//			entidade =  repositorio.save (entidade);
-//			depoisDeSalvar(entidade);
-//			tx.commit();
-//		} catch (Exception e) {
-//			tx.rollback();
-//			handleException(OperacaoDB.UPT,e);
-//		}
-//		return entidade;
-//
 //	}
+
+//	@Override
+//	public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
+//		return 	Optional.ofNullable(this.repositorio.findById(id)
+//				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
+//	}
+//	
+////
+////
 //	@Override
 //	public void excluirPorId(ID id)throws Exception {
 //		EntityTransaction tx = geradorTransacao();
@@ -294,4 +238,17 @@ public abstract class ServicoAbstratoDTO<
 //	public void excluirTodos(){
 //		repositorio.deleteAll();
 //	}
+//  public EntityTransaction geradorTransacao() {
+//	EntityManager em = emf.createEntityManager();
+//	return  em.getTransaction();
+//	
+//}
+//As a workaround, you can create an object of a type parameter through reflection:
+//
+//	public static <E> void append(List<E> list, Class<E> cls) throws Exception {
+//	    E elem = cls.newInstance();   // OK
+//	    list.add(elem);
+//	}
+
+
 }

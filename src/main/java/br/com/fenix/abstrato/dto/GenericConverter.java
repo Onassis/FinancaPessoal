@@ -3,19 +3,21 @@ package br.com.fenix.abstrato.dto;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Component;
 
-public class GenericConverter<E, D> implements Converter<E, D> {
+
+public class GenericConverter<T, D> implements Converter<T, D> {
 
     private final Class<D> dtoClass;
-    private final Class<E> entityClass;
+    private final Class<T> entityClass;
 
-    public GenericConverter(Class<E> entityClass, Class<D> dtoClass) {
+    public GenericConverter(Class<T> entityClass, Class<D> dtoClass) {
         this.entityClass = entityClass;
         this.dtoClass = dtoClass;
     }
 
     @Override
-    public D convertToDto(E entity) {
+    public D convertToDto(T entity) {
         try {
             D dto = createDto();
             BeanUtils.copyProperties(dto, entity);
@@ -26,9 +28,9 @@ public class GenericConverter<E, D> implements Converter<E, D> {
     }
 
     @Override
-    public E convertToEntity(D dto)  {
+    public T convertToEntity(D dto)  {
 		   try {    	
-            E entity = createEntity();
+            T entity = createEntity();
             BeanUtils.copyProperties(entity,dto);
             return entity;
 	        } catch (Exception e) {
@@ -48,9 +50,9 @@ public class GenericConverter<E, D> implements Converter<E, D> {
 	}
 
 	@Override
-	public E createEntity() {
+	public T createEntity() {
 	try {
-	     E entity = entityClass.getDeclaredConstructor().newInstance();
+	     T entity = entityClass.getDeclaredConstructor().newInstance();
      
          return entity;
      } catch (Exception e) {
@@ -59,7 +61,7 @@ public class GenericConverter<E, D> implements Converter<E, D> {
 	}
 
 	@Override
-	public E updateEntity(E entity, D dto) {
+	public T updateEntity(T entity, D dto) {
 		   try {    	
 	            BeanUtils.copyProperties(entity,dto);
 	            return entity;

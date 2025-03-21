@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import br.com.fenix.abstrato.servico.IServico;
@@ -20,14 +22,22 @@ import br.com.fenix.util.Singularizer;
 import br.com.fenix.util.TextProcessor;
 
 @Service
-public class AutomacaoServico  extends ServicoAbstrato<AutomacaoRepositorio,Automacao,Long> implements IServico<Automacao,Long> {
+public class AutomacaoServico  extends ServicoAbstrato<Automacao,Long> implements IServico<Automacao,Long> {
 
 	Iterable <Automacao> automacoes; 
 	Map<Integer , Automacao> automacaoMap =  new HashMap<>();
 
-	public AutomacaoServico(AutomacaoRepositorio repositorio) {
-		super(repositorio);
+	@Autowired
+	AutomacaoRepositorio repositorio; 
+	
+	public AutomacaoServico() {
+//		super(repositorio);
 		
+	}
+	@Override
+	public CrudRepository<Automacao, Long> getRp() {
+		// TODO Auto-generated method stub
+		return repositorio;
 	}
 	/**
 	 	* Função que recebe uma coleção de lancamentos importados do arquivo  e classifica a categoria
@@ -161,6 +171,7 @@ public class AutomacaoServico  extends ServicoAbstrato<AutomacaoRepositorio,Auto
 		// TODO Auto-generated method stub
 		
 	}
+
 
 	
 }

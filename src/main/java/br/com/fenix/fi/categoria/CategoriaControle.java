@@ -30,6 +30,8 @@ import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
 import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.abstrato.dto.GenericConverter;
+import br.com.fenix.abstrato.servico.ServicoAbstrato;
+import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
@@ -42,7 +44,7 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/categoria")
-public class CategoriaControle extends 	ControleAbstratoDTO<CategoriaServico,Categoria,CategoriaDTO,Long> 
+public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaDTO,Long> 
 			implements IControleDTO<Categoria,CategoriaDTO,Long>   {
 	@Autowired
 	ContaRepositorio contaRP;
@@ -52,12 +54,19 @@ public class CategoriaControle extends 	ControleAbstratoDTO<CategoriaServico,Cat
     CategoriaRepositorio categoriaRP;
 	@Autowired
 	SubCategoriaRepositorio subCategoriaRP;
-
-	public CategoriaControle(CategoriaServico servico) {
-		super(servico);
+	@Autowired
+	CategoriaServico servico;
+	
+	private GenericConverter<Categoria, CategoriaDTO> converter;
+	public CategoriaControle() {
+	  	this.converter = new GenericConverter<>(Categoria.class, CategoriaDTO.class);
 		
 	}
+	@Override
+	public ServicoAbstratoDTO getServico() {
 	
+		return servico;
+	}
 	@ModelAttribute("opTiposLancamento")	
     public List<Option> getOptionsFromTipoLancamento() {
         return Stream.of(TipoLancamento.values())
@@ -175,6 +184,8 @@ public GenericConverter<Categoria, CategoriaDTO> getConverter() {
 	// TODO Auto-generated method stub
 	return null;
 }
+
+
 
 
 

@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.fenix.abstrato.dto.GenericConverter;
+import br.com.fenix.fi.favorecido.Favorecido;
+import br.com.fenix.fi.favorecido.FavorecidoDTO;
 import jakarta.validation.Valid;
 
 /*
@@ -49,6 +52,7 @@ public interface IControleDTO<T,DTO,ID> {
 	
 	String salvarDTO(@Valid DTO dto, BindingResult result, RedirectAttributes attr);
 //	String cadastrarDTO(DTO dto,ModelMap model);
+	GenericConverter<T, DTO> getConverter();
 
 
 }

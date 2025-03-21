@@ -17,12 +17,15 @@ import jakarta.persistence.EntityTransaction;
  * Interface de Servico
  */
 
-public interface IServicoDTO<T, DTO extends Persistable<ID>, ID> extends IServico<T,ID> {
+public interface IServicoDTO<T, DTO, ID> extends IServico<T,ID> {
 	
 	List<DTO> listarDto() ;
-	DTO EntidadeToDTO(T entidade);
-	T   DTOtoEntidade(DTO dto);
-	T DTOtoEntidade(DTO dto, T entidade) throws NegocioException;
+//	DTO EntidadeToDTO(T entidade);
+//	T   DTOtoEntidade(DTO dto);
+//	T DTOtoEntidade(DTO dto, T entidade) throws NegocioException;
 	DTO buscaDTOPorId(ID id) ;
-	T criar(DTO dto) throws Exception; 
+	
+	DTO criarDTO(DTO dto) throws Exception; 
+	DTO atualizarDTO(DTO dto) throws Exception;
+
 }

@@ -15,6 +15,8 @@ import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControle;
 import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.abstrato.dto.GenericConverter;
+import br.com.fenix.abstrato.servico.ServicoAbstrato;
+import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
@@ -25,19 +27,20 @@ import br.com.fenix.fi.conta.ContaRepositorio;
 
 @Controller
 @RequestMapping("/favorecido")
-public class FavorecidoControle extends ControleAbstratoDTO<FavorecidoServico,Favorecido,FavorecidoDTO,Long> 
+public class FavorecidoControle extends ControleAbstratoDTO<Favorecido,FavorecidoDTO,Long> 
 								implements IControleDTO<Favorecido,FavorecidoDTO,Long>   {
 	@Autowired
 	ContaRepositorio contaRP;
 	@Autowired
 	CategoriaServico categoriaSC;
+	@Autowired
+	FavorecidoServico servico;
 	
 	private GenericConverter<Favorecido, FavorecidoDTO> converter;
 
 
 
-	public FavorecidoControle(FavorecidoServico servico) {
-		super(servico);
+	public FavorecidoControle() {
 		this.converter = new GenericConverter<>(Favorecido.class, FavorecidoDTO.class);
 	}
 	@Override
@@ -66,6 +69,11 @@ public class FavorecidoControle extends ControleAbstratoDTO<FavorecidoServico,Fa
 			   			   			   
 	   return options;
 	}
+@Override
+public ServicoAbstratoDTO getServico() {
+	// TODO Auto-generated method stub
+	return this.servico;
+}
 
 
 }

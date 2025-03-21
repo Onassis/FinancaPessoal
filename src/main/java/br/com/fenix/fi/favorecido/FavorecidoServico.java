@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.IServico;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
@@ -21,12 +23,19 @@ import br.com.fenix.dominio.enumerado.OperacaoDB;
 import jakarta.persistence.EntityTransaction;
 
 @Service
-public class FavorecidoServico  extends ServicoAbstrato<FavorecidoRepositorio,Favorecido, Long> implements IServico<Favorecido,Long> {
+public class FavorecidoServico  extends ServicoAbstratoDTO<Favorecido,FavorecidoDTO, Long> implements IServicoDTO<Favorecido,FavorecidoDTO,Long> {
 
-
-	public FavorecidoServico(FavorecidoRepositorio repositorio) {
-		super(repositorio);
+	@Autowired
+	FavorecidoRepositorio repositorio;
+	private GenericConverter<Favorecido, FavorecidoDTO> converter;
+	
+	public FavorecidoServico() {
+		this.converter = new GenericConverter<>(Favorecido.class, FavorecidoDTO.class);
+	}
+	@Override
+	public CrudRepository<Favorecido, Long> getRp() {
 		
+		return repositorio;
 	}
 
 	public List<Option>  listaDeFavorecido() {
@@ -47,30 +56,17 @@ public class FavorecidoServico  extends ServicoAbstrato<FavorecidoRepositorio,Fa
 	
  	  throw e ;	
 	}
-//	@Override
-//	public Favorecido antesDeSalvar(Favorecido entidade) throws NegocioException {
-//		// TODO Auto-generated method stub
-//		return entidade;
-//	}
-//	@Override
-//	public void depoisDeSalvar(Favorecido entidade) throws NegocioException {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//	@Override
-//	public Favorecido antesDeAlterar(Favorecido entidade) throws NegocioException {
-//		// TODO Auto-generated method stub
-//		return entidade;
-//	}
-//	@Override
-//	public void depoisDeAlterar(Favorecido entidade) throws NegocioException {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//	@Override
-//	public void antesDeExcluir(Long id) throws NegocioException {
-//		// TODO Auto-generated method stub
-//		
-//	}
+	@Override
+	public Favorecido criar(Favorecido entidade) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public GenericConverter<Favorecido, FavorecidoDTO> getConverter() {
+		// TODO Auto-generated method stub
+		return converter;
+	}
+
 
 }

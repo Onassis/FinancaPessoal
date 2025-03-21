@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.CrudRepository;
 
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
@@ -17,6 +18,7 @@ import jakarta.persistence.EntityTransaction;
 public interface IServico<T,ID> {
 	
 	 EntityTransaction geradorTransacao(); 
+	 CrudRepository<T,ID> getRp();
 	 
 	 Optional<T>  buscarPorId(ID id) throws RegistroNaoExisteException;
 	 Iterable<T> listar() throws RegistroNaoExisteException;
