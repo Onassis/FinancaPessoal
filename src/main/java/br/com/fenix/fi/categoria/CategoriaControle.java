@@ -38,6 +38,7 @@ import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
+import br.com.fenix.fi.conta.ContaServico;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoServico;
 import jakarta.validation.Valid;
@@ -46,20 +47,16 @@ import jakarta.validation.Valid;
 @RequestMapping("/categoria")
 public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaDTO,Long> 
 			implements IControleDTO<Categoria,CategoriaDTO,Long>   {
+
 	@Autowired
-	ContaRepositorio contaRP;
-	@Autowired
-	CategoriaServico categoriaSC;
-	@Autowired
-    CategoriaRepositorio categoriaRP;
-	@Autowired
-	SubCategoriaRepositorio subCategoriaRP;
+	ContaServico contaSC;
 	@Autowired
 	CategoriaServico servico;
 	
-	private GenericConverter<Categoria, CategoriaDTO> converter;
+	//private GenericConverter<Categoria, CategoriaDTO> converter;
+
 	public CategoriaControle() {
-	  	this.converter = new GenericConverter<>(Categoria.class, CategoriaDTO.class);
+	  //	this.converter = new GenericConverter<>(Categoria.class, CategoriaDTO.class);
 		
 	}
 	@Override
@@ -77,23 +74,13 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 	@ModelAttribute("opContas")
 	@Cacheable(value="conta", sync = true)
 	public List<Option>  listaDeContas() {
-		   List<Option> options = contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC)
-				.stream()    
-				.map(conta -> new Option(conta.getId(), conta.getAjuda()))
-	            .collect(Collectors.toList());
-			return options;
-			
+		   return contaSC.listaDeContas(TipoConta.CC); 		
 	}
 	
    @ModelAttribute("categoriasDTO")
    @Cacheable(value="categoria", sync = true)
-	public List<Option> listaDeCategorias() {	
-	   List<Option> options =  categoriaSC.listaDeCategorias(TipoLancamento.D)
-			    .stream()
-				.map(categoria -> new Option(categoria.getId(), categoria.getDescricao()))
-	            .collect(Collectors.toList());
-			   			   			   
-	   return options;
+	public List<Option> listaDeCategorias() {	   
+	   return servico. listaDeCategoriasOpt(TipoLancamento.D); 
 	}
 
    @GetMapping("/listar/{tipoLancamento}")  
@@ -109,7 +96,7 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 	@GetMapping("/lista_tab/{tipoLancamento}")  
 	public ModelAndView listar_TabView(@PathVariable TipoLancamento tipoLancamento) {	
 		System.out.println( tipoLancamento);
-   	List<CategoriaDTO>  dados = categoriaSC.listaDeCategorias(tipoLancamento)	;
+   	List<CategoriaDTO>  dados = servico.listaDeCategorias(tipoLancamento)	;
 		System.out.println( dados.size());
    	
 		return new ModelAndView("categoria/lista_tab","categoriaDTO", dados) ;		  			  
@@ -118,17 +105,17 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 //---------------------------- SubCategoria ---------------------------------------------------------	
    @GetMapping("{id}/subcategoria/{id2}") 
    @ResponseStatus(code = HttpStatus.OK)	    	    
-   public SubCategoria buscarSubCategoriaPorId (@PathVariable  long id2){
-   
-   	   	   return subCategoriaRP.findById(id2)	    			   
-   	   			   .orElseThrow ( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id2));		    			       		    	
+   public CategoriaDTO buscarSubCategoria (@PathVariable  long id2){
+          return servico.buscarSubCategoriaPorId(id2);
+//   	   	   return servico.findById(id2)	    			   
+//   	   			   .orElseThrow ( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id2));		    			       		    	
    }
 
    @GetMapping("{id}/subcategoria/editar/{id2}") 
    @ResponseStatus(code = HttpStatus.OK)	
    public ModelAndView editar_sub_item(@PathVariable long id, @PathVariable long id2) {
    	System.out.println("editar subcategoria");
-   	SubCategoria subCategoria = buscarSubCategoriaPorId(id2) ;     		
+   	   CategoriaDTO subCategoria = servico.buscarSubCategoriaPorId(id2);     		
 
 		 return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
    }    
@@ -147,53 +134,42 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
    @PostMapping("/{id}/subcategoria")
    @Transactional
 	@ResponseStatus(code = HttpStatus.CREATED) 
-   public SubCategoria criarSubCategoria(@PathVariable long id, @Validated @RequestBody SubCategoria subCategoria){
+   public CategoriaDTO criarSubCategoria(@PathVariable long id, @Validated @RequestBody CategoriaDTO subCategoria) throws Exception{
    	System.out.println("Post criar  subcategoria");
    	System.out.println(subCategoria.toString());
-   	subCategoria.setCategoria(servico.buscarPorId(id).get());
-       return subCategoriaRP.save (subCategoria);
+//   	subCategoria.setIdCategoria(servico.buscarPorId(id).get());
+   	
+   	return (CategoriaDTO) getServico().criarDTO(subCategoria); 
+   	
+    //   return (SubCategoria) getServico().criar(subCategoria);
    }
   
    @PutMapping("/{id}/subcategoria/{idSub}")
    @Transactional
    @ResponseStatus(code = HttpStatus.OK)
-   public SubCategoria atualizar(@PathVariable long id, @Validated @RequestBody SubCategoria subCategoria){
+   public SubCategoria atualizar(@PathVariable long id, @Validated @RequestBody CategoriaDTO subCategoria){
    	System.out.println("Put  subcategoria");
-   	
-//   	System.out.println(subCategoria);
-   	SubCategoria subCatUpt = subCategoriaRP.findById(subCategoria.getId()).get();
-   	
-   	subCatUpt.setDescricao(subCategoria.getDescricao()); 
-   	subCatUpt.setImp_renda(subCategoria.isImp_renda()); 
-   	subCatUpt.setDesp_fixa(subCategoria.isDesp_fixa()); 
-   	//subCategoria.setCategoria(categoriaRP.findById(id).get());
-   	System.out.println(subCategoria.toString());
-       return subCategoriaRP.save (subCatUpt);
+   	return null;   	
+////   	System.out.println(subCategoria);
+//   	SubCategoria subCatUpt = subCategoriaRP.findById(subCategoria.getId()).get();
+//   	
+//   	subCatUpt.setDescricao(subCategoria.getDescricao()); 
+//   	subCatUpt.setImp_renda(subCategoria.isImp_renda()); 
+//   	subCatUpt.setDesp_fixa(subCategoria.isDesp_fixa()); 
+//   	//subCategoria.setCategoria(categoriaRP.findById(id).get());
+//   	System.out.println(subCategoria.toString());
+//       return subCategoriaRP.save (subCatUpt);
    }
    @DeleteMapping("/{id}/subcategoria/{id2}")
    @Transactional
    @ResponseStatus(code = HttpStatus.NO_CONTENT)
    public void excluirPorId(@PathVariable long id, @PathVariable long id2){
     	System.out.println("excluir subcategoria");
-   	buscarSubCategoriaPorId(id2);
-   	subCategoriaRP.deleteById(id2);
+    	
+////   	buscarSubCategoriaPorId(id2);
+//    getServico().de
+//   	subCategoriaRP.deleteById(id2);
    }
-
-@Override
-public GenericConverter<Categoria, CategoriaDTO> getConverter() {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-
-
-
-
-
-
-
-
-
 
 
 

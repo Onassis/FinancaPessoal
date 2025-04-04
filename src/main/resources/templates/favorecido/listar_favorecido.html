@@ -9,7 +9,7 @@
 
 	<!-------------------------------------------------- Lista ---------------------------------------------------------->
 
-	<div th:insert="fragments/navbar :: navbar('Favorecido',true)"></div>
+	<div th:insert="~{fragments/navbar :: navbar('Favorecido',true)}"></div>
 
 	<!-------------------------------------------------- alerta ------------------------------------------------------------>
 
@@ -32,7 +32,7 @@
 						</thead>
 						<tbody>
 
-							<tr th:each="f : ${favorecidodto}">
+							<tr th:each="f : ${favorecidoDTO}">
 								<td th:text="${f.nome}">nome</td>
 								<td th:text="${f?.conta?.apelido}">nome</td>
 								<td th:text="${f?.subCategoria?.descricao}">categoria</td>
@@ -49,10 +49,8 @@
 				</div>
 			</div>
 		</div>
-<script type="text/javascript">
-    $(".alert").delay(5000).slideUp(200, function () {
-        $(this).alert('close');
-    });
+		<script th:src="@{/js/cadastro.js}"></script>
+
 </script>
 </main>
 </html>

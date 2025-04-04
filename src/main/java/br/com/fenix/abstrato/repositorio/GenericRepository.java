@@ -12,7 +12,7 @@ import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.seguranca.usuario.Usuario;
 
 @NoRepositoryBean
-public interface GenericRepository<T> extends CrudRepository<T, Long> {
+public interface GenericRepository<T> extends JpaRepository<T, Long> {
 	
 
   //  @Query("SELECT e FROM #{#entityName} e WHERE e.id = ?1 and e.criadoPor.id = ?#{ principal.id}")

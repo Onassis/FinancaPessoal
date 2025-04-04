@@ -19,7 +19,7 @@ public class GenericConverter<T, D> implements Converter<T, D> {
     @Override
     public D convertToDto(T entity) {
         try {
-            D dto = createDto();
+            D dto = dtoClass.getDeclaredConstructor().newInstance();;
             BeanUtils.copyProperties(dto, entity);
             return dto;
         } catch (Exception e) {
@@ -30,7 +30,7 @@ public class GenericConverter<T, D> implements Converter<T, D> {
     @Override
     public T convertToEntity(D dto)  {
 		   try {    	
-            T entity = createEntity();
+            T entity = entityClass.getDeclaredConstructor().newInstance();
             BeanUtils.copyProperties(entity,dto);
             return entity;
 	        } catch (Exception e) {
@@ -39,26 +39,26 @@ public class GenericConverter<T, D> implements Converter<T, D> {
             
     }
 
-	@Override
-	public D createDto() {
-		   try {
-	            D dto = dtoClass.getDeclaredConstructor().newInstance();	        
-	            return dto;
-	        } catch (Exception e) {
-	            throw new RuntimeException("Error converting to DTO", e);
-	        }
-	}
-
-	@Override
-	public T createEntity() {
-	try {
-	     T entity = entityClass.getDeclaredConstructor().newInstance();
-     
-         return entity;
-     } catch (Exception e) {
-         throw new RuntimeException("Error converting to Entity", e);
-     }
-	}
+//	@Override
+//	public D createDto() {
+//		   try {
+//	            D dto = dtoClass.getDeclaredConstructor().newInstance();	        
+//	            return dto;
+//	        } catch (Exception e) {
+//	            throw new RuntimeException("Error converting to DTO", e);
+//	        }
+//	}
+//
+//	@Override
+//	public T createEntity() {
+//	try {
+//	     T entity = entityClass.getDeclaredConstructor().newInstance();
+//     
+//         return entity;
+//     } catch (Exception e) {
+//         throw new RuntimeException("Error converting to Entity", e);
+//     }
+//	}
 
 	@Override
 	public T updateEntity(T entity, D dto) {

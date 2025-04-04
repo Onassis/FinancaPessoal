@@ -36,20 +36,9 @@ public class FavorecidoControle extends ControleAbstratoDTO<Favorecido,Favorecid
 	@Autowired
 	FavorecidoServico servico;
 	
-	private GenericConverter<Favorecido, FavorecidoDTO> converter;
-
-
-
 	public FavorecidoControle() {
-		this.converter = new GenericConverter<>(Favorecido.class, FavorecidoDTO.class);
+		super();
 	}
-	@Override
-	public GenericConverter<Favorecido, FavorecidoDTO> getConverter() {
-
-		return this.converter;
-	}
-
-
 	@ModelAttribute("contas")
 	@Cacheable(value="conta", sync = true)
 	public List<Option>  listaDeContas() {

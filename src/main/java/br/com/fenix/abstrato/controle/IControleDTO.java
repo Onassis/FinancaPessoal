@@ -52,7 +52,7 @@ public interface IControleDTO<T,DTO,ID> {
 	
 	String salvarDTO(@Valid DTO dto, BindingResult result, RedirectAttributes attr);
 //	String cadastrarDTO(DTO dto,ModelMap model);
-	GenericConverter<T, DTO> getConverter();
+//	GenericConverter<T, DTO> getConverter();
 
 
 }

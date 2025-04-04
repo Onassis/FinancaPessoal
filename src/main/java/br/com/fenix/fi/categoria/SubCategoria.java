@@ -20,10 +20,14 @@ import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(callSuper=true)
-@NoArgsConstructor
+//@NoArgsConstructor
 @Data
 public class SubCategoria extends MasterCategoria {
 	 
+	public SubCategoria() {
+		super();
+		this.tipoCategoria = "SC";
+	}
 	/**
 	 * 
 	 */
@@ -62,16 +66,16 @@ public class SubCategoria extends MasterCategoria {
 				+ ", descricao=" + descricao + ", tipoLancamento=" + tipoLancamento + ", inativo=" + inativo
 				+ ", isDebito=" + debito + "]";
 	}
-	@Override
-    public CategoriaDTO categoria_DTO() {
-    	return new CategoriaDTO(
-    			this.getId(),
-    			categoria.getDescricao().concat( " ->" ).concat(this.descricao) ,    			
-    			tipoLancamento,
-    			categoria.getId(),
-				this.desp_fixa,
-				this.imp_renda);
-    }
+//	@Override
+//    public CategoriaDTO categoria_DTO() {
+//    	return new CategoriaDTO(
+//    			this.getId(),
+//    			categoria.getDescricao().concat( " ->" ).concat(this.descricao) ,    			
+//    			tipoLancamento,
+//    			categoria.getId(),
+//				this.desp_fixa,
+//				this.imp_renda);
+//    }
 
 
 	 

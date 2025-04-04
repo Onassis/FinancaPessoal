@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import br.com.fenix.abstrato.base.AbstrataDTO;
 import br.com.fenix.abstrato.base.EntidadeAbstrata;
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
+import br.com.fenix.dominio.converter.rest.CategoriaDeserializer;
 import br.com.fenix.dominio.converter.rest.StringDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 
@@ -20,18 +21,16 @@ import br.com.fenix.dominio.enumerado.TipoLancamento;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CategoriaDTO  extends EntidadeAuditavel<Long> {
+public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 		
- 
-//		private Long  id;
-
 	    
 		@JsonDeserialize(using = StringDeserializer.class)		
 		private String descricao;
+		
 		
 		@JsonDeserialize(using = StringDeserializer.class) 
 	    @Enumerated(EnumType.STRING)
@@ -39,49 +38,35 @@ public class CategoriaDTO  extends EntidadeAuditavel<Long> {
 		
         private String tipoCategoria;
 	    
-		private Long idCategoria; 
-		
+    	@JsonDeserialize(using =  CategoriaDeserializer.class)
+	    public Categoria categoria;
+    	
 		private boolean desp_fixa; 
 		
+		private boolean credito; 
 	    private boolean imp_renda;
+		private long versao;
 
 
 	//    @JsonDeserialize(using = StringDeserializer.class) 
 	//    private String tipoCategoria;
     
-		public CategoriaDTO(Long id, String descricao, TipoLancamento tipoLancamento,Long idCategoria, boolean desp_fixa, boolean imp_renda) {
-			super();
-			this.id = id;
-			this.descricao = descricao;			
-			this.tipoLancamento = tipoLancamento;
-			if ( idCategoria == 0) { 
-				this.tipoCategoria = "CT";						
-			} else { 
-				this.tipoCategoria = "SC";										
-			}
-			this.idCategoria = idCategoria;
-			this.desp_fixa = desp_fixa; 
-			this.imp_renda = imp_renda;
-		     
-//			this.tipoCategoria = tipoCategoria;			
-		}
-	    
-		protected void EntidadeToDTO(MasterCategoria categoria) { 
-			if (categoria instanceof SubCategoria) { 
-				SubCategoria subCategoria = (SubCategoria) categoria;
-				this.idCategoria = subCategoria.getCategoria().getId();				
-				this.tipoCategoria = "SC";										
-			} else {
-				this.tipoCategoria = "CT";						
-			}
-			
-			this.id = categoria.getId();
-			this.descricao = categoria.getDescricao();			
-			this.tipoLancamento = categoria.getTipoLancamento();
-
-			this.desp_fixa = false;; 
-			this.imp_renda = false;	    		    	
-	    }
+//		protected void EntidadeToDTO(MasterCategoria categoria) { 
+//			if (categoria instanceof SubCategoria) { 
+//				SubCategoria subCategoria = (SubCategoria) categoria;
+//				this.idCategoria = subCategoria.getCategoria().getId();				
+//				this.tipoCategoria = "SC";										
+//			} else {
+//				this.tipoCategoria = "CT";						
+//			}
+//			
+//			this.id = categoria.getId();
+//			this.descricao = categoria.getDescricao();			
+//			this.tipoLancamento = categoria.getTipoLancamento();
+//
+//			this.desp_fixa = false;; 
+//			this.imp_renda = false;	    		    	
+//	    }
 
 		@Override
 		public int hashCode() {
@@ -105,8 +90,5 @@ public class CategoriaDTO  extends EntidadeAuditavel<Long> {
 			} else if (!id.equals(other.id))
 				return false;
 			return true;
-		}
-
-
-	    
+		}	    
 }

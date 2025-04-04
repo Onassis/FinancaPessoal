@@ -87,7 +87,7 @@ public class LancamentoControllerRest {
 	}
 	
 	@ModelAttribute("categoriasDTO")
-	public ArrayList<CategoriaDTO> listaDeCategorias() {		
+	public List<CategoriaDTO> listaDeCategorias() {		
 	 return categoriaSC.listaDeCategorias(TipoLancamento.D); 
 	}
 	

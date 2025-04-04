@@ -1,74 +1,22 @@
 package br.com.fenix.fi.categoria;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import br.com.fenix.dominio.converter.rest.CategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class SubCategoriaDTO {
+@NoArgsConstructor
+@Data
+public class SubCategoriaDTO extends CategoriaDTO {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 		
-		private Long  id;
-		private String descricao;
-	    @Enumerated(EnumType.STRING)
-		private TipoLancamento tipoLancamento;
-	    private String tipoCategoria;
-		public SubCategoriaDTO(Long id, String descricao, TipoLancamento tipoLancamento,String tipoCategoria) {
-			super();
-			this.id = id;
-			this.descricao = descricao;
-			this.tipoLancamento = tipoLancamento;
-			this.tipoCategoria = tipoCategoria;
-			
-		}	    
-		public Long getId() {
-			return id;
-		}
-		public void setId(Long id) {
-			this.id = id;
-		}
-
-		public String getDescricao() {
-			return descricao;
-		}
-		public void setDescricao(String descricao) {
-			this.descricao = descricao;
-		}
-		public TipoLancamento getTipoLancamento() {
-			return tipoLancamento;
-		}
-		public void setTipoLancamento(TipoLancamento tipoLancamento) {
-			this.tipoLancamento = tipoLancamento;
-		}
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((id == null) ? 0 : id.hashCode());
-			return result;
-		}
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			SubCategoriaDTO other = (SubCategoriaDTO) obj;
-			if (id == null) {
-				if (other.id != null)
-					return false;
-			} else if (!id.equals(other.id))
-				return false;
-			return true;
-		}
-		public String getTipoCategoria() {
-			return tipoCategoria;
-		}
-		public void setTipoCategoria(String tipoCategoria) {
-			this.tipoCategoria = tipoCategoria;
-		}
+		@JsonDeserialize(using =  CategoriaDeserializer.class)
+	    public Categoria categoria2;
 	    
 }

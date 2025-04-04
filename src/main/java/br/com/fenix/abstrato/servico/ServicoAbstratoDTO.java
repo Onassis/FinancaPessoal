@@ -15,14 +15,19 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
+import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.categoria.CategoriaDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceUnit;
+
 
 public abstract class ServicoAbstratoDTO< T   extends Persistable,
 										  DTO extends Persistable,
@@ -35,18 +40,19 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	private final Class<T> dtoClass = 
 			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 
-	@Autowired
-	protected EntityManagerFactory emf;
+	@PersistenceUnit
+	protected final EntityManagerFactory emf;
 	
 
 	public abstract  CrudRepository<T,ID> getRp();
 	
-    public abstract  GenericConverter<T, DTO> getConverter(); 
+    public abstract   Converter<T, DTO> getConverter(); 
 	
-//	public abstract  GenericConverter<T, DTO> getConverter(); 
 
-	public ServicoAbstratoDTO() {
+	public ServicoAbstratoDTO(EntityManagerFactory emf) {
 		super();
+		this.emf = emf;
+	
 	}
     @Override
     public EntityTransaction geradorTransacao() {
@@ -74,12 +80,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	    List<DTO> dtos = StreamSupport.stream(listar().spliterator(), false)
                 .map(dado -> getConverter().convertToDto(dado))
                 .collect(Collectors.toList());
-//		  Iterable<T>  dados = getRp().findAll();
-//	      List<DTO> dtos = new ArrayList<>();
-//	        for (T dado : dados ) {
-//	            dtos.add(EntidadeToDTO(dado) );
-//	        }
-	        return dtos;
+        return dtos;
 	}
 
 	@Override
@@ -147,20 +148,6 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
               return null;
           }
 	 }
-	
-
-//    @Override
-//    public T DTOtoEntidade (DTO dto) throws NegocioException {
-//    	T entidade = criarInstancia(); 
-//    	BeanUtils.copyProperties(dto,entidade);
-//    	return entidade; 
-//    }; 
-//    @Override
-//    public T DTOtoEntidade (DTO dto, T entidade) throws NegocioException {    	
-//    	BeanUtils.copyProperties(dto,entidade);
-//    	return entidade; 
-//    }; 
-
 	public DTO buscaDTOPorId (ID id) throws RegistroNaoExisteException {
 		   Optional<T>  entidadeOp = buscarPorId(id);
 		    DTO dto =  getConverter().convertToDto(entidadeOp.get()); 
@@ -172,14 +159,12 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 		EntityTransaction tx = geradorTransacao();
         T entidade=null;
 		try {				
-			tx.begin();	
+			 tx.begin();	
 			 Optional<T>  entidadeOp = buscarPorId((ID) dto.getId());
-			
-			//T entidade = (T) entidadeOp.get(); 
-			entidade = getConverter().updateEntity(entidadeOp.get(),dto); 
-			entidade = atualizar(entidade);		
-			depoisDeSalvar(entidade);
-			tx.commit();
+			 entidade = getConverter().updateEntity(entidadeOp.get(),dto); 
+			 entidade = atualizar(entidade);		
+			 depoisDeSalvar(entidade);
+			 tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
 			handleException(OperacaoDB.UPT,e);
@@ -191,64 +176,25 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 
 	@Override
 	public DTO criarDTO(DTO dto)  throws Exception {
-		T entidade= criarInstancia();
-//		entidade = DTOtoEntidade(dto,entidade);
-//		return criar(entidade);
-		return dto;
+		System.out.println("ServicoAbstratoDTO -> Crair ");
+		T entidade = getConverter().convertToEntity(dto);
+
+		entidade = criar(entidade);
+		return getConverter().convertToDto(entidade);
 	}
-//	@Override
-//	public T criar( T entidade ) throws Exception {
-//		EntityTransaction tx = geradorTransacao();
-//		try {				
-//			tx.begin();
-//			entidade = antesDeSalvar(entidade);
-//			entidade =  repositorio.save (entidade);
-//			depoisDeSalvar(entidade);
-//			tx.commit();
-//		} catch (Exception e) {
-//			tx.rollback();
-//			handleException(OperacaoDB.INS,e);
-//		}
-//		return entidade;		    
-//	}
-
-//	@Override
-//	public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
-//		return 	Optional.ofNullable(this.repositorio.findById(id)
-//				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
-//	}
-//	
-////
-////
-//	@Override
-//	public void excluirPorId(ID id)throws Exception {
-//		EntityTransaction tx = geradorTransacao();
-//		try {				
-//			tx.begin();	
-//			antesDeExcluir(id);
-//			repositorio.deleteById(id);
-//			tx.commit();
-//		} catch (Exception e) {
-//			tx.rollback();
-//			handleException(OperacaoDB.DEL,e);
-//		}
-//	}
-//	@Override
-//	@Transactional
-//	public void excluirTodos(){
-//		repositorio.deleteAll();
-//	}
-//  public EntityTransaction geradorTransacao() {
-//	EntityManager em = emf.createEntityManager();
-//	return  em.getTransaction();
-//	
-//}
-//As a workaround, you can create an object of a type parameter through reflection:
-//
-//	public static <E> void append(List<E> list, Class<E> cls) throws Exception {
-//	    E elem = cls.newInstance();   // OK
-//	    list.add(elem);
-//	}
-
-
+	@Override
+	public T criar( T entidade ) throws Exception {
+		EntityTransaction tx = geradorTransacao();
+		try {				
+			tx.begin();
+			entidade = antesDeSalvar(entidade);
+			entidade = getRp().save (entidade);
+			depoisDeSalvar(entidade);
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+			handleException(OperacaoDB.INS,e);
+		}
+		return entidade;		    
+	}
 }

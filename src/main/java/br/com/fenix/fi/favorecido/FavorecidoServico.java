@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.IServico;
 import br.com.fenix.abstrato.servico.IServicoDTO;
@@ -20,6 +23,7 @@ import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
 @Service
@@ -27,10 +31,11 @@ public class FavorecidoServico  extends ServicoAbstratoDTO<Favorecido,Favorecido
 
 	@Autowired
 	FavorecidoRepositorio repositorio;
-	private GenericConverter<Favorecido, FavorecidoDTO> converter;
+	@Autowired
+	private FavorecidoMapper converter;
 	
-	public FavorecidoServico() {
-		this.converter = new GenericConverter<>(Favorecido.class, FavorecidoDTO.class);
+	public FavorecidoServico(EntityManagerFactory emf) {
+    	super(emf);
 	}
 	@Override
 	public CrudRepository<Favorecido, Long> getRp() {
@@ -56,15 +61,9 @@ public class FavorecidoServico  extends ServicoAbstratoDTO<Favorecido,Favorecido
 	
  	  throw e ;	
 	}
+
 	@Override
-	public Favorecido criar(Favorecido entidade) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public GenericConverter<Favorecido, FavorecidoDTO> getConverter() {
-		// TODO Auto-generated method stub
+	public FavorecidoMapper getConverter() {	
 		return converter;
 	}
 

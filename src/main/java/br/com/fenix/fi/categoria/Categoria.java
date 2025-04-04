@@ -24,7 +24,7 @@ import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 //@DiscriminatorValue( value="CT" )
 @EqualsAndHashCode(callSuper=true)
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Categoria extends MasterCategoria {
 
 	/**
@@ -37,6 +37,12 @@ public class Categoria extends MasterCategoria {
     @Column(nullable = false)
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<SubCategoria> subCategoria ;
+    
+    
+	public Categoria() {
+		super();
+		this.tipoCategoria = "CT";
+	}
     
     public Categoria ( ModeloCategoria modeloCategoria) { 
     	   super();

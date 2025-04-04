@@ -48,26 +48,14 @@ public abstract   class ControleAbstratoDTO<T extends Persistable,
 	
 	private final Class<T> dtoClass = 
 			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-	
-//	protected S servico; 
-	
-	
-	
 
 
-  //
-	  public ControleAbstratoDTO() {
-		}
 
-//    public ControleAbstratoDTO(S servico) {
-//		this.servico = servico;
-//	//	this.converter = converter;
-//
-//	}
-    public abstract  GenericConverter<T, DTO> getConverter(); 
     
     public abstract  ServicoAbstratoDTO<T,DTO,ID> getServico(); 
     
+	public ControleAbstratoDTO() {
+	}
     
     
     
@@ -88,7 +76,9 @@ public abstract   class ControleAbstratoDTO<T extends Persistable,
         String className = clazz.getSimpleName();
         return Character.toLowerCase(className.charAt(0)) + className.substring(1);
     }
-
+	/*
+	 * Retorna o formulario de cadastro 
+	 */
 	@Override
 	public String cadastroHtml() {
 		return nomeClasse().concat("/cad_").concat(nomeClasse());	    
@@ -97,7 +87,7 @@ public abstract   class ControleAbstratoDTO<T extends Persistable,
 	
 	@Override
 	public String listarHtml() {
-		System.out.println("nomeClasse: " + nomeClasse());
+//		System.out.println("nomeClasse: " + nomeClasse());
 		return nomeClasse().concat("/listar_").concat(nomeClasse());	 
 	}	
 
@@ -135,14 +125,7 @@ public abstract   class ControleAbstratoDTO<T extends Persistable,
 	@GetMapping("/listar")
 	@Override
 	public String  listarView(ModelMap model) {
-//		System.out.println("listarView"); 
-		
-//	    Iterable<T> dados = getServico().listar();
-//	    List<DTO> dtos = StreamSupport.stream(dados.spliterator(), false)
-//                    .map(dado -> getConverter().convertToDto(dado))
-//                    .collect(Collectors.toList());
-	    List<DTO> dtos = (List<DTO>) getServico().listarDto ();
-//	    System.out.println("ControeAbstractDTo -> ListarView: " + nomeClasseDTO() );
+	    List<DTO> dtos = getServico().listarDto ();
 		model.addAttribute(nomeClasseDTO(), dtos);
 		return listarHtml();
 	}
@@ -154,8 +137,7 @@ public abstract   class ControleAbstratoDTO<T extends Persistable,
 			   return cadastroHtml();
 		 }
 		 try {
-//		   Optional<T>  entidadeOp = getServico().buscarPorId(id);
-		    DTO dto = (DTO) getServico().buscaDTOPorId(id); 
+		    DTO dto =  getServico().buscaDTOPorId(id); 
 		   
 		   model.addAttribute(nomeClasseDTO() , dto);
 		 } catch (RegistroNaoExisteException e) {
@@ -167,8 +149,7 @@ public abstract   class ControleAbstratoDTO<T extends Persistable,
 	@Override
 	public String inserir(DTO dto, RedirectAttributes attr) {
 		try {	
-			T entidade = getConverter().convertToEntity(dto);
-			getServico().criar(entidade);				
+			dto = getServico().criarDTO(dto); 
 			attr.addFlashAttribute("Sucesso", "Registro inserido com sucesso.");
 		}
 		catch (Exception e) {
@@ -182,18 +163,14 @@ public abstract   class ControleAbstratoDTO<T extends Persistable,
 	@Override
 	public String alterar(DTO dto, RedirectAttributes attr) {
 		try {	
-//			Optional<T>  entidadeOp = (Optional<T>) getServico().buscarPorId(dto.getId());
-//			T entidade = entidadeOp.get(); 
-//			entidade = getConverter().updateEntity(entidade,dto); 
-//			getServico().atualizar(entidade);		
+			dto = getServico().atualizarDTO(dto);
 			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
 		}
 		catch (Exception e) {
 			System.out.println("ControleAbstrato-> Salvar -> Exception");
 			attr.addFlashAttribute("Erro", e.getMessage());			
 			attr.addFlashAttribute(nomeClasseDTO(), dto );			
-//			attr.addFlashAttribute(nomeClasse() ,entidade);
-			return "redirect:".concat(urlEditar((ID) dto.getId()));		
+			return "redirect:".concat(urlEditar( (ID) dto.getId()));		
 			}
 		 			
 		return "redirect:".concat(urlListar());	

@@ -42,24 +42,14 @@ public class ContaController  extends ControleAbstratoDTO<Conta,ContaDTO,Long> i
   @Autowired
   ContaServico servico; 
 
-  private GenericConverter<Conta, ContaDTO> converter; 
-	
-//	public ContaController( ContaServico servico) {
-//		super(servico);
-//		this.servico = servico;
-//		this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
-//	}
-	public ContaController( ) {
-		this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
+	public ContaController() {
+		super();
 	}
+	
 	@Override
 	public ServicoAbstratoDTO getServico() {
 		
 		return servico;
-	}
-	@Override
-	public GenericConverter<Conta, ContaDTO> getConverter() {
-			return this.converter;
 	}
 
 	@ModelAttribute("tipoConta")

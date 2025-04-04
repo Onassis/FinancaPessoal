@@ -16,8 +16,8 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>,  Serializ
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Transient
-	private boolean isNew = false;
+//	@Transient
+//	private boolean isNew ;
 	  
 	public EntidadeAbstrata() {
 		super();	
@@ -28,17 +28,17 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>,  Serializ
 	@Column(updatable = false)
 	protected ID  id;
 
-   @Override
+   
+   @Transient
 	public boolean isNew() {
-//	   return isNew;
        return null == getId();
 	} 
    
-   @PrePersist 
-   @PostLoad
-   void markNotNew() {
-     this.isNew = false;
-   }
+//   @PrePersist 
+//   @PostLoad
+//   void markNotNew() {
+//     this.isNew = false;
+//   }
    
    
 	

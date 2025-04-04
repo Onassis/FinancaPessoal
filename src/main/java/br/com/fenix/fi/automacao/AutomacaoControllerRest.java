@@ -56,7 +56,7 @@ public class AutomacaoControllerRest  extends ControleAbstratoRest<Automacao> im
 	 return favorecidoRP.findAll();  
 	}
    @ModelAttribute("categoriasDTO")
-	public ArrayList<CategoriaDTO> listaDeCategorias() {		
+	public List<CategoriaDTO> listaDeCategorias() {		
 	 return categoriaSC.listaDeCategorias(null); 
 	}
 

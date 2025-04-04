@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.hibernate.type.TrueFalseConverter;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ import br.com.fenix.abstrato.repositorio.GenericRepositoryAutenticado;
 import br.com.fenix.dominio.enumerado.TipoConta;
 
 @Repository
-public interface ContaRepositorio extends CrudRepository<Conta,Long> {
+public interface ContaRepositorio extends JpaRepository<Conta,Long> {
 	
 	@Query("from Conta o where o.id = ?1 and o.criadoPor.id = ?#{ principal.id}")
 	Optional<Conta> findById (Long id);

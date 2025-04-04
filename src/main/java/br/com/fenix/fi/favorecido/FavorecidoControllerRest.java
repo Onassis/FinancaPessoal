@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.fenix.abstrato.controle.ControleAbstratoRest;
+import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
@@ -35,16 +36,17 @@ import jakarta.annotation.security.RolesAllowed;
 @RequestMapping("api/favorecido")
 public class FavorecidoControllerRest  extends ControleAbstratoRest<Favorecido> implements IControleFavorecidoRest  {
  
+	
+
 //	@Autowired
 //	FavorecidoRepositorio FavorecidoRP;
 	@Autowired
 	ContaRepositorio contaRP;
 	@Autowired
 	CategoriaServico categoriaSC;
-    	
-	public FavorecidoControllerRest(FavorecidoRepositorio repositorio) {
+	
+	public FavorecidoControllerRest(GenericRepository<Favorecido> repositorio) {
 		super(repositorio);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@ModelAttribute("contas")

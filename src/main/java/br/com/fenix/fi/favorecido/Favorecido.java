@@ -16,6 +16,8 @@ import br.com.fenix.dominio.converter.rest.StringDeserializer;
 import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
 import br.com.fenix.fi.categoria.SubCategoria;
 import br.com.fenix.fi.conta.Conta;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +30,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Favorecido extends EntidadeAuditavel<Long>  {
 	private static final long serialVersionUID = -4594764148388431106L;
 

@@ -22,6 +22,7 @@ import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.dominio.enumerado.TipoConta;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -32,13 +33,11 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 	
    private GenericConverter<Conta, ContaDTO> converter; 
    
-	public ContaServico() {
+	public ContaServico(EntityManagerFactory emf) {
+    	super(emf);
 		this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
+		
 	}
-//   
-//	public CrudRepository<Conta,Long> getRp() {
-//		return this.contaRp;
-//	}
 	public List<Option>  listaDeContas(TipoConta tipoConta) {
 		   List<Option> options = contaRp.findByTipoContaOrderByApelidoAsc(tipoConta).stream()    
 				.map(conta -> new Option(conta.getId(), conta.getAjuda()))
@@ -65,10 +64,7 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 		return contaRp;
 	}
 
-	@Override
-	public Conta criar(Conta entidade) throws Exception {
-		return null;
-	}
+
 	@Override
 	public GenericConverter<Conta, ContaDTO> getConverter() {
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.repositorio.GenericRepository;
@@ -36,6 +37,8 @@ import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
 import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 
 
 @Service
@@ -47,11 +50,15 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	SubCategoriaRepositorio subCategoriaRP;
 	@Autowired
 	CategoriaRepositorio repositorio;
+	@Autowired
+	CategoriaMapper converter;
+	@Autowired
+	private SubCategoriaMapper converterSub;
 	
-	private GenericConverter<Categoria, CategoriaDTO> converter;
-
-    public CategoriaServico() {
-    	this.converter = new GenericConverter<>(Categoria.class, CategoriaDTO.class);
+    public CategoriaServico(EntityManagerFactory emf) {
+    	super(emf);
+//    	this.converter = new GenericConverter<>(Categoria.class, CategoriaDTO.class);
+//    	this.converterSub = new GenericConverter<>(SubCategoria.class, CategoriaDTO.class);
 	}
     @Override
     public CrudRepository<Categoria, Long> getRp() {
@@ -65,7 +72,15 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	            .collect(Collectors.toList());
 			return options;			
 	}	
-
+ 
+   public CategoriaDTO buscarSubCategoriaPorId (@PathVariable  long id){
+	          
+	   Optional<SubCategoria>  entidadeOp  = Optional.ofNullable(repositorio.findBySubCategoriaId(id)
+			   .orElseThrow ( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id)));
+   	   	   
+		   CategoriaDTO dto = converterSub.convertToDto(entidadeOp.get()); 
+         return dto;       		    			       		    	
+   }
 
 	@Transactional(isolation = Isolation.DEFAULT)
 	public  void  CriarPorModelo(TipoLancamento tipoLancamento) {
@@ -91,9 +106,9 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 		 
 }	
 
-    public ArrayList<CategoriaDTO> listaDeCategorias(TipoLancamento tipoLancamento) {
+    public List<CategoriaDTO> listaDeCategorias(TipoLancamento tipoLancamento) {
 
-	 ArrayList<CategoriaDTO> categoriasDTO = new ArrayList<CategoriaDTO>(); 
+	 List<CategoriaDTO> categoriasDTO = new ArrayList<CategoriaDTO>(); 
 	 Iterable<Categoria> categorias ; 
 	 
 	 CategoriaDTO categoriaDTO = new CategoriaDTO();
@@ -105,20 +120,35 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	 for(Categoria categoria : categorias) {      
 		 
 		 if (categoria.getSubCategoria().isEmpty()) {
-			 categoriasDTO.add(categoria.categoria_DTO());
+			 categoriaDTO = converter.convertToDto(categoria); 
+			 categoriasDTO.add(categoriaDTO);
+			 continue;
 		 }
-		 else {
- 	    	 	for(MasterCategoria subCategoria : categoria.getSubCategoria()) { 
-				 
- 	    	 		categoriaDTO =  subCategoria.categoria_DTO();
- 	    	 		if (!categoriasDTO.contains(categoriaDTO)) { 
- 	    	 			categoriasDTO.add(categoriaDTO);
+   	 	for(SubCategoria subCategoria : categoria.getSubCategoria()) { 
+   	 		 CategoriaDTO subCategoriaDTO = converterSub.convertToDto(subCategoria); 
+ 	    	 		
+// 	    	 		categoriaDTO =  subCategoria.categoria_DTO();
+ 	    	 		if (!categoriasDTO.contains(subCategoriaDTO )) { 
+ 	    	 			categoriasDTO.add(subCategoriaDTO );
  	    	 		}
- 	    	 	}	 
-		 	}
-	 	}
+ 		 }	 
+	}
+	 	
 	 
 	 return categoriasDTO ; 
+	}
+
+	public void excluirPorIdSub(Long id)throws Exception {
+		EntityTransaction tx = geradorTransacao();
+		try {				
+			tx.begin();	
+			antesDeExcluir(id);
+			repositorio.deleteSubCategoria(id);
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+			handleException(OperacaoDB.DEL,e);
+		}
 	}
 /*	
 	public ArrayList<CategoriaDTO> listaDeSubCategorias(TipoLancamento tipoLancamento) {
@@ -151,16 +181,11 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	public void handleException(OperacaoDB op, Exception e) throws Exception {
 		// TODO Auto-generated method stub
 	}
-	@Override
 	
-	public Categoria criar(Categoria entidade) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	@Override
-	public GenericConverter<Categoria, CategoriaDTO> getConverter() {
-		// TODO Auto-generated method stub
-		return null;
+	public CategoriaMapper getConverter() {
+	
+		return converter;
 	}
 
 

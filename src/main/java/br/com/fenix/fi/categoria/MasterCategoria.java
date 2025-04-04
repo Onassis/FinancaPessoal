@@ -45,6 +45,8 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     protected boolean debito;
     @jakarta.persistence.Transient
     protected boolean credito;
+    @jakarta.persistence.Transient
+    protected String tipoCategoria;
     
     public  MasterCategoria() {
     	super();
@@ -68,10 +70,11 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     public boolean isCredito() {
     	return tipoLancamento == TipoLancamento.C; 
     }
-    public CategoriaDTO categoria_DTO() {
-    	return new CategoriaDTO(this.getId(),descricao,tipoLancamento,0L,false,false);
-    }
     
+//    public CategoriaDTO categoria_DTO() {
+//    	return new CategoriaDTO(this.getId(),descricao,tipoLancamento,0L,false,false);
+//    }
+//    
 //    protected boolean despesaFixa;
     
 
