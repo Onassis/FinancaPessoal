@@ -8,24 +8,18 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import br.com.fenix.dominio.modelo.Option;
 
-public enum TipoOperacao {
-	AP("AP", "Aplicação"), 
-	CC("CC","Cartão de crédito"),
-	CH("CH","Cheque"),
-	DB("DB","Débito"),
-	DP("DP","Depósito"),
-	EP("EP","Emprestimo"),
-	PI("PI", "Pix"),
-	PG("PG","Pagamento"),
-	SQ("SQ","Saque"),
-	RG("RG", "Resgate"),	
+public enum TipoCategoria {
+	DP("DP", "Despesa"), 
+	EP("EP", "Emprestimo"), 
+	IV("IV", "Investimento"), 
+	RE("RE", "Receita"), 
 	TR("TR", "Transferência");
 
 
 	private String tipoOperacao;
 	private String descricao;
 	
-	TipoOperacao(String tipoOperacao, String descricao) {
+	TipoCategoria(String tipoOperacao, String descricao) {
 		this.tipoOperacao = tipoOperacao;
 		this.descricao = descricao;
 	}
@@ -46,7 +40,7 @@ public enum TipoOperacao {
 		this.descricao = descricao;
 	}	
 	public static List<Option>  listaTipoOperacao() {
-		   List<Option> options = Stream.of(TipoOperacao.values())
+		   List<Option> options = Stream.of(TipoCategoria.values())
 		            .map(tipo -> new Option(tipo.name(), tipo.getDescricao()))
 		            .collect(Collectors.toList());
 		return options;

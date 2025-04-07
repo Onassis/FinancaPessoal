@@ -24,10 +24,6 @@ import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 @Data
 public class SubCategoria extends MasterCategoria {
 	 
-	public SubCategoria() {
-		super();
-		this.tipoCategoria = "SC";
-	}
 	/**
 	 * 
 	 */
@@ -35,7 +31,6 @@ public class SubCategoria extends MasterCategoria {
 	
 
 	@ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER ,  optional = false)	
-//	@JoinColumn(updatable = false)
 	@JsonDeserialize(using =  CategoriaDeserializer.class)
     public Categoria categoria;
     
@@ -45,6 +40,10 @@ public class SubCategoria extends MasterCategoria {
     @Column(name="imp_renda", nullable=true)
     private boolean imp_renda; 
 	
+	public SubCategoria() {
+		super();
+		this.classe = "SC";
+	}
  
 	public Categoria getCategoria() {
 		return categoria;
@@ -66,16 +65,7 @@ public class SubCategoria extends MasterCategoria {
 				+ ", descricao=" + descricao + ", tipoLancamento=" + tipoLancamento + ", inativo=" + inativo
 				+ ", isDebito=" + debito + "]";
 	}
-//	@Override
-//    public CategoriaDTO categoria_DTO() {
-//    	return new CategoriaDTO(
-//    			this.getId(),
-//    			categoria.getDescricao().concat( " ->" ).concat(this.descricao) ,    			
-//    			tipoLancamento,
-//    			categoria.getId(),
-//				this.desp_fixa,
-//				this.imp_renda);
-//    }
+
 
 
 	 

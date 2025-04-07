@@ -39,9 +39,11 @@
 	<nav>
 	  <div class="nav nav-tabs" id="nav-tab" role="tablist">
 	    <a class="nav-item nav-link active" id="nav-credito-tab" data-toggle="tab" href="#nav-credito"  th:data-url="@{/categoria/lista_tab/C}"
-	    	role="tab" aria-controls="nav-home" aria-selected="true">Credito</a>
+	    	role="tab" aria-controls="nav-home" aria-selected="true">Receita</a>
 	    <a class="nav-item nav-link" id="nav-debito-tab" data-toggle="tab" href="#nav-debito"  th:data-url="@{/categoria/lista_tab/D}" 
-	    	role="tab" aria-controls="nav-profile" aria-selected="false">Débito</a>
+	    	role="tab" aria-controls="nav-profile" aria-selected="false">Despesa</a>
+	    <a class="nav-item nav-link" id="nav-emprestimo-tab" data-toggle="tab" href="#nav-emprestimo"  th:data-url="@{/categoria/lista_tab/E}" 
+	    	role="tab" aria-controls="nav-profile" aria-selected="false">Emprestimo</a>	    	
 	  </div>
 	</nav>
 	<div class="tab-content" id="nav-tabContent">
@@ -49,6 +51,9 @@
 	   			<div  th:replace="~{categoria/tabela_categoria :: categoria}"></div>
 	  </div>
 	  <div class="tab-pane fade" id="nav-debito" role="tabpanel" aria-labelledby="nav-profile-tab">
+	  			<div th:replace="~{categoria/tabela_categoria :: categoria}"></div>
+	  </div>
+	    <div class="tab-pane fade" id="nav-emprestimo" role="tabpanel" aria-labelledby="nav-profile-tab">
 	  			<div th:replace="~{categoria/tabela_categoria :: categoria}"></div>
 	  </div>
 	</div>	

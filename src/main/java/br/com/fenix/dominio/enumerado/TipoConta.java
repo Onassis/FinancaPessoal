@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import br.com.fenix.dominio.dto.Option;
+import br.com.fenix.dominio.modelo.Option;
 
 public enum TipoConta {
 	CC("CC", "Conta corrente"), 

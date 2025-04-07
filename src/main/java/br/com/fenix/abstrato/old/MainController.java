@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import br.com.fenix.dominio.dto.Option;
+import br.com.fenix.dominio.modelo.Option;
 import ch.qos.logback.core.model.Model;
 
 @Controller()

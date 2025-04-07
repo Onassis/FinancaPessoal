@@ -1,4 +1,4 @@
-package br.com.fenix.dominio.dto;
+package br.com.fenix.dominio.modelo;
 
 public  class Option {
     private String id;

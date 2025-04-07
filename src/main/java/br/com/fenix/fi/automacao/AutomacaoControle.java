@@ -20,9 +20,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import br.com.fenix.abstrato.controle.ControleAbstrato;
 import br.com.fenix.abstrato.controle.IControle;
-import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.dominio.modelo.Option;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.conta.Conta;

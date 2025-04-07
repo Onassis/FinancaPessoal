@@ -41,7 +41,7 @@ public class Categoria extends MasterCategoria {
     
 	public Categoria() {
 		super();
-		this.tipoCategoria = "CT";
+		this.classe = "CT";
 	}
     
     public Categoria ( ModeloCategoria modeloCategoria) { 

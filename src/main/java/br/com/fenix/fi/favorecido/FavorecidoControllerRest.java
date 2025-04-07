@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.fenix.abstrato.controle.ControleAbstratoRest;
 import br.com.fenix.abstrato.repositorio.GenericRepository;
-import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.dominio.modelo.Option;
 import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaRepositorio;

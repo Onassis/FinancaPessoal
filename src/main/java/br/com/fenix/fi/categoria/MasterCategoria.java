@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
+import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 
 
@@ -37,6 +38,12 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     @Enumerated(EnumType.STRING)
     protected TipoLancamento tipoLancamento;
     
+    @Column(length = 2, updatable = false)
+    @Enumerated(EnumType.STRING)    
+    protected TipoCategoria tipoCategoria;
+    
+    
+    
     @Column(name="inativo", nullable=true)
     @JsonInclude(content = Include.NON_NULL)
     protected boolean inativo; 
@@ -46,7 +53,7 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     @jakarta.persistence.Transient
     protected boolean credito;
     @jakarta.persistence.Transient
-    protected String tipoCategoria;
+    protected String classe;
     
     public  MasterCategoria() {
     	super();
@@ -54,9 +61,6 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     }
     
     public boolean GetDebito() {
-    	boolean teste; 
-    	teste = tipoLancamento == TipoLancamento.D;
-    	System.out.println( "isDebito: " + teste);
     	return tipoLancamento == TipoLancamento.D; 
     }
     
@@ -71,15 +75,5 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     	return tipoLancamento == TipoLancamento.C; 
     }
     
-//    public CategoriaDTO categoria_DTO() {
-//    	return new CategoriaDTO(this.getId(),descricao,tipoLancamento,0L,false,false);
-//    }
-//    
-//    protected boolean despesaFixa;
-    
 
-//	@Transient
-//	public String getTipoCategoria() {
-//		 return this.getClass().getAnnotation(DiscriminatorValue.class).value();
-//	}
 }

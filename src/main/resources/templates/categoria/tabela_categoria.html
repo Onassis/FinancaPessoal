@@ -15,7 +15,7 @@
 			<tbody>
 				<tr th:each="c : ${categoriaDTO}">
 					<h2 th:case="null">Nenhuma Categoria foi encontrada</h2>
-					<td th:text="${c.descricao}">Auxiliar Contábil</td>
+					<td th:text="${c.ajuda}">Auxiliar Contábil</td>
 					<td th:text="${c?.tipoLancamento?.getDescricao()}">Auxiliar	Contábil</td>
 					<td >
 			              <div class="custom-control custom-checkbox">
@@ -28,27 +28,27 @@
 			              </div>	
 	               </td>				
 					<td colspan="3">
-						<a th:if="${c.tipoCategoria == 'CT'}" class="btn btn-info btn-sm btnadd" id="btnadd"
+						<a th:if="${c.classe == 'CT'}" class="btn btn-info btn-sm btnadd" id="btnadd"
 							th:href="@{/categoria/{id}/subcategoria/cadastrar (id=${c.id}) }" role="button"> 
 							<span class="oi oi-plus" title="Adicionar SubCategoria" aria-hidden="true"></span> 
 						</a> 
-					   <a th:if="${c.tipoCategoria == 'SC'}" class="btn btn-info btn-sm btnadd" id="btnadd"
+					   <a th:if="${c.classe == 'SC'}" class="btn btn-info btn-sm btnadd" id="btnadd"
 						  th:href="@{/categoria/{id}/subcategoria/lancamento/{id2} (id=${c.categoria.id}, id2=${c.id}) }" role="button"> 
 						  <span class="oi oi-calculator" title="Lançamento" aria-hidden="true"></span>
 					   </a>
-					  <a th:if="${c.tipoCategoria == 'CT'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
+					  <a th:if="${c.classe == 'CT'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
 					     th:href="@{/categoria/editar/{id} (id=${c.id}) }" 	role="button"> 
 					     <span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
 					  </a>					    
-					  <a th:if="${c.tipoCategoria == 'SC'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
+					  <a th:if="${c.classe  == 'SC'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
 					     th:href="@{/categoria/{id}/subcategoria/editar/{id2}  (id=${c.categoria.id}, id2=${c.id}) }" 	role="button"> 
 					     <span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
 					  </a>
-					  <a th:if="${c.tipoCategoria == 'CT'}" class="btn btn-danger btn-sm" id="btn_deletar" 	
+					  <a th:if="${c.classe  == 'CT'}" class="btn btn-danger btn-sm" id="btn_deletar" 	
 					  	 th:href="@{/categoria/{id} (id=${c.id}) }"> 
 						 <span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
 				 	  </a>
-					  <a th:if="${c.tipoCategoria == 'SC'}" class="btn btn-danger btn-sm" id="btn_deletar" 
+					  <a th:if="${c.classe  == 'SC'}" class="btn btn-danger btn-sm" id="btn_deletar" 
 					     th:href="@{/categoria/{id}/subcategoria/{id2} (id=${c.categoria.id}, id2=${c.id}) }"> 
 					     <span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
 					  </a>								

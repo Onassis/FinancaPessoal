@@ -21,8 +21,8 @@ import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
-import br.com.fenix.dominio.dto.Option;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
+import br.com.fenix.dominio.modelo.Option;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 

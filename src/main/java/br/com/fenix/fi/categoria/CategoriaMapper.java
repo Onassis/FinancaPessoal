@@ -14,5 +14,7 @@ public interface CategoriaMapper extends GenericMapper<Categoria, CategoriaDTO> 
 	   CategoriaMapper INSTANCE = Mappers.getMapper( CategoriaMapper.class );
 
 	   @Mapping(target = "categoria", ignore = true)
+	   @Mapping(target = "desp_fixa", ignore = true)
+	   @Mapping(target = "imp_renda", ignore = true)
 	   CategoriaDTO convertToDto(Categoria entity);
 }
