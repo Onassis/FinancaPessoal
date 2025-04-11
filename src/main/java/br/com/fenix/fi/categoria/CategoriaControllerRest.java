@@ -22,6 +22,8 @@ import br.com.fenix.abstrato.controle.ControleAbstratoRest;
 import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoriaRepositorio;
 
 @RestController
 @RequestMapping("/api/categoria")
@@ -36,7 +38,7 @@ public class CategoriaControllerRest  extends ControleAbstratoRest<Categoria> im
 	@Autowired
     CategoriaServico categoriaSC;
 
-	public CategoriaControllerRest(GenericRepository<Categoria> repositorio) {
+	public CategoriaControllerRest( CategoriaRepositorio repositorio) {
 		super(repositorio);
 		// TODO Auto-generated constructor stub
 	}

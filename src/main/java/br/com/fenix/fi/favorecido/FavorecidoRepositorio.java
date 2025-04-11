@@ -4,15 +4,13 @@ package br.com.fenix.fi.favorecido;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import br.com.fenix.abstrato.repositorio.GenericRepository;
-import br.com.fenix.fi.conta.Conta;
-
 
 @Repository
-public interface FavorecidoRepositorio extends GenericRepository<Favorecido> {
+public interface FavorecidoRepositorio extends JpaRepository<Favorecido,Long> {
 	
 	@Override
 	@Query("from Favorecido f where f.criadoPor.id = ?#{ principal.id}")

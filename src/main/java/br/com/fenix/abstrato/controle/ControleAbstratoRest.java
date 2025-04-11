@@ -2,7 +2,7 @@ package br.com.fenix.abstrato.controle;
 
 import java.util.List;
 
-
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +23,9 @@ import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 
 public abstract class ControleAbstratoRest<T> implements IControleRest<T>{
 	
-	 protected final GenericRepository<T> repositorio;
+	 protected final JpaRepository<T,Long> repositorio;
 
-	    public ControleAbstratoRest(GenericRepository<T> repositorio) {
+	    public ControleAbstratoRest(JpaRepository<T,Long> repositorio) {
  	        this.repositorio = repositorio;
 	    }
 	    @Override

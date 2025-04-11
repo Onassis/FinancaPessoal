@@ -14,8 +14,10 @@
 				<div class="card-body">
 					<h5 class="card-title">Cadastro de SubCategoria</h5>
 					<div th:replace="~{fragments/alert}"></div>
-					<form id="editForm" th:object="${subCategoria}"  th:action = "@{/categoria/{id}/subcategoria/{idSub} (id=${subCategoria.categoria.id},idSub=${subCategoria.id}) }"  
+					<form id="editForm" th:object="${subCategoria}"  th:action = "@{/categoria/{id}/subcategoria (id=${subCategoria?.categoria?.id})}"  
 						class="row g-3 needs-validation" method="POST">
+						<div th:replace="~{fragments/forms::inputRow(object='subCategoria', field='tipoCategoria', type='select',options= ${opTipoCategoria}, readOnly='readOnly',rowClass='col-md-12')}" />
+                               						
 						<div th:replace="~{fragments/forms::inputRow(object='subCategoria', field='tipoLancamento', type='select',options= ${opTiposLancamento}, readOnly='readOnly',rowClass='col-md-12')}" />
 						<div th:replace="~{fragments/forms::inputRow(object='subCategoria', field='categoria.descricao', required='required', readOnly='readOnly',rowClass='col-md-12')}" />
 						<div th:replace="~{fragments/forms::inputRow(object='subCategoria', field='descricao', required='required',rowClass='col-md-12')}" />
@@ -27,7 +29,7 @@
 						
 						<div class="text-center">
 							<button type="submit" id="btnSalvar" class="btn btn-primary">Salvar</button>
-							 <a  th:href="@{/categoria/listar/{tipo} (tipo=${tipoLancamento})}"  class="btn btn-secondary">Voltar</a>
+							 <a  th:href="@{/categoria/listar/{tipo} (tipo=${subCategoria.tipoLancamento})}"  class="btn btn-secondary">Voltar</a>
 						</div>
 					</form>
 				</div>
@@ -38,6 +40,19 @@
    			 $(".alert").delay(5000).slideUp(200, function () {
      		   $(this).alert('close');
   				  });
+  				  $(document).ready(function(){
+    $('#campo1').on('input', function() {
+        var campo1 = $(this).val();
+        var campo2 = $('#campo2');
+        
+        if (campo1 === 'mostrar') {
+            campo2.show();
+        } else {
+            campo2.hide();
+        }
+    });
+});
+
 		</script>
 	</section>
 </main>

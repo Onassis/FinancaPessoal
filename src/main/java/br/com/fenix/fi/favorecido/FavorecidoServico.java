@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class FavorecidoServico  extends ServicoAbstratoDTO<Favorecido,Favorecido
     	super(emf);
 	}
 	@Override
-	public CrudRepository<Favorecido, Long> getRp() {
+	public JpaRepository<Favorecido, Long> getRp() {
 		
 		return repositorio;
 	}

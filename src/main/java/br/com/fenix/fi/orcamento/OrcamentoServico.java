@@ -18,11 +18,11 @@ import br.com.fenix.fi.automacao.OrcamentoDTO;
 import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaRepositorio;
-import br.com.fenix.fi.categoria.SubCategoria;
-import br.com.fenix.fi.categoria.SubCategoriaRepositorio;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
 import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoriaRepositorio;
 
 @Service
 public class OrcamentoServico {

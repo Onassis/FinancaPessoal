@@ -1,9 +1,11 @@
-package br.com.fenix.fi.categoria;
+package br.com.fenix.fi.subCategoria;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.dominio.converter.rest.CategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.categoria.CategoriaDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

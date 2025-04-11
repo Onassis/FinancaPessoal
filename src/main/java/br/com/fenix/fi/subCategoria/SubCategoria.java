@@ -1,4 +1,4 @@
-package br.com.fenix.fi.categoria;
+package br.com.fenix.fi.subCategoria;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.dominio.converter.rest.CategoriaDeserializer;
+import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.masterCategoria.MasterCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
@@ -50,7 +52,8 @@ public class SubCategoria extends MasterCategoria {
 	}
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
-		this.setTipoLancamento(categoria.getTipoLancamento());
+//		this.setTipoLancamento(categoria.getTipoLancamento());
+		this.setTipoCategoria(categoria.getTipoCategoria());
 	}
 	
 	 public SubCategoria ( Categoria categoria, ModeloSubCategoria modeloSubCategoria) {

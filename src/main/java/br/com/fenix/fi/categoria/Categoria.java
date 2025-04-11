@@ -15,8 +15,10 @@ import lombok.ToString;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.fenix.fi.masterCategoria.MasterCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoria;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -33,7 +35,6 @@ public class Categoria extends MasterCategoria {
 	private static final long serialVersionUID = 1L;
 
     @JsonIgnore    
-
     @Column(nullable = false)
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<SubCategoria> subCategoria ;

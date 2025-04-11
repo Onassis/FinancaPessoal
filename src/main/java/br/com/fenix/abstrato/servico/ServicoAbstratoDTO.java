@@ -7,12 +7,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fenix.abstrato.dto.Converter;
@@ -26,8 +29,18 @@ import br.com.fenix.fi.categoria.CategoriaDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
+import org.hibernate.boot.spi.SessionFactoryOptions;
+import org.hibernate.engine.spi.FilterDefinition;
+import org.hibernate.graph.RootGraph;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.relational.SchemaManager;
+import org.hibernate.stat.Statistics;
+import org.hibernate.Session;
 
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManagerFactory;
 
 public abstract class ServicoAbstratoDTO< T   extends Persistable,
 										  DTO extends Persistable,
@@ -40,24 +53,32 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	private final Class<T> dtoClass = 
 			(Class<T>) ( (ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
 
-	@PersistenceUnit
-	protected final EntityManagerFactory emf;
-	
+//	@PersistenceUnit
+//	protected final EntityManagerFactory emf;
+// 
+//
+//	 @PersistenceContext
+//	  EntityManager entityManager;
+//
+//	 @Autowired
+//	 private SessionFactory sessionFactory; 
 
-	public abstract  CrudRepository<T,ID> getRp();
+	public abstract  JpaRepository<T,ID> getRp();
+	
 	
     public abstract   Converter<T, DTO> getConverter(); 
 	
 
 	public ServicoAbstratoDTO(EntityManagerFactory emf) {
 		super();
-		this.emf = emf;
+//		this.emf = emf;
 	
 	}
     @Override
     public EntityTransaction geradorTransacao() {
-    	EntityManager em = emf.createEntityManager();
-		return  em.getTransaction();		
+//    	EntityManager em = emf.createEntityManager();
+//		return  entityManager.getTransaction();
+		return null;
 	  }
 	@Override
 	public Page<T> listarPagina(Pageable pageable) {
@@ -84,22 +105,29 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	}
 
 	@Override
+	@Transactional
 	public T atualizar(T entidade)  throws Exception {	
-		EntityTransaction tx = geradorTransacao();
+//		EntityTransaction tx = geradorTransacao();
+//		Session session = sessionFactory.openSession(); // (2)
 		try {				
-			tx.begin();	
+//			tx.begin();
+//			session.getTransaction().begin();
 			entidade = antesDeAlterar(entidade);
-			entidade =  getRp().save (entidade);
+			entidade =  getRp().saveAndFlush(entidade);
 			depoisDeSalvar(entidade);
-			tx.commit();
+//			session.getTransaction().commit();
+
+//			tx.commit();
 		} catch (Exception e) {
-			tx.rollback();
+//			session.getTransaction().rollback();
+//			tx.rollback();
 			handleException(OperacaoDB.UPT,e);
 		}
 		return entidade;
 
 	}
 	@Override
+	@Transactional
 	public void excluirPorId(ID id)throws Exception {
 		EntityTransaction tx = geradorTransacao();
 		try {				
@@ -156,17 +184,17 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 
 	@Override
 	public DTO atualizarDTO(DTO dto)  throws Exception {	
-		EntityTransaction tx = geradorTransacao();
+//		EntityTransaction tx = geradorTransacao();
         T entidade=null;
 		try {				
-			 tx.begin();	
+//			 tx.begin();	
 			 Optional<T>  entidadeOp = buscarPorId((ID) dto.getId());
 			 entidade = getConverter().updateEntity(entidadeOp.get(),dto); 
 			 entidade = atualizar(entidade);		
 			 depoisDeSalvar(entidade);
-			 tx.commit();
+//			 tx.commit();
 		} catch (Exception e) {
-			tx.rollback();
+//			tx.rollback();
 			handleException(OperacaoDB.UPT,e);
 		}
 		dto = getConverter().convertToDto(entidade); 
@@ -183,16 +211,17 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 		return getConverter().convertToDto(entidade);
 	}
 	@Override
+	@Transactional
 	public T criar( T entidade ) throws Exception {
-		EntityTransaction tx = geradorTransacao();
+//		EntityTransaction tx = geradorTransacao();
 		try {				
-			tx.begin();
+//			tx.begin();
 			entidade = antesDeSalvar(entidade);
-			entidade = getRp().save (entidade);
+			entidade = getRp().saveAndFlush(entidade);
 			depoisDeSalvar(entidade);
-			tx.commit();
+//			tx.commit();
 		} catch (Exception e) {
-			tx.rollback();
+//			tx.rollback();
 			handleException(OperacaoDB.INS,e);
 		}
 		return entidade;		    

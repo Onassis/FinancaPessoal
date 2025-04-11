@@ -1,4 +1,4 @@
-package br.com.fenix.fi.categoria;
+package br.com.fenix.fi.masterCategoria;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import br.com.fenix.fi.subCategoria.SubCategoria;
 
 @Service
 public class MasterCategoriaServico {

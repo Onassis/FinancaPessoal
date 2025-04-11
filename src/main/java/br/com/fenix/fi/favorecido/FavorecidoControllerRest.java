@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,9 @@ import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaRepositorio;
 import br.com.fenix.fi.categoria.CategoriaServico;
-import br.com.fenix.fi.categoria.SubCategoria;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
+import br.com.fenix.fi.subCategoria.SubCategoria;
 import jakarta.annotation.security.RolesAllowed;
 
 @RestController
@@ -45,7 +46,7 @@ public class FavorecidoControllerRest  extends ControleAbstratoRest<Favorecido> 
 	@Autowired
 	CategoriaServico categoriaSC;
 	
-	public FavorecidoControllerRest(GenericRepository<Favorecido> repositorio) {
+	public FavorecidoControllerRest(FavorecidoRepositorio repositorio) {
 		super(repositorio);
 	}
 	

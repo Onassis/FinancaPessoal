@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.categoria.CategoriaRepositorio;
-import br.com.fenix.fi.categoria.SubCategoria;
-import br.com.fenix.fi.categoria.SubCategoriaRepositorio;
+import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoriaRepositorio;
 
 
 public class SubCategoriaDeserializer extends StdDeserializer<SubCategoria> {

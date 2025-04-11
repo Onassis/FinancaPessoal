@@ -15,8 +15,8 @@ import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.categoria.Categoria;
-import br.com.fenix.fi.categoria.SubCategoria;
 import br.com.fenix.fi.favorecido.Favorecido;
+import br.com.fenix.fi.subCategoria.SubCategoria;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

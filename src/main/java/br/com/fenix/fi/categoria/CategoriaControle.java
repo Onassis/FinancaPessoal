@@ -33,6 +33,7 @@ import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
+import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.modelo.Option;
@@ -41,6 +42,8 @@ import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.fi.conta.ContaServico;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoServico;
+import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoriaServico;
 import jakarta.validation.Valid;
 
 @Controller
@@ -52,12 +55,12 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 	ContaServico contaSC;
 	@Autowired
 	CategoriaServico servico;
+	@Autowired
+	SubCategoriaServico sSubCategoria;
 	
 	//private GenericConverter<Categoria, CategoriaDTO> converter;
 
-	public CategoriaControle() {
-	  //	this.converter = new GenericConverter<>(Categoria.class, CategoriaDTO.class);
-		
+	public CategoriaControle() {	
 	}
 	@Override
 	public ServicoAbstratoDTO getServico() {
@@ -66,11 +69,13 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 	}
 	@ModelAttribute("opTiposLancamento")	
     public List<Option> getOptionsFromTipoLancamento() {
-        return Stream.of(TipoLancamento.values())
-                     .map(tipo -> new Option(tipo.getTipoLancamento(), tipo.getDescricao()))
-                     .collect(Collectors.toList());
+		return TipoLancamento.listaTipoLancamento();
     }
 
+	@ModelAttribute("opTipoCategoria")	
+    public List<Option> getOptionsFromTipoCategoria() {
+        return TipoCategoria.listaTipoCategoria();
+    }
 	@ModelAttribute("opContas")
 	@Cacheable(value="conta", sync = true)
 	public List<Option>  listaDeContas() {
@@ -80,23 +85,23 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
    @ModelAttribute("categoriasDTO")
    @Cacheable(value="categoria", sync = true)
 	public List<Option> listaDeCategorias() {	   
-	   return servico. listaDeCategoriasOpt(TipoLancamento.D); 
+	   return servico.listaDeCategoriasOpt(TipoLancamento.D); 
 	}
 
-   @GetMapping("/listar/{tipoLancamento}")  
-	public ModelAndView listarView(@PathVariable TipoLancamento tipoLancamento) {	
-		System.out.println( tipoLancamento);
-		List<CategoriaDTO>  dados = servico.listaDeCategorias(tipoLancamento)	;	
+   @GetMapping("/listar/{tipoCategoria}")  
+	public ModelAndView listarView(@PathVariable TipoCategoria tipoCategoria) {	
+		System.out.println( tipoCategoria);
+		List<CategoriaDTO>  dados = servico.listaPorTipoCategorias(tipoCategoria)	;	
 		return new ModelAndView("categoria/listar_categoria","categoriaDTO", dados) ;		  			  
 	}
 	
 
 
 /*----------------------- Lista os dados da tabela NAV TAB ------------------ */	
-	@GetMapping("/lista_tab/{tipoLancamento}")  
-	public ModelAndView listar_TabView(@PathVariable TipoLancamento tipoLancamento) {	
-		System.out.println( tipoLancamento);
-   	List<CategoriaDTO>  dados = servico.listaDeCategorias(tipoLancamento)	;
+	@GetMapping("/lista_tab/{tipo}")  
+	public ModelAndView listar_TabView(@PathVariable TipoCategoria tipo) {	
+		System.out.println( tipo);
+   	List<CategoriaDTO>  dados = servico.listaPorTipoCategorias(tipo)	;
 		System.out.println( dados.size());
    	
 		return new ModelAndView("categoria/lista_tab","categoriaDTO", dados) ;		  			  
@@ -106,71 +111,87 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
    @GetMapping("{id}/subcategoria/{id2}") 
    @ResponseStatus(code = HttpStatus.OK)	    	    
    public CategoriaDTO buscarSubCategoria (@PathVariable  long id2){
-          return servico.buscarSubCategoriaPorId(id2);
-//   	   	   return servico.findById(id2)	    			   
-//   	   			   .orElseThrow ( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id2));		    			       		    	
+          return sSubCategoria.buscaDTOPorId(id2);
    }
 
    @GetMapping("{id}/subcategoria/editar/{id2}") 
    @ResponseStatus(code = HttpStatus.OK)	
    public ModelAndView editar_sub_item(@PathVariable long id, @PathVariable long id2) {
-   	System.out.println("editar subcategoria");
-   	   CategoriaDTO subCategoria = servico.buscarSubCategoriaPorId(id2);     		
-
-		 return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
+   		System.out.println("editar subcategoria");
+   	   CategoriaDTO subCategoria = sSubCategoria.buscaDTOPorId(id2);  		
+	   return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
    }    
 
    @GetMapping("{id}/subcategoria/cadastrar") 
    @ResponseStatus(code = HttpStatus.OK)	
    public ModelAndView cadastrar_sub_item(@PathVariable long id) {    	
-   	System.out.println("Cadastro subcategoria");
-   	SubCategoria subCategoria = new SubCategoria() ;
-   	subCategoria.setCategoria( servico.buscarPorId(id).get());
-   	
-		 return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
+   		System.out.println("Cadastro subcategoria");   		
+   		Categoria categoria = servico.buscarPorId(id).get(); 
+   		CategoriaDTO subCategoria = new CategoriaDTO(categoria);  	
+		return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
    }    
    
 
    @PostMapping("/{id}/subcategoria")
-   @Transactional
-	@ResponseStatus(code = HttpStatus.CREATED) 
-   public CategoriaDTO criarSubCategoria(@PathVariable long id, @Validated @RequestBody CategoriaDTO subCategoria) throws Exception{
-   	System.out.println("Post criar  subcategoria");
-   	System.out.println(subCategoria.toString());
-//   	subCategoria.setIdCategoria(servico.buscarPorId(id).get());
-   	
-   	return (CategoriaDTO) getServico().criarDTO(subCategoria); 
-   	
-    //   return (SubCategoria) getServico().criar(subCategoria);
+   @ResponseStatus(code = HttpStatus.CREATED) 
+   public String criarSubCategoria(@PathVariable long id, @Validated  CategoriaDTO subCategoria,BindingResult result, RedirectAttributes attr) throws Exception{
+
+		if (result.hasErrors()) {
+			attr.addFlashAttribute("subcategoria", subCategoria);
+			return  "redirect:/categoria/" + id + "/subcategoria"; 
+ 		}
+		
+		try {	
+			if (subCategoria.isNew()) { 
+				subCategoria = sSubCategoria.criarDTO(subCategoria); 				
+			}
+			else { 
+				subCategoria = sSubCategoria.atualizarDTO(subCategoria);
+			}
+			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
+		}
+		catch (Exception e) {
+			System.out.println("ControleAbstrato-> Salvar -> Exception");
+			attr.addFlashAttribute("Erro", e.getMessage());			
+			 return  "redirect:/categoria/listar/RE"  ;
+		}
+		 			
+   		return    "redirect:/categoria/listar/RE"  ;	   	
    }
   
-   @PutMapping("/{id}/subcategoria/{idSub}")
-   @Transactional
-   @ResponseStatus(code = HttpStatus.OK)
-   public SubCategoria atualizar(@PathVariable long id, @Validated @RequestBody CategoriaDTO subCategoria){
-   	System.out.println("Put  subcategoria");
-   	return null;   	
-////   	System.out.println(subCategoria);
-//   	SubCategoria subCatUpt = subCategoriaRP.findById(subCategoria.getId()).get();
-//   	
-//   	subCatUpt.setDescricao(subCategoria.getDescricao()); 
-//   	subCatUpt.setImp_renda(subCategoria.isImp_renda()); 
-//   	subCatUpt.setDesp_fixa(subCategoria.isDesp_fixa()); 
-//   	//subCategoria.setCategoria(categoriaRP.findById(id).get());
-//   	System.out.println(subCategoria.toString());
-//       return subCategoriaRP.save (subCatUpt);
-   }
-   @DeleteMapping("/{id}/subcategoria/{id2}")
-   @Transactional
-   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-   public void excluirPorId(@PathVariable long id, @PathVariable long id2){
-    	System.out.println("excluir subcategoria");
-    	
-////   	buscarSubCategoriaPorId(id2);
-//    getServico().de
-//   	subCategoriaRP.deleteById(id2);
-   }
-
-
+//   @PostMapping("/{id}/subcategoria/{idSub}")
+//   @Transactional
+//   @ResponseStatus(code = HttpStatus.OK)
+//   public  String  atualizar(@Validated CategoriaDTO subCategoria,BindingResult result, RedirectAttributes attr) {
+//     try {
+//	    subCategoria = sSubCategoria.atualizarDTO(subCategoria);
+//	    attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
+//     }
+//     catch (Exception e) {
+//		System.out.println("ControleAbstrato-> Salvar -> Exception");
+//		attr.addFlashAttribute("Erro", e.getMessage());			
+//		return   "redirect:/categoria/listar/RE" ;		
+//     }
+//	 			
+//	 return  "redirect:/categoria/listar/RE" ;	   	
+//   }
+//   
+//   @DeleteMapping("/{id}/subcategoria/{id2}")
+//   @Transactional
+//   @ResponseStatus(code = HttpStatus.NO_CONTENT)
+//   public String excluirPorId(@PathVariable long id, @PathVariable long id2, RedirectAttributes attr) ){
+//	   
+//		try {
+//			sSubCategoria.excluirPorId(id);
+//			attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");
+//		}	
+//		catch (Exception e) {
+//			attr.addFlashAttribute("Erro", e.getMessage()); 
+//		}		
+//		return  "redirect:".concat(urlListar());	
+//   }
+   
 
 }
+
+

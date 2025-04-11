@@ -1,4 +1,4 @@
-package br.com.fenix.fi.categoria;
+package br.com.fenix.fi.masterCategoria;
 
 import java.beans.Transient;
 
@@ -67,9 +67,9 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     public boolean isDebito() {
     	return tipoLancamento == TipoLancamento.D; 
     }
-    public boolean GetCredito() {
-    	return tipoLancamento == TipoLancamento.C; 
-    }
+//    public boolean GetCredito() {
+//    	return tipoLancamento == TipoLancamento.C; 
+//    }
     
     public boolean isCredito() {
     	return tipoLancamento == TipoLancamento.C; 

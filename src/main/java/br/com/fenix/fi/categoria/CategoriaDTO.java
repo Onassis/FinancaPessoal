@@ -1,6 +1,7 @@
 package br.com.fenix.fi.categoria;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +30,8 @@ public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 		private static final long serialVersionUID = 1L;
 		
 	    
-		@JsonDeserialize(using = StringDeserializer.class)		
+		@JsonDeserialize(using = StringDeserializer.class)	
+		@Size(min = 2, max = 40)
 		private String descricao;
 		
 		
@@ -51,6 +53,23 @@ public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 	    
 		private long versao;
 		
+		public CategoriaDTO(Categoria categoria) {
+			super();
+			this.categoria = categoria;
+			this.tipoCategoria = categoria.getTipoCategoria();
+			this.tipoLancamento = categoria.getTipoLancamento();						
+		}
+		
+		public void setTipoCategoria(TipoCategoria tipoCategoria) {
+			this.tipoCategoria = tipoCategoria;
+			 
+		  if ( tipoCategoria == TipoCategoria.DP) {
+			  this.tipoLancamento = TipoLancamento.D ; 
+		  }
+		  if ( tipoCategoria == TipoCategoria.RE) {
+			  this.tipoLancamento = TipoLancamento.C ; 
+		  }
+		}
 		public String ajuda() {
 			if (this.categoria == null) {
                 return this.descricao;
@@ -58,5 +77,6 @@ public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 			return this.categoria.getDescricao() + "->" + this.descricao ;
 			
 		}
+
 
 }

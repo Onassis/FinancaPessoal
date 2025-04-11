@@ -16,20 +16,20 @@ public enum TipoCategoria {
 	TR("TR", "Transferência");
 
 
-	private String tipoOperacao;
+	private String tipo;
 	private String descricao;
 	
-	TipoCategoria(String tipoOperacao, String descricao) {
-		this.tipoOperacao = tipoOperacao;
+	TipoCategoria(String tipo, String descricao) {
+		this.tipo = tipo;
 		this.descricao = descricao;
 	}
 	@JsonValue
-	public String getTipoOperacao() {
-		return this.tipoOperacao;
+	public String getTipoCategoria() {
+		return this.tipo;
 	}
 
-	public void settipoOperacao(String tipoOperacao) {
-		this.tipoOperacao = tipoOperacao;
+	public void settipoCategoria(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public String getDescricao() {
@@ -39,7 +39,7 @@ public enum TipoCategoria {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}	
-	public static List<Option>  listaTipoOperacao() {
+	public static List<Option>  listaTipoCategoria() {
 		   List<Option> options = Stream.of(TipoCategoria.values())
 		            .map(tipo -> new Option(tipo.name(), tipo.getDescricao()))
 		            .collect(Collectors.toList());

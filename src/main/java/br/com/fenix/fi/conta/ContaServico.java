@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +61,7 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
  	  throw e ;		
 	}
 	@Override
-	public CrudRepository<Conta, Long> getRp() {
+	public JpaRepository<Conta, Long> getRp() {
 		return contaRp;
 	}
 

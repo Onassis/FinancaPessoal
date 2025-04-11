@@ -24,4 +24,10 @@ public  class Option {
     public String getAjuda() {
         return ajuda;
     }
+	@Override
+	public String toString() {
+		return "Option [id=" + id + ", ajuda=" + ajuda + "]";
+	}
+    
 }
+

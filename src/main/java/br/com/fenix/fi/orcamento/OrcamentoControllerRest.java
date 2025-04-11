@@ -32,7 +32,6 @@ import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaRepositorio;
 import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.categoria.IControleCategoriaRest;
-import br.com.fenix.fi.categoria.SubCategoriaRepositorio;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.fi.favorecido.Favorecido;
@@ -43,6 +42,7 @@ import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.fi.lancamento.LancamentoRepositorio;
 import br.com.fenix.fi.lancamento.LancamentoServico;
 import br.com.fenix.fi.moeda.Moeda;
+import br.com.fenix.fi.subCategoria.SubCategoriaRepositorio;
 import br.com.fenix.icontroller.IControleLancamentoRest;
 import br.com.fenix.icontroller.IControleOrcamentoRest;
 

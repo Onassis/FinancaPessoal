@@ -13,7 +13,7 @@
                     <input th:type="${type}" th:field="*{__${field}__}"  class="form-check-input" th:classappend="${inputClassappend}" 
                       	   th:required="${__${required}__} ? 'required' : null"
                       	   th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
-                      	   th:id="${field}"      	 
+                      	   th:id="|input_${#strings.toLowerCase(field)}|"    	 
                     />
                     <label class="form-check-label">
                        <span th:text="#{'__${object}__.__${field}__.label'}"></span>
