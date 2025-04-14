@@ -62,6 +62,9 @@ public class AutomacaoControle  extends ControleAbstrato<AutomacaoServico,Automa
 	}	
    @ModelAttribute("categoriasDTO")	
 	public List<Option>  listaDeCategorias() {
-	      return categoriaSC.listaDeCategoriasOpt(null);
+	  //TODO: verificar se o retorno é correto
+	   
+	   return null;
+//	      return categoriaSC.listaDeCategoriasOpt(null);
 	}	
 }

@@ -76,6 +76,15 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	
 		return converter;
 	}
+	
+
+	public List<Option>  listaDeCategoriasOpt(TipoCategoria  tipoCategoria) {
+		   List<Option> options =  listaPorTipoCategorias(tipoCategoria)
+		   		.stream()    
+				.map(categoria  -> new Option(categoria.getId(), categoria.getDescricao()))
+	            .collect(Collectors.toList());
+			return options;			
+	}	
  
 	public List<Option>  listaDeCategoriasOpt(TipoLancamento tipoLancamento) {
 		   List<Option> options =  listaDeCategorias(tipoLancamento)
@@ -84,6 +93,7 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	            .collect(Collectors.toList());
 			return options;			
 	}	
+	
     public List<CategoriaDTO> listaToDto ( Iterable<Categoria> categorias){
 	   List<CategoriaDTO> categoriasDTO = new ArrayList<CategoriaDTO>(); 
 	   CategoriaDTO categoriaDTO = new CategoriaDTO();

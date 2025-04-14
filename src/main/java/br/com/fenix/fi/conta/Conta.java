@@ -75,7 +75,6 @@ public class Conta extends EntidadeAuditavel<Long> {
 
 	@JsonDeserialize(using = MoedaDeserializer.class) 
 	@ManyToOne (fetch = FetchType.EAGER )  
-	@JoinColumn(updatable = false)
 	@NotNull
 	private Moeda moeda;
 

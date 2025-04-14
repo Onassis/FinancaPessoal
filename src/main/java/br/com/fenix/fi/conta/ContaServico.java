@@ -23,6 +23,7 @@ import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.Option;
+import br.com.fenix.fi.favorecido.FavorecidoMapper;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.AllArgsConstructor;
 
@@ -31,12 +32,14 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 
    @Autowired
    private ContaRepositorio contaRp;
-	
-   private GenericConverter<Conta, ContaDTO> converter; 
-   
+	@Autowired
+	private ContaMapper converter;
+//	
+//   private GenericConverter<Conta, ContaDTO> converter; 
+//   
 	public ContaServico(EntityManagerFactory emf) {
     	super(emf);
-		this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
+	//	this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
 		
 	}
 	public List<Option>  listaDeContas(TipoConta tipoConta) {
@@ -67,7 +70,7 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 
 
 	@Override
-	public GenericConverter<Conta, ContaDTO> getConverter() {
+	public ContaMapper getConverter() {
 
 		return converter;
 	}

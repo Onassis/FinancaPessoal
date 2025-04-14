@@ -9,9 +9,11 @@ import org.mapstruct.factory.Mappers;
 
 
 public interface GenericMapper<E, D> extends Converter<E, D> {
-//    D convertToDto(E entity);
-//    E convertToEntity(D dto);
-//    E updateEntity(@MappingTarget E entity,D dto);
+    D convertToDto(E entity);
+    @ToEntity
+    E convertToEntity(D dto);
+    @ToEntity
+    E updateEntity(@MappingTarget E entity,D dto);
  
 
 }

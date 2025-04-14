@@ -85,7 +85,7 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
    @ModelAttribute("categoriasDTO")
    @Cacheable(value="categoria", sync = true)
 	public List<Option> listaDeCategorias() {	   
-	   return servico.listaDeCategoriasOpt(TipoLancamento.D); 
+	   return servico.listaDeCategoriasOpt(TipoCategoria.RE); 
 	}
 
    @GetMapping("/listar/{tipoCategoria}")  

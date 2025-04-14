@@ -4,6 +4,7 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import br.com.fenix.abstrato.dto.GenericMapper;
@@ -15,9 +16,14 @@ public interface FavorecidoMapper extends GenericMapper<Favorecido, FavorecidoDT
    @Mapping(source = "conta", target = "conta")
    @Mapping(source = "versao", target = "versao")
    FavorecidoDTO convertToDto(Favorecido entity);
-      
 
-   
-   
+   @Mapping(source = "conta", target = "conta")
+   @Mapping(source = "versao", target = "versao")
+   	Favorecido convertToEntity(FavorecidoDTO dto) ;
+
+   @Mapping(source = "conta", target = "conta")
+   @Mapping(source = "versao", target = "versao")
+   Favorecido updateEntity(@MappingTarget Favorecido entity, FavorecidoDTO dto) ;    
+    
 	
 }
