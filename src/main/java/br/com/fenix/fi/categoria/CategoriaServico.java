@@ -99,10 +99,10 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	   CategoriaDTO categoriaDTO = new CategoriaDTO();
 		 	 
 		 for(Categoria categoria : categorias) {      
-			categoriaDTO = converter.convertToDto(categoria); 
+			categoriaDTO = converter.ToDto(categoria); 
 			categoriasDTO.add(categoriaDTO);
 	   	 	for(SubCategoria subCategoria : categoria.getSubCategoria()) { 
-	   	 		 CategoriaDTO subCategoriaDTO = converterSub.convertToDto(subCategoria); 
+	   	 		 CategoriaDTO subCategoriaDTO = converterSub.ToDto(subCategoria); 
 	 	    	 		if (!categoriasDTO.contains(subCategoriaDTO )) { 
 	 	    	 			categoriasDTO.add(subCategoriaDTO );
 	 	    	 		}

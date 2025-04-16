@@ -32,8 +32,9 @@ public class SubCategoria extends MasterCategoria {
 	private static final long serialVersionUID = 878110273093281276L;
 	
 
-	@ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER ,  optional = false)	
+	@ManyToOne(cascade = CascadeType.PERSIST ,fetch = FetchType.EAGER ,  optional = false)	
 	@JsonDeserialize(using =  CategoriaDeserializer.class)
+	@JoinColumn(name="categoria_id")
     public Categoria categoria;
     
     @Column(name="desp_fixa", nullable=true)

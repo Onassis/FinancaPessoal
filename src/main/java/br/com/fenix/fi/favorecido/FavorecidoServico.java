@@ -39,6 +39,11 @@ public class FavorecidoServico  extends ServicoAbstratoDTO<Favorecido,Favorecido
     	super(emf);
 	}
 	@Override
+	public FavorecidoMapper getConverter() {	
+		return converter;
+	}
+
+	@Override
 	public JpaRepository<Favorecido, Long> getRp() {
 		
 		return repositorio;
@@ -63,10 +68,6 @@ public class FavorecidoServico  extends ServicoAbstratoDTO<Favorecido,Favorecido
  	  throw e ;	
 	}
 
-	@Override
-	public FavorecidoMapper getConverter() {	
-		return converter;
-	}
 
 
 }

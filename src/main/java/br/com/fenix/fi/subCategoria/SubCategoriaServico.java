@@ -24,10 +24,6 @@ public class SubCategoriaServico extends ServicoAbstratoDTO<SubCategoria,Categor
 		super(emf);
 	}
 
-	@Override
-	public void handleException(OperacaoDB op, Exception e) throws Exception {
-		
-	}
 
 	@Override
 	public JpaRepository<SubCategoria, Long> getRp() {		

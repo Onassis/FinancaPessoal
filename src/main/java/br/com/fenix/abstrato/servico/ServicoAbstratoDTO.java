@@ -99,7 +99,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	@Override
 	public  List<DTO> listarDto () throws RegistroNaoExisteException {
 	    List<DTO> dtos = StreamSupport.stream(listar().spliterator(), false)
-                .map(dado -> getConverter().convertToDto(dado))
+                .map(dado -> getConverter().ToDto(dado))
                 .collect(Collectors.toList());
         return dtos;
 	}
@@ -167,7 +167,10 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	public void antesDeExcluir(ID id) throws NegocioException {		
 	}
 
-	
+	@Override
+	public void handleException(OperacaoDB op,Exception e) throws Exception {
+ 	  throw e ;		
+	}
 	public T criarInstancia() {
 		  try {
 			 return   entidadeClass.getDeclaredConstructor().newInstance(); 
@@ -178,7 +181,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	 }
 	public DTO buscaDTOPorId (ID id) throws RegistroNaoExisteException {
 		   Optional<T>  entidadeOp = buscarPorId(id);
-		    DTO dto =  getConverter().convertToDto(entidadeOp.get()); 
+		    DTO dto =  getConverter().ToDto(entidadeOp.get()); 
 		return dto;
 	}
 
@@ -188,8 +191,10 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
         T entidade=null;
 		try {				
 //			 tx.begin();	
-			 Optional<T>  entidadeOp = buscarPorId((ID) dto.getId());
-			 entidade = getConverter().updateEntity(entidadeOp.get(),dto); 
+			ID id = (ID) dto.getId(); 
+//			 Optional<T>  entidadeOp = buscarPorId(id).orElseThrow();
+			 entidade = buscarPorId(id).orElseThrow();
+			 getConverter().updateEntity(dto,entidade); 
 			 entidade = atualizar(entidade);		
 			 depoisDeSalvar(entidade);
 //			 tx.commit();
@@ -197,7 +202,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 //			tx.rollback();
 			handleException(OperacaoDB.UPT,e);
 		}
-		dto = getConverter().convertToDto(entidade); 
+		dto = getConverter().ToDto(entidade); 
 		return dto;
 
 	}
@@ -205,10 +210,10 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	@Override
 	public DTO criarDTO(DTO dto)  throws Exception {
 		System.out.println("ServicoAbstratoDTO -> Crair ");
-		T entidade = getConverter().convertToEntity(dto);
+		T entidade = getConverter().ToEntity(dto);
 
 		entidade = criar(entidade);
-		return getConverter().convertToDto(entidade);
+		return getConverter().ToDto(entidade);
 	}
 	@Override
 	@Transactional

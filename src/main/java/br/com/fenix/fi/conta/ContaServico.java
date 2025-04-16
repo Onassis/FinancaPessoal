@@ -39,9 +39,13 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 //   
 	public ContaServico(EntityManagerFactory emf) {
     	super(emf);
-	//	this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);
-		
+	//	this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);		
 	}
+	@Override
+	public ContaMapper getConverter() {
+
+		return converter;
+	}	
 	public List<Option>  listaDeContas(TipoConta tipoConta) {
 		   List<Option> options = contaRp.findByTipoContaOrderByApelidoAsc(tipoConta).stream()    
 				.map(conta -> new Option(conta.getId(), conta.getAjuda()))
@@ -69,11 +73,7 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 	}
 
 
-	@Override
-	public ContaMapper getConverter() {
 
-		return converter;
-	}
 
 	
 }

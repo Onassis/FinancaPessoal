@@ -18,12 +18,12 @@ public interface CategoriaMapper extends GenericMapper<Categoria, CategoriaDTO> 
 	   @Mapping(target = "categoria", ignore = true)
 	   @Mapping(target = "desp_fixa", ignore = true)
 	   @Mapping(target = "imp_renda", ignore = true)
-	   CategoriaDTO convertToDto(Categoria entity);
+	   CategoriaDTO ToDto(Categoria entity);
   
 	   @InheritInverseConfiguration
-	   Categoria convertToEntity(CategoriaDTO dto) ;
+	   Categoria ToEntity(CategoriaDTO dto) ;
 
-	   Categoria updateEntity(@MappingTarget Categoria entity, CategoriaDTO dto) ;
+	   void updateEntity(CategoriaDTO dto, @MappingTarget Categoria entity) ;
 	   
   
 }

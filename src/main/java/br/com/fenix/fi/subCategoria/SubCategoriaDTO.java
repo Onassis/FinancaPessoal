@@ -18,7 +18,6 @@ public class SubCategoriaDTO extends CategoriaDTO {
 		 */
 		private static final long serialVersionUID = 1L;
 		
-		@JsonDeserialize(using =  CategoriaDeserializer.class)
-	    public Categoria categoria2;
+
 	    
 }

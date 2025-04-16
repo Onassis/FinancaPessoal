@@ -39,6 +39,8 @@ public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 	    @Enumerated(EnumType.STRING)
 		private TipoLancamento tipoLancamento;
 		
+		@JsonDeserialize(using = StringDeserializer.class) 
+	    @Enumerated(EnumType.STRING)
         private TipoCategoria tipoCategoria;
 	    
     	@JsonDeserialize(using =  CategoriaDeserializer.class)

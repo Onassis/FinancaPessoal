@@ -17,7 +17,7 @@ public class GenericConverter<T, D> implements Converter<T, D> {
     }
 
     @Override
-    public D convertToDto(T entity) {
+    public D ToDto(T entity) {
         try {
             D dto = dtoClass.getDeclaredConstructor().newInstance();;
             BeanUtils.copyProperties(dto, entity);
@@ -28,7 +28,7 @@ public class GenericConverter<T, D> implements Converter<T, D> {
     }
 
     @Override
-    public T convertToEntity(D dto)  {
+    public T ToEntity(D dto)  {
 		   try {    	
             T entity = entityClass.getDeclaredConstructor().newInstance();
             BeanUtils.copyProperties(entity,dto);
@@ -61,10 +61,10 @@ public class GenericConverter<T, D> implements Converter<T, D> {
 //	}
 
 	@Override
-	public T updateEntity(T entity, D dto) {
+	public void updateEntity(D dto , T entity ) {
 		   try {    	
 	            BeanUtils.copyProperties(entity,dto);
-	            return entity;
+//	            return entity;
 		   } catch (Exception e) {
 		       throw new RuntimeException("Error converting to DTO", e);
 		 }

@@ -23,7 +23,7 @@ public interface FavorecidoMapper extends GenericMapper<Favorecido, FavorecidoDT
 
    @Mapping(source = "conta", target = "conta")
    @Mapping(source = "versao", target = "versao")
-   Favorecido updateEntity(@MappingTarget Favorecido entity, FavorecidoDTO dto) ;    
+   void updateEntity( FavorecidoDTO dto, @MappingTarget Favorecido entity) ;    
     
 	
 }
