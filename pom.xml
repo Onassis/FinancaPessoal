@@ -264,6 +264,11 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
     <artifactId>geronimo-stax-api_1.0_spec</artifactId>
     <version>1.0.1</version>
 </dependency>
+		<dependency>
+			<groupId>com.mballem.curso.boot</groupId>
+			<artifactId>demo-mvc</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

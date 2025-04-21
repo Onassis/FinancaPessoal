@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
+
 @Repository
-public interface SubCategoriaRepositorio extends JpaRepository<SubCategoria,Long> {
+public interface SubCategoriaRepositorio extends JpaRepositoryAuditavel<SubCategoria,Long> {
 	
 	  
 

@@ -30,11 +30,7 @@
 			</a>
 	</nav>
 <!---------------------------------------------- alerta -------------------------------------------------->		
-	<div class="alert alert-dismissible  fade show" style="display: none;"	role="alert">
-		<strong>Alerta!</strong>
-		<p>Favor verificar o suporte.</p>
-		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-	</div>
+		<div th:replace="~{fragments/alert}"></div>
 <!---------------------------------------------- nav tabs  -------------------------------------------------->	
 	<nav>
 	  <div class="nav nav-tabs" id="nav-tab" role="tablist">

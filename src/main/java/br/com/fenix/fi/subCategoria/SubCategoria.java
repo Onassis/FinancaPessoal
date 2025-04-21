@@ -20,6 +20,7 @@ import br.com.fenix.fi.masterCategoria.MasterCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
+@Table(name="sub_categoria", indexes = { @Index(name = "subCategoriaDescricao", columnList = "criado_por_id,categoria_id,descricao", unique = true) })  
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(callSuper=true)
 //@NoArgsConstructor
@@ -32,7 +33,7 @@ public class SubCategoria extends MasterCategoria {
 	private static final long serialVersionUID = 878110273093281276L;
 	
 
-	@ManyToOne(cascade = CascadeType.PERSIST ,fetch = FetchType.EAGER ,  optional = false)	
+	@ManyToOne(cascade = CascadeType.DETACH ,fetch = FetchType.EAGER ,  optional = false)	
 	@JsonDeserialize(using =  CategoriaDeserializer.class)
 	@JoinColumn(name="categoria_id")
     public Categoria categoria;
@@ -45,7 +46,6 @@ public class SubCategoria extends MasterCategoria {
 	
 	public SubCategoria() {
 		super();
-		this.classe = "SC";
 	}
  
 	public Categoria getCategoria() {
@@ -53,7 +53,7 @@ public class SubCategoria extends MasterCategoria {
 	}
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
-//		this.setTipoLancamento(categoria.getTipoLancamento());
+		this.setTipoLancamento(categoria.getTipoLancamento());
 		this.setTipoCategoria(categoria.getTipoCategoria());
 	}
 	

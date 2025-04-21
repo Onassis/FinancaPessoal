@@ -29,10 +29,17 @@
 			 <h5 class="card-title">Cadastro de categoria</h5>
 			<div th:replace="~{fragments/alert}"></div>	 
 		
-   		<form id="CadastroForm" th:object="${categoriadto}" th:action="@{/categoria}"  class="row g-3 needs-validation"   method="POST">  
-			<div th:replace="~{fragments/forms::inputRow(object='categoriadto', field='tipoCategoria', type='select',options= ${opTipoCategoria},rowClass='col-md-12')}" />
-			<div th:replace="~{fragments/forms::inputRow(object='categoriadto', field='tipoLancamento', type='select',options= ${opTiposLancamento},rowClass='col-md-12')}" />
-		   	<div th:replace="~{fragments/forms::inputRow(object='categoriadto', field='descricao',  rowClass='col-md-12')}" />       			   		
+   		<form id="CadastroForm" th:object="${categoriaDTO}" th:action="@{/categoria}"  class="row g-3 needs-validation"   method="POST">
+
+   		  
+					<div
+						th:replace="~{fragments/forms::inputRow(object='categoriaDTO', field='tipoCategoria', type='select',options= ${opTipoCategoria}, readOnly='readOnly',rowClass='col-md-12')}" />
+					<div
+						th:replace="~{fragments/forms::inputRow(object='categoriaDTO', field='tipoLancamento', type='select',options= ${opTiposLancamento}, readOnly='readOnly',rowClass='col-md-12')}" />
+					<div
+						th:replace="~{fragments/forms::inputRow(object='categoriaDTO', field='descricao', required='required',rowClass='col-md-12')}" />
+			
+						
 			<input type="hidden" id="id" th:field="*{id}"/>
 	        <input type="hidden" id="versao" th:field="*{versao}" />	
 	         <div class="text-center">	   		

@@ -43,18 +43,21 @@ import br.com.fenix.fi.conta.ContaServico;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoServico;
 import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoriaDTO;
 import br.com.fenix.fi.subCategoria.SubCategoriaServico;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/categoria")
 public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaDTO,Long> 
-			implements IControleDTO<Categoria,CategoriaDTO,Long>   {
+								implements IControleDTO<Categoria,CategoriaDTO,Long>   {
 
 	@Autowired
 	ContaServico contaSC;
+	
 	@Autowired
 	CategoriaServico servico;
+	
 	@Autowired
 	SubCategoriaServico sSubCategoria;
 	
@@ -94,7 +97,6 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 		System.out.println( tipoCategoria);
 		List<CategoriaDTO>  dados = servico.listaPorTipoCategorias(tipoCategoria)	;
 		model.addAttribute("categoriaDTO", dados); 
-//		return new ModelAndView("categoria/listar_categoria","categoriaDTO", dados) ;
 		return "categoria/listar_categoria";
 	}
 	
@@ -110,19 +112,19 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 	}
 	
    @PostMapping("/{id}/subcategoria")
-   public String criarSubCategoria(@PathVariable long id, @Validated  CategoriaDTO subCategoria,BindingResult result, RedirectAttributes attr) throws Exception{
+   public String criarSubCategoria(@PathVariable long id, @Validated  SubCategoriaDTO subCategoriaDTO,BindingResult result, RedirectAttributes attr) throws Exception{
 
 		if (result.hasErrors()) {
-			attr.addFlashAttribute("subcategoria", subCategoria);
+			attr.addFlashAttribute("subcategoria", subCategoriaDTO);
 			return  "/categoria/" + id + "/subcategoria/" ; 
  		}
 		
 		try {	
-			if (subCategoria.isNew()) { 
-				subCategoria = sSubCategoria.criarDTO(subCategoria); 				
+			if (subCategoriaDTO.isNew()) { 
+				subCategoriaDTO = sSubCategoria.criarDTO(subCategoriaDTO); 				
 			}
 			else { 
-				subCategoria = sSubCategoria.atualizarDTO(subCategoria);
+				subCategoriaDTO = sSubCategoria.atualizarDTO(subCategoriaDTO);
 			}
 			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
 		}
@@ -130,7 +132,7 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 			System.out.println("ControleAbstrato-> Salvar -> Exception");
 			System.out.println(e.toString());
 			attr.addFlashAttribute("Erro", e.getMessage());	
-			attr.addFlashAttribute("subCategoria", subCategoria);	
+			attr.addFlashAttribute("subCategoria", subCategoriaDTO);	
 //			 return  "redirect://categoria/cad_subcategoria"  ;
 		}
 		 			System.out.println("CategoriaControle -> criarSubCategoria -> Redirect");
@@ -141,13 +143,11 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
 
 //---------------------------- SubCategoria ---------------------------------------------------------	
    @GetMapping("{id}/subcategoria/{id2}") 
-   @ResponseStatus(code = HttpStatus.OK)	    	    
-   public CategoriaDTO buscarSubCategoria (@PathVariable  long id2){
+   public SubCategoriaDTO buscarSubCategoria (@PathVariable  long id2){
           return sSubCategoria.buscaDTOPorId(id2);
    }
 
    @GetMapping("{id}/subcategoria/editar/{id2}") 
-   @ResponseStatus(code = HttpStatus.OK)	
    public ModelAndView editar_sub_item(@PathVariable long id, @PathVariable long id2) {
    		System.out.println("editar subcategoria");
    	   CategoriaDTO subCategoria = sSubCategoria.buscaDTOPorId(id2);  		
@@ -155,15 +155,25 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
    }    
 
    @GetMapping("{id}/subcategoria/cadastrar") 
-   @ResponseStatus(code = HttpStatus.OK)	
    public ModelAndView cadastrar_sub_item(@PathVariable long id) {    	
-   		System.out.println("Cadastro subcategoria");   		
-   		Categoria categoria = servico.buscarPorId(id).get(); 
-   		CategoriaDTO subCategoria = new CategoriaDTO(categoria);  	
+   		System.out.println("Cadastro subcategoria");   		   		
+   		CategoriaDTO categoria = (CategoriaDTO) servico.buscaDTOPorId(id);
+   		SubCategoriaDTO subCategoria = new SubCategoriaDTO(categoria);  	
 		return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
    }    
    
-
+  @GetMapping("/{id}/subcategoria/excluir/{id2}")
+  public String excluirSubCategoriaPorId(@PathVariable long id, @PathVariable long id2, RedirectAttributes attr) {
+	   
+		try {
+			sSubCategoria.excluirPorId(id2);
+			attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");
+		}	
+		catch (Exception e) {
+			attr.addFlashAttribute("Erro", e.getMessage()); 
+		}		
+		return   "redirect:/categoria/listar/RE" ;	
+ }
  
   
 //   @PostMapping("/{id}/subcategoria/{idSub}")

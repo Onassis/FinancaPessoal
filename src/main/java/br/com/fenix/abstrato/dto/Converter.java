@@ -6,7 +6,6 @@ public interface Converter<E, D> {
 
     
 	D ToDto(E entity);
-    E ToEntity(D dto);
-    
+    E ToEntity(D dto);    
     void updateEntity(D dto, @MappingTarget E entity);
 }

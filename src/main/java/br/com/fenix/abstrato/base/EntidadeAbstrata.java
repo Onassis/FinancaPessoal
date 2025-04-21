@@ -1,6 +1,7 @@
 package br.com.fenix.abstrato.base;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.springframework.data.domain.Persistable;
 import org.springframework.lang.Nullable;
@@ -32,7 +33,27 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>,  Serializ
    @Transient
 	public boolean isNew() {
        return null == getId();
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EntidadeAbstrata other = (EntidadeAbstrata) obj;
+		return Objects.equals(id, other.id);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	} 
+	   
    
 //   @PrePersist 
 //   @PostLoad

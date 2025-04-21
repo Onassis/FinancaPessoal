@@ -1,29 +1,24 @@
 package br.com.fenix.fi.categoria;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.io.Serializable;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import br.com.fenix.abstrato.base.AbstrataDTO;
 import br.com.fenix.abstrato.base.EntidadeAbstrata;
-import br.com.fenix.abstrato.base.EntidadeAuditavel;
-import br.com.fenix.dominio.converter.rest.CategoriaDeserializer;
 import br.com.fenix.dominio.converter.rest.StringDeserializer;
 import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 
 @ToString
 @Getter
 @Setter
-@NoArgsConstructor
 public class CategoriaDTO  extends EntidadeAbstrata<Long> {
+	
 		/**
 		 * 
 		 */
@@ -32,36 +27,32 @@ public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 	    
 		@JsonDeserialize(using = StringDeserializer.class)	
 		@Size(min = 2, max = 40)
-		private String descricao;
+		protected String descricao;
 		
 		
 		@JsonDeserialize(using = StringDeserializer.class) 
 	    @Enumerated(EnumType.STRING)
-		private TipoLancamento tipoLancamento;
+		protected TipoLancamento tipoLancamento;
 		
 		@JsonDeserialize(using = StringDeserializer.class) 
 	    @Enumerated(EnumType.STRING)
-        private TipoCategoria tipoCategoria;
+		protected TipoCategoria tipoCategoria;
 	    
-    	@JsonDeserialize(using =  CategoriaDeserializer.class)
-	    public Categoria categoria;
-    	
-		private boolean desp_fixa; 
+   	
+		protected boolean desp_fixa; 
 		
-		private boolean credito; 
-	    private boolean imp_renda;
-	    private boolean inativo; 
-	    private String classe;
+		protected boolean credito; 
+		protected boolean imp_renda;
+		protected boolean inativo; 
+
+		protected String classe; 
 	    
-		private long versao;
+		protected long versao;
 		
-		public CategoriaDTO(Categoria categoria) {
+		public CategoriaDTO() {
 			super();
-			this.categoria = categoria;
-			this.tipoCategoria = categoria.getTipoCategoria();
-			this.tipoLancamento = categoria.getTipoLancamento();						
+			this.classe = "CT"; // CT - Categoria
 		}
-		
 		public void setTipoCategoria(TipoCategoria tipoCategoria) {
 			this.tipoCategoria = tipoCategoria;
 			 
@@ -73,11 +64,7 @@ public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 		  }
 		}
 		public String ajuda() {
-			if (this.categoria == null) {
-                return this.descricao;
-            }
-			return this.categoria.getDescricao() + "->" + this.descricao ;
-			
+		    return this.descricao;		
 		}
 
 

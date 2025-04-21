@@ -1,10 +1,12 @@
 package br.com.fenix.abstrato.servico;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,7 +26,7 @@ public abstract class ServicoAbstrato<T ,ID> implements IServico< T,ID>   {
 	@Autowired
 	protected EntityManagerFactory emf;
 		
-	public abstract  CrudRepository<T,ID> getRp(); 
+	public abstract  JpaRepository<T,ID> getRp(); 
 	
 	public ServicoAbstrato() {
 	}
@@ -46,7 +48,7 @@ public abstract class ServicoAbstrato<T ,ID> implements IServico< T,ID>   {
 				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
 	}
 	@Override
-	public Iterable<T> listar () throws RegistroNaoExisteException {
+	public List<T> listar () throws RegistroNaoExisteException {
 		return getRp().findAll();
 	}
 	@Override

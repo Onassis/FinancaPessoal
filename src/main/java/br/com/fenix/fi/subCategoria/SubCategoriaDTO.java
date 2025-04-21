@@ -8,16 +8,37 @@ import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@Data
-public class SubCategoriaDTO extends CategoriaDTO {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		
 
-	    
+@Data
+
+public class SubCategoriaDTO extends CategoriaDTO {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+   	@JsonDeserialize(using =  CategoriaDeserializer.class)
+    public CategoriaDTO categoria;
+	
+	public SubCategoriaDTO() {
+		super();
+		this.classe = "SC"; // SC - SubCategoria 
+	}
+	
+	public SubCategoriaDTO(CategoriaDTO categoria) {
+			super();
+			this.categoria = categoria;
+			this.classe = "SC"; // SC - SubCategoria
+			this.setTipoLancamento(categoria.getTipoLancamento());
+			this.setTipoCategoria(categoria.getTipoCategoria());
+	}
+		@Override
+		public String ajuda() {
+			return this.categoria.getDescricao() + "->" + this.descricao ;
+			
+		}
+		
 }

@@ -22,6 +22,7 @@ import br.com.fenix.fi.subCategoria.SubCategoria;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@Table(name="categoria", indexes = { @Index(name = "categoriaDescricao", columnList = "criado_por_id,descricao", unique = true) })  
 
 //@DiscriminatorValue( value="CT" )
 @EqualsAndHashCode(callSuper=true)
@@ -42,7 +43,7 @@ public class Categoria extends MasterCategoria {
     
 	public Categoria() {
 		super();
-		this.classe = "CT";
+	
 	}
     
     public Categoria ( ModeloCategoria modeloCategoria) { 

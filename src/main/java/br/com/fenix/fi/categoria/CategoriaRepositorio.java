@@ -6,12 +6,14 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.fi.subCategoria.SubCategoria;
 
 @Repository
-public interface CategoriaRepositorio extends JpaRepository<Categoria,Long> {
+public interface CategoriaRepositorio extends JpaRepositoryAuditavel<Categoria,Long> {
 	
 	  @Query("select c from Categoria c JOIN FETCH c.subCategoria s where c.criadoPor.id = ?#{ principal?.id } and c.tipoLancamento = ?1 order by c.descricao,s.descricao" )
 	  List<Categoria> findByTipoLancamentoOrderByDescricaoAsc(TipoLancamento tipoLancamento);

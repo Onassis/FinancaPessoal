@@ -40,6 +40,7 @@ import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
 import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.subCategoria.SubCategoriaDTO;
 import br.com.fenix.fi.subCategoria.SubCategoriaMapper;
 import br.com.fenix.fi.subCategoria.SubCategoriaRepositorio;
 import jakarta.persistence.EntityManagerFactory;
@@ -57,6 +58,9 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	CategoriaRepositorio repositorio;
 	@Autowired
 	CategoriaMapper converter;
+	@Autowired
+	SubCategoriaMapper subConverter;
+	
 	@Autowired
 	private SubCategoriaMapper converterSub;
 	
@@ -95,7 +99,9 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	}	
 	
     public List<CategoriaDTO> listaToDto ( Iterable<Categoria> categorias){
-	   List<CategoriaDTO> categoriasDTO = new ArrayList<CategoriaDTO>(); 
+	   
+    	List<CategoriaDTO> categoriasDTO = new ArrayList<CategoriaDTO>();
+    	
 	   CategoriaDTO categoriaDTO = new CategoriaDTO();
 		 	 
 		 for(Categoria categoria : categorias) {      
@@ -103,9 +109,9 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 			categoriasDTO.add(categoriaDTO);
 	   	 	for(SubCategoria subCategoria : categoria.getSubCategoria()) { 
 	   	 		 CategoriaDTO subCategoriaDTO = converterSub.ToDto(subCategoria); 
-	 	    	 		if (!categoriasDTO.contains(subCategoriaDTO )) { 
+	 	  //  	 		if (!categoriasDTO.contains(subCategoriaDTO )) { 
 	 	    	 			categoriasDTO.add(subCategoriaDTO );
-	 	    	 		}
+	 	    //	 		}
 	 		 }	 
 		}		 			 
 		 return categoriasDTO ; 

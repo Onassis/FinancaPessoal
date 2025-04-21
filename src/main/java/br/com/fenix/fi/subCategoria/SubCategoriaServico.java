@@ -12,10 +12,11 @@ import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import jakarta.persistence.EntityManagerFactory;
 @Service
-public class SubCategoriaServico extends ServicoAbstratoDTO<SubCategoria,CategoriaDTO,Long> implements IServicoDTO<SubCategoria,CategoriaDTO,Long> {
+public class SubCategoriaServico extends ServicoAbstratoDTO<SubCategoria,SubCategoriaDTO,Long> implements IServicoDTO<SubCategoria,SubCategoriaDTO,Long> {
 
 	@Autowired
 	SubCategoriaRepositorio subCategoriaRP;
+
 	@Autowired
 	private SubCategoriaMapper converterSub;
 
@@ -30,9 +31,13 @@ public class SubCategoriaServico extends ServicoAbstratoDTO<SubCategoria,Categor
 		return subCategoriaRP;
 	}
 
+
 	@Override
-	public Converter<SubCategoria, CategoriaDTO> getConverter() {	
+	public SubCategoriaMapper getConverter() {
+		// TODO Auto-generated method stub
 		return converterSub;
 	}
+
+	
 
 }

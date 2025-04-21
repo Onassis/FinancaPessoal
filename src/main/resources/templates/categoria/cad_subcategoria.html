@@ -23,6 +23,7 @@
 						<div th:replace="~{fragments/forms::inputRow(object='subCategoria', field='descricao', required='required',rowClass='col-md-12')}" />
 						<div th:replace="~{fragments/forms::inputRow(object='subCategoria', field='desp_fixa', type='checkbox',rowClass='col-md-6')}" />      
 						<div th:replace="~{fragments/forms::inputRow(object='subCategoria', field='imp_renda', type='checkbox',rowClass='col-md-6')}" />      						
+						<input type="hidden" id="categoria" th:field="*{categoria.id}" />
 						<input type="hidden" id="versao" th:field="*{versao}" />
 						<input type="hidden" id="versao" th:field="*{versao}" />		
 						<input type="hidden" id="id" th:field="*{id}" />

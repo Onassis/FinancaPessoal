@@ -1,61 +1,71 @@
 <div id="div-categoria" th:fragment="categoria">
-<table class="table table-striped table-advance table-hover">
-	<thead>
-		<tr>
-			<th><i class="icon_profile"></i> Categoria</th>
-			<th><i class="money-check-alt"></i> Débito/Credito</th>
-			<th><i class="money-check-alt"></i> Despesa fixa</th>	
-			<th><i class="money-check-alt"></i> Imposto renda</th>		
-			<th><i class="icon_cogs"></i> Ação</th>
-		</tr>
-	</thead>
-	<div th:switch="${categoriaDTO}">
-		<h2 th:case="null">Nenhuma categoria foi encontrada</h2>
-		<div th:case="*">
-			<tbody>
-				<tr th:each="c : ${categoriaDTO}">
-					<h2 th:case="null">Nenhuma Categoria foi encontrada</h2>
-					<td th:text="${c.ajuda}">Auxiliar Contábil</td>
-					<td th:text="${c?.tipoLancamento?.getDescricao()}">Auxiliar	Contábil</td>
-					<td >
-			              <div class="custom-control custom-checkbox">
-							   <input align="center" class="form-check-input" type="checkbox"  id="desp_fixa"  th:checked="${c.desp_fixa}" placeholder="Despesa fixa" disabled="disabled">
-			              </div>	
-	               </td>
-	               		<td>
-			              <div class="custom-control custom-checkbox">
-							   <input class="form-check-input" type="checkbox"  id="imp_renda"  th:checked="${c.imp_renda}" placeholder="Imposto de renda" disabled="disabled">
-			              </div>	
-	               </td>				
-					<td colspan="3">
-						<a th:if="${c.classe == 'CT'}" class="btn btn-info btn-sm btnadd" id="btnadd"
-							th:href="@{/categoria/{id}/subcategoria/cadastrar (id=${c.id}) }" role="button"> 
-							<span class="oi oi-plus" title="Adicionar SubCategoria" aria-hidden="true"></span> 
-						</a> 
-					   <a th:if="${c.classe == 'SC'}" class="btn btn-info btn-sm btnadd" id="btnadd"
-						  th:href="@{/categoria/{id}/subcategoria/lancamento/{id2} (id=${c.categoria.id}, id2=${c.id}) }" role="button"> 
-						  <span class="oi oi-calculator" title="Lançamento" aria-hidden="true"></span>
-					   </a>
-					  <a th:if="${c.classe == 'CT'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
-					     th:href="@{/categoria/editar/{id} (id=${c.id}) }" 	role="button"> 
-					     <span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
-					  </a>					    
-					  <a th:if="${c.classe  == 'SC'}" class="btn btn-info btn-sm btnEditar" id="btn_editar" 	
-					     th:href="@{/categoria/{id}/subcategoria/editar/{id2}  (id=${c.categoria.id}, id2=${c.id}) }" 	role="button"> 
-					     <span class="oi oi-brush" title="Editar" aria-hidden="true"></span>
-					  </a>
-					  <a th:if="${c.classe  == 'CT'}" class="btn btn-danger btn-sm" id="btn_deletar" 	
-					  	 th:href="@{/categoria/{id} (id=${c.id}) }"> 
-						 <span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
-				 	  </a>
-					  <a th:if="${c.classe  == 'SC'}" class="btn btn-danger btn-sm" id="btn_deletar" 
-					     th:href="@{/categoria/{id}/subcategoria/{id2} (id=${c.categoria.id}, id2=${c.id}) }"> 
-					     <span class="oi oi-circle-x" title="Exclusão" aria-hidden="true"></span>
-					  </a>								
-					</td>						
-			</tbody>
+<!-------------------------------------------------- Lista ------------------------------------------------>	
+	  	<div class="Containner  max-width=60%">
+	  	<div class="row">
+				<div class="card">
+					<div class="table-responsive" >				
+							<table class="table table-bordered table-striped table-hover ">
+								<thead class="thead-light">	
+									<tr>
+											<th><i class="icon_profile"></i> Categoria</th>
+											<th><i class="money-check-alt"></i> Débito/Credito</th>
+											<th><i class="money-check-alt"></i> Despesa fixa</th>	
+											<th><i class="money-check-alt"></i> Imposto renda</th>		
+											<th><i class="money-check-alt"></i> Inativo</th>	
+											<th><i class="icon_cogs"></i> Ação</th>
+										</tr>
+									</thead>
+									
+				<div th:switch="${categoriaDTO}">
+					<h2 th:case="null">Nenhuma categoria foi encontrada</h2>
+					<div th:case="*">
+					 	 <tbody th:remove="all-but-first">
+							<tr th:each="c : ${categoriaDTO}">
+								<h2 th:case="null">Nenhuma Categoria foi encontrada</h2>
+								
+								<td th:text="${c.ajuda}">Auxiliar Contábil</td>
+								<td th:text="${c?.tipoLancamento?.getDescricao()}">Auxiliar	Contábil</td>
+								<td align="center">
+										<a th:if="${c.desp_fixa == true}" class="fa-regular fa-square-check" title="Despesa fixa"></a>
+										<a th:if="${c.desp_fixa == false}" class="fa-regular fa-square" style="color: #ced6de" title="Despesa fixa"></a>											
+								</td>
+								<td align="center">
+										<a th:if="${c.imp_renda == true}" class="fa-regular fa-square-check" title="Imposto de renda"></a>
+										<a th:if="${c.imp_renda== false}" class="fa-regular fa-square" style="color: #ced6de" title="Imposto de renda"></a>											
+								</td>
+										<td align="center">
+										<a th:if="${c.inativo == true}" class="fa-regular fa-square-check" title="Inativo"></a>
+										<a th:if="${c.inativo == false}" class="fa-regular fa-square" style="color: #ced6de" title="Inativo"></a>											
+								</td>																									
+								<td colspan="3">
+									<a th:if="${c.classe == 'CT'}"  class="fa-regular  fa-square-plus icon-dark"  id="btnadd"
+										th:href="@{/categoria/{id}/subcategoria/cadastrar (id=${c.id}) }" role="button" title="Adcionar subCategoria"> 									
+									</a>
+								  <a th:if="${c.classe == 'CT'}" class="fa-regular fa-pen-to-square icon-dark" id="btn_editar" 	
+								     th:href="@{/categoria/editar/{id} (id=${c.id}) }" 	role="button"  title="Editar Categoria"> 
+								  </a>					    
+								  <a th:if="${c.classe  == 'CT'}" class="fa-regular fa-trash-can icon-dark btn-delete" id="btn_deletar" 	
+								  	 th:href="@{/categoria/excluir/{id} (id=${c.id}) }"  title="Excluir Categoria"> 
+							 	  </a>
+									 
+								   <a th:if="${c.classe == 'SC'}" class="fa-solid fa-receipt icon-dark" id="btnadd"  title="Adcionar Lançamentos"
+									  th:href="@{/categoria/{id}/subcategoria/lancamento/{id2} (id=${c?.categoria?.id}, id2=${c.id}) }" role="button"> 
+								   </a>
+								  <a th:if="${c.classe  == 'SC'}" class="fa-regular fa-pen-to-square icon-dark" id="btn_editar"  title="Editar subCategoria"	
+								     th:href="@{/categoria/{id}/subcategoria/editar/{id2}  (id=${c?.categoria?.id}, id2=${c.id}) }" 	role="button"> 
+								  </a>
+							 	  
+								  <a th:if="${c.classe  == 'SC'}" class="fa-regular fa-trash-can icon-dark btn-delete" id="btn_deletar" title="Excluir subCategoria"
+								     th:href="@{/categoria/{id}/subcategoria/excluir/{id2} (id=${c?.categoria?.id}, id2=${c.id}) }"> 
+								  </a>								
+								</td>						
+						</tbody>
+					
+					 	</div>							
+				</div>
+				</table>
 		</div>
-	</div>
-</table>
-
+</div>	
+</div>
+</div>
 </div>

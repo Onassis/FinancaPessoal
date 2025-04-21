@@ -1,5 +1,6 @@
 package br.com.fenix.abstrato.servico;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -21,7 +22,7 @@ public interface IServico<T,ID> {
 	 CrudRepository<T,ID> getRp();
 	 
 	 Optional<T>  buscarPorId(ID id) throws RegistroNaoExisteException;
-	 Iterable<T> listar() throws RegistroNaoExisteException;
+	 List<T> listar() throws RegistroNaoExisteException;
 	 Page<T> listarPagina(Pageable pageable);
 	 void handleException(OperacaoDB op,Exception e) throws Exception;
 	 T criar(T entidade) throws Exception;

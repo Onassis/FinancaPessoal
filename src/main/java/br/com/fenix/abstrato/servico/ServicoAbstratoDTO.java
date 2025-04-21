@@ -16,6 +16,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fenix.abstrato.dto.Converter;
@@ -87,25 +88,30 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 
 
 	@Override
+	@Transactional(readOnly = true)
 	public 	Optional<T>  buscarPorId (ID id) throws RegistroNaoExisteException {
 		return 	Optional.ofNullable(getRp().findById(id)
 				.orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrato") )) ;
 	}
 	@Override
-	public Iterable<T> listar () throws RegistroNaoExisteException {
+	@Transactional(readOnly = true)
+	public List<T> listar () throws RegistroNaoExisteException {
 		System.err.println("Listar");
 		return getRp().findAll();
 	}
 	@Override
 	public  List<DTO> listarDto () throws RegistroNaoExisteException {
-	    List<DTO> dtos = StreamSupport.stream(listar().spliterator(), false)
+	    List<DTO> dtos = listar()
+	    		.stream()
                 .map(dado -> getConverter().ToDto(dado))
                 .collect(Collectors.toList());
         return dtos;
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
+// Verifica se o usuario é o dono do registro	
+//	@PreAuthorize("#entidade.criadoPor.id == principal.id")
 	public T atualizar(T entidade)  throws Exception {	
 //		EntityTransaction tx = geradorTransacao();
 //		Session session = sessionFactory.openSession(); // (2)
@@ -127,21 +133,21 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 
 	}
 	@Override
-	@Transactional
+	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
 	public void excluirPorId(ID id)throws Exception {
-		EntityTransaction tx = geradorTransacao();
+//		EntityTransaction tx = geradorTransacao();
 		try {				
-			tx.begin();	
+//			tx.begin();	
 			antesDeExcluir(id);
 			getRp().deleteById(id);
-			tx.commit();
+//			tx.commit();
 		} catch (Exception e) {
-			tx.rollback();
+//			tx.rollback();
 			handleException(OperacaoDB.DEL,e);
 		}
 	}
 	@Override
-	@Transactional
+	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
 	public void excluirTodos(){
 		getRp().deleteAll();
 	}
@@ -180,8 +186,8 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
           }
 	 }
 	public DTO buscaDTOPorId (ID id) throws RegistroNaoExisteException {
-		   Optional<T>  entidadeOp = buscarPorId(id);
-		    DTO dto =  getConverter().ToDto(entidadeOp.get()); 
+		   T  entidade = buscarPorId(id).orElseThrow(() -> new RegistroNaoExisteException("Registro  não encontrato:" + id) );
+		    DTO dto =  getConverter().ToDto(entidade); 
 		return dto;
 	}
 
@@ -216,7 +222,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 		return getConverter().ToDto(entidade);
 	}
 	@Override
-	@Transactional
+	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
 	public T criar( T entidade ) throws Exception {
 //		EntityTransaction tx = geradorTransacao();
 		try {				

@@ -35,7 +35,7 @@ public class AutomacaoServico  extends ServicoAbstrato<Automacao,Long> implement
 		
 	}
 	@Override
-	public CrudRepository<Automacao, Long> getRp() {
+	public AutomacaoRepositorio getRp() {
 		// TODO Auto-generated method stub
 		return repositorio;
 	}
@@ -146,31 +146,7 @@ public class AutomacaoServico  extends ServicoAbstrato<Automacao,Long> implement
 	
  	  throw e ;		
 	}
-	@Override
-	public Automacao antesDeSalvar(Automacao entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void depoisDeSalvar(Automacao entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Automacao antesDeAlterar(Automacao entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void depoisDeAlterar(Automacao entidade) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void antesDeExcluir(Long id) throws NegocioException {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 
 	

@@ -52,8 +52,7 @@ public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
     protected boolean debito;
     @jakarta.persistence.Transient
     protected boolean credito;
-    @jakarta.persistence.Transient
-    protected String classe;
+
     
     public  MasterCategoria() {
     	super();
