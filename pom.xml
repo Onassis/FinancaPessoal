@@ -16,7 +16,7 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 	<name>WebOS</name>
 	<properties>
       <org.mapstruct.version>1.6.3</org.mapstruct.version>
-      <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
+      <maven-compiler-plugin-version>3.11.0</maven-compiler-plugin-version>
 		<jakarta-servlet.version>5.0.0</jakarta-servlet.version>
 		<java.version>17</java.version>
 	</properties>
@@ -264,11 +264,7 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
     <artifactId>geronimo-stax-api_1.0_spec</artifactId>
     <version>1.0.1</version>
 </dependency>
-		<dependency>
-			<groupId>com.mballem.curso.boot</groupId>
-			<artifactId>demo-mvc</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -276,21 +272,7 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		 <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-             <version>3.11.0</version>
-            <configuration>
-               
-                <annotationProcessorPaths>
-                    <path>
-                        <groupId>org.mapstruct</groupId>
-                        <artifactId>mapstruct-processor</artifactId>
-                        <version>${org.mapstruct.version}</version>
-                    </path>
-                </annotationProcessorPaths>
-            </configuration>
-        </plugin>
+
 
 		</plugins>
 	</build>

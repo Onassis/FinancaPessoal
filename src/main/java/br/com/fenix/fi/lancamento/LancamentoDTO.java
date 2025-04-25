@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.BooleanDeserializer;
 
+import br.com.fenix.abstrato.base.EntidadeAbstrata;
 import br.com.fenix.dominio.converter.rest.ContaDeserializer;
 import br.com.fenix.dominio.converter.rest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converter.rest.MoedaDeserializer;
@@ -32,7 +33,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-public class LancamentoDTO implements Comparable<LancamentoDTO> {
+public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<LancamentoDTO> {
 	
  
 	
@@ -40,9 +41,7 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
 	private Long  detalheLancamentoId;
 	private Long  detalheDestinoId;
 	private Long  lancamentoId;
-		
-	@JsonDeserialize(using = UsuarioDeserializer.class)
-    private Usuario criadoPor;
+	
 	 
 	private String lancamentoInformacao;
 	
@@ -102,7 +101,10 @@ public class LancamentoDTO implements Comparable<LancamentoDTO> {
    
     @JsonDeserialize(using = NumericBooleanDeserializer.class)
 	protected boolean conciliado ;
-   
+	
+	@JsonDeserialize(using = UsuarioDeserializer.class)
+    private Usuario criadoPor;
+	
     public LancamentoDTO() {    	
     	super();
     	this.valor = BigDecimal.ZERO; 

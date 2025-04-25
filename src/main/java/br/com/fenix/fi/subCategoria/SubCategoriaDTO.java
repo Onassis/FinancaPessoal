@@ -35,10 +35,16 @@ public class SubCategoriaDTO extends CategoriaDTO {
 			this.setTipoLancamento(categoria.getTipoLancamento());
 			this.setTipoCategoria(categoria.getTipoCategoria());
 	}
-		@Override
-		public String ajuda() {
-			return this.categoria.getDescricao() + "->" + this.descricao ;
-			
-		}
-		
+	
+
+	public void setCategoria(CategoriaDTO categoria) {
+		this.categoria = categoria;
+		this.classe = "SC"; // SC - SubCategoria
+		this.setTipoLancamento(categoria.getTipoLancamento());
+		this.setTipoCategoria(categoria.getTipoCategoria());
+	}
+	@Override
+	public String ajuda() {
+		return this.categoria.getDescricao() + "->" + this.descricao ;			
+	}		
 }

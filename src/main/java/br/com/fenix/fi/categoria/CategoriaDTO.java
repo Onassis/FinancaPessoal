@@ -8,6 +8,8 @@ import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,10 +24,12 @@ public class CategoriaDTO  extends EntidadeAbstrata<Long> {
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = 1L;
+	
 		
 	    
-		@JsonDeserialize(using = StringDeserializer.class)	
+		@JsonDeserialize(using = StringDeserializer.class)
+		@NotBlank
+		@NotNull
 		@Size(min = 2, max = 40)
 		protected String descricao;
 		

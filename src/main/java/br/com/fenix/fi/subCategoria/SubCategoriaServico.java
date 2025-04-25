@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
+import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import jakarta.persistence.EntityManagerFactory;
@@ -38,6 +39,15 @@ public class SubCategoriaServico extends ServicoAbstratoDTO<SubCategoria,SubCate
 		return converterSub;
 	}
 
-	
+	@Override
+	public void handleException(OperacaoDB op, Exception e) throws Exception {
+		  if ( e.getMessage().contains("subcategoriadescricao")) {
+			  throw new NegocioException("Já existe um subCategoria com essa descrição");				  			  
+		  }
+		  if (op == OperacaoDB.DEL) { 
+			  throw new NegocioException("SubCategoria possui lançamento e não pode ser excluida");
+		  }		  	
+ 	  throw e ;	
+	}
 
 }

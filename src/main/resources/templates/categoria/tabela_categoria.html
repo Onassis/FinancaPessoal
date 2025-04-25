@@ -48,7 +48,7 @@
 								  	 th:href="@{/categoria/excluir/{id} (id=${c.id}) }"  title="Excluir Categoria"> 
 							 	  </a>
 									 
-								   <a th:if="${c.classe == 'SC'}" class="fa-solid fa-receipt icon-dark" id="btnadd"  title="Adcionar Lançamentos"
+								   <a th:if="${c.classe == 'SC'}" class="fa-solid fa-calculator icon-dark" id="btnadd"  title="Adcionar Lançamentos"
 									  th:href="@{/categoria/{id}/subcategoria/lancamento/{id2} (id=${c?.categoria?.id}, id2=${c.id}) }" role="button"> 
 								   </a>
 								  <a th:if="${c.classe  == 'SC'}" class="fa-regular fa-pen-to-square icon-dark" id="btn_editar"  title="Editar subCategoria"	

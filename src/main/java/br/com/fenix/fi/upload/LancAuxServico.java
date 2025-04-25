@@ -107,7 +107,7 @@ public class LancAuxServico {
 			lancDTO.setConciliado(true);
 			lancDTO.setContaLancamento(conta);
 			
-			lancamentos.add(lancSC.criar(lancDTO));
+//			lancamentos.add(lancSC.criar(lancDTO));
 		}		
 		lancRP.saveAll(lancamentos);		
 /*		saldoRP.f_atualiza_saldo(UtilSerguranca.userId() , 

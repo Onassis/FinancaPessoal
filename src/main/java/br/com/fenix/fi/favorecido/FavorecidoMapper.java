@@ -19,10 +19,12 @@ public interface FavorecidoMapper extends GenericMapper<Favorecido, FavorecidoDT
 
    @Mapping(source = "conta", target = "conta")
    @Mapping(source = "versao", target = "versao")
+   @br.com.fenix.abstrato.dto.ToEntity
    	Favorecido convertToEntity(FavorecidoDTO dto) ;
 
    @Mapping(source = "conta", target = "conta")
    @Mapping(source = "versao", target = "versao")
+   @br.com.fenix.abstrato.dto.ToEntity
    void updateEntity( FavorecidoDTO dto, @MappingTarget Favorecido entity) ;    
     
 	

@@ -7,15 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.fenix.abstrato.repositorio.GenericRepository;
+import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 import br.com.fenix.fi.conta.Conta;
 
 
 @Repository
-public interface LancamentoRepositorio extends GenericRepository<Lancamento> {
-	@Override
-	@Query("from Lancamento o where o.criadoPor.id = ?#{ principal.id}")
-	public List<Lancamento> findAll(); 
-
+public interface LancamentoRepositorio extends JpaRepositoryAuditavel<Lancamento,Long> {
+	
 
 	 
 }

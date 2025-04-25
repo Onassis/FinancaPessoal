@@ -38,7 +38,7 @@ import br.com.fenix.fi.moeda.Moeda;
 import br.com.fenix.icontroller.IControleLancamentoRest;
 
 @RestController
-@RequestMapping("/lancamento")
+@RequestMapping("/api/lancamento")
 public class LancamentoControllerRest {
 
 
@@ -112,14 +112,16 @@ public class LancamentoControllerRest {
 	@Transactional
     public Lancamento Criar(@Validated @RequestBody LancamentoDTO lancDTO){ 
     	System.out.println("Criar lancDTO");
-       return lancSC.salvar(lancDTO);
+//       return lancSC.salvar(lancDTO);
+       return null;
     } 
     @PutMapping
 	@ResponseStatus(code = HttpStatus.OK) 
     public Lancamento alterar(@Validated @RequestBody LancamentoDTO lancDTO){ 
     	System.out.println("alterar lancDTO");
     	System.out.println(lancDTO);
-       return lancSC.alterar(lancDTO);
+//       return lancSC.alterar(lancDTO);
+    	return null;
     } 
     @GetMapping("/{id}")	    
     public Lancamento buscarPorId (@PathVariable long id){	 
@@ -131,7 +133,7 @@ public class LancamentoControllerRest {
 	@GetMapping("/listar/{mesLancamento}")  
 	public ModelAndView listarView(@PathVariable String mesLancamento) {	
 		System.out.println( mesLancamento);
-    	List<LancamentoDTO>  dados = lancSC.listaPorMesAno(mesLancamento);
+    	List<LancamentoDTO>  dados= lancSC.listaPorMesAno(mesLancamento);
 		return new ModelAndView("lancamento/listar_lancamento","lancamentosDTO", dados) ;		  			  
 	}	
 	

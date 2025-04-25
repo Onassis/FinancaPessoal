@@ -17,11 +17,14 @@ public class MyErrorView implements ErrorViewResolver {
 	@Override
 	public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> map) {
 		System.out.println("MyErrorView");
+		System.out.println(request.getRequestURI());
 		map.forEach( (k,v) ->  System.out.println(k + ":" + v + "\n"));
 		for (var entry : map.entrySet()) {
 		    System.out.println("key " + entry.getKey()) ;
 		    System.out.println("Value " + entry.getValue());
+		    
 		}
+		
 		ModelAndView model = new ModelAndView("/error");
 		model.addObject("status", status.value());
 		switch (status.value()) {

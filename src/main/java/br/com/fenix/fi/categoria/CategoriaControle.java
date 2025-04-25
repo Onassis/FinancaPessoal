@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.fenix.abstrato.controle.ControleAbstrato;
@@ -114,32 +116,30 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
    @PostMapping("/{id}/subcategoria")
    public String criarSubCategoria(@PathVariable long id, @Validated  SubCategoriaDTO subCategoriaDTO,BindingResult result, RedirectAttributes attr) throws Exception{
 
-		if (result.hasErrors()) {
-			attr.addFlashAttribute("subcategoria", subCategoriaDTO);
-			return  "/categoria/" + id + "/subcategoria/" ; 
+		if (result.hasErrors()) {			
+			return cadastrar_sub_item(id,subCategoriaDTO); 
  		}
 		
 		try {	
 			if (subCategoriaDTO.isNew()) { 
-				subCategoriaDTO = sSubCategoria.criarDTO(subCategoriaDTO); 				
+				subCategoriaDTO = sSubCategoria.criarDTO(subCategoriaDTO); 		
+				attr.addFlashAttribute("Sucesso", "Registro incluido com sucesso.");
 			}
 			else { 
 				subCategoriaDTO = sSubCategoria.atualizarDTO(subCategoriaDTO);
+				attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
 			}
-			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
 		}
 		catch (Exception e) {
 			System.out.println("ControleAbstrato-> Salvar -> Exception");
 			System.out.println(e.toString());
 			attr.addFlashAttribute("Erro", e.getMessage());	
-			attr.addFlashAttribute("subCategoria", subCategoriaDTO);	
-//			 return  "redirect://categoria/cad_subcategoria"  ;
+			attr.addFlashAttribute("subCategoriaDTO", subCategoriaDTO);
+			String url = "redirect:/categoria/" + id + "/subcategoria/cadastrar" ;
+			return url ; 
 		}
-		 			System.out.println("CategoriaControle -> criarSubCategoria -> Redirect");
-   		return    "redirect:/categoria/listar/RE"  ;	   	
+	return     "redirect:/categoria/listar/RE"  ;	   	
    }
-
-
 
 //---------------------------- SubCategoria ---------------------------------------------------------	
    @GetMapping("{id}/subcategoria/{id2}") 
@@ -151,17 +151,21 @@ public class CategoriaControle extends 	ControleAbstratoDTO<Categoria,CategoriaD
    public ModelAndView editar_sub_item(@PathVariable long id, @PathVariable long id2) {
    		System.out.println("editar subcategoria");
    	   CategoriaDTO subCategoria = sSubCategoria.buscaDTOPorId(id2);  		
-	   return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
+	   return new ModelAndView("categoria/cad_subcategoria","subCategoriaDTO", subCategoria) ;		 		 	
    }    
 
-   @GetMapping("{id}/subcategoria/cadastrar") 
-   public ModelAndView cadastrar_sub_item(@PathVariable long id) {    	
-   		System.out.println("Cadastro subcategoria");   		   		
-   		CategoriaDTO categoria = (CategoriaDTO) servico.buscaDTOPorId(id);
-   		SubCategoriaDTO subCategoria = new SubCategoriaDTO(categoria);  	
-		return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
+   @GetMapping("{catId}/subcategoria/cadastrar") 
+   public String cadastrar_sub_item(@PathVariable long catId,SubCategoriaDTO subCategoria) {    	
+   		System.out.println("Cadastro subcategoria");
+   		if ( subCategoria.getCategoria() == null ) { 
+   			CategoriaDTO categoria = (CategoriaDTO) servico.buscaDTOPorId(catId);
+//   		SubCategoriaDTO subCategoria = new SubCategoriaDTO(categoria);  	
+          subCategoria.setCategoria(categoria); 		
+   		}
+//		return new ModelAndView("categoria/cad_subcategoria","subCategoria", subCategoria) ;		 		 	
+		return "categoria/cad_subcategoria";
    }    
-   
+
   @GetMapping("/{id}/subcategoria/excluir/{id2}")
   public String excluirSubCategoriaPorId(@PathVariable long id, @PathVariable long id2, RedirectAttributes attr) {
 	   

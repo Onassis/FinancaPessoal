@@ -73,6 +73,13 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
     }
 	@Override
 	public void handleException(OperacaoDB op, Exception e) throws Exception {
+		  if ( e.getMessage().contains("categoriadescricao")) {
+			  throw new NegocioException("Já existe um categoria com essa descrição");				  			  
+		  }
+		  if (op == OperacaoDB.DEL) { 
+			  throw new NegocioException("Categoria possui subcategoria ");
+		  }		  	
+ 	  throw e ;	
 	}
 	
 	@Override
