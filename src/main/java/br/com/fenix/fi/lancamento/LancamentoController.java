@@ -28,8 +28,10 @@ import br.com.fenix.fi.formaPgto.FormaPgtoRepositorio;
 
 @Controller
 @RequestMapping("/lancamento")
-public class LancamentoController  extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,Long> 
-			implements IControleDTO<Lancamento,LancamentoDTO,Long>   {
+public class LancamentoController 
+//extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,Long> 
+//			implements IControleDTO<Lancamento,LancamentoDTO,Long>   
+{
 
 
 	@Autowired	
@@ -43,12 +45,13 @@ public class LancamentoController  extends 	ControleAbstratoDTO<Lancamento,Lanca
 	
 	@Autowired
 	LancamentoServico lancSC;;
-	
-	@Override
-	public LancamentoServico getServico() {
-		// TODO Auto-generated method stub
-		return lancSC;
-	}
+	@Autowired
+	DetalheLancServico detLancSC;;
+//	@Override
+//	public LancamentoServico getServico() {
+//		// TODO Auto-generated method stub
+//		return lancSC;
+//	}
 	@ModelAttribute("formaPgtos")
 	public List<FormaPgto> listaDeFormaPgto() {
 		return formaRP.findByOrderByNomeAsc();
@@ -84,8 +87,10 @@ public class LancamentoController  extends 	ControleAbstratoDTO<Lancamento,Lanca
 	@GetMapping("/listar/{mesLancamento}")  
 	public ModelAndView listarView(@PathVariable String mesLancamento) {	
 		System.out.println( mesLancamento);
-    	List<LancamentoDTO>  dados= lancSC.listaPorMesAno(mesLancamento);
-		return new ModelAndView("lancamento/listar_lancamento","lancamentosDTO", dados) ;		  			  
+//    	List<LancamentoDTO>  dados = lancSC.listaPorMesAno(mesLancamento);
+    	List<DetalheLancDTO> dados = detLancSC.listaPorMesAno(mesLancamento);
+
+    	return new ModelAndView("lancamento/listar_lancamento","DetalheLancDTO", dados) ;		  			  
 	}
 
 }

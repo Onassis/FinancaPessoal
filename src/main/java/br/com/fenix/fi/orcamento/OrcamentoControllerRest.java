@@ -53,7 +53,7 @@ public class OrcamentoControllerRest  extends ControleAbstratoRest<Orcamento>  i
 	@Autowired
 	OrcamentoServico orcamentoSR;
 	
-	public OrcamentoControllerRest(GenericRepository<Orcamento> repositorio) {
+	public OrcamentoControllerRest(OrcamentoRepositorio repositorio) {
 		super(repositorio);
 		// TODO Auto-generated constructor stub
 	}

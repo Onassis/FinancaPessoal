@@ -9,13 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.fenix.abstrato.repositorio.GenericRepository;
+import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.view.ITotalMesDetalhe;
 import br.com.fenix.fi.conta.Conta;
 
 
 @Repository
-public interface DetalheLancamentoRepositorio extends GenericRepository<DetalheLancamento> {
+public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<DetalheLancamento,Long> {
 	
 	
 	@Query("from DetalheLancamento d JOIN FETCH d.lancamento l where d.id = ?1 and d.criadoPor.id = ?#{ principal.id}")

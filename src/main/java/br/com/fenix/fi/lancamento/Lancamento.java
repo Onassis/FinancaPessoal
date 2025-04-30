@@ -1,6 +1,7 @@
 package br.com.fenix.fi.lancamento;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +36,6 @@ public class Lancamento extends EntidadeAuditavel<Long> {
     @Column(length = 2, nullable =  false)
     @Enumerated(EnumType.STRING)
 	private TipoOperacao tipoOperacao;
-   
-    @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY ,optional = true  )
-	@JsonBackReference
-    private Favorecido favorecido;
-	
-    @Column(length = 80)
-	private String informacao;
-
-    private String observacao;
     
     @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY ,optional = true )
     @JsonIgnore
@@ -53,9 +45,19 @@ public class Lancamento extends EntidadeAuditavel<Long> {
     @ManyToOne(cascade = CascadeType.PERSIST ,fetch = FetchType.EAGER ,optional = true  )
     private SubCategoria subCategoria;
     
+    @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY ,optional = true  )
+	@JsonBackReference
+    private Favorecido favorecido;
+	
+    @Column(length = 80)
+	private String informacao;
+
+    private String observacao;
+    
+
  
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "lancamento")
-    private List<DetalheLancamento> datalheLancamento = new ArrayList<DetalheLancamento>()  ;    	
+    private List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>()  ;    	
 
     @Column(nullable = false, columnDefinition = "DATE")	
     private LocalDate dataDoc;
@@ -85,9 +87,11 @@ public class Lancamento extends EntidadeAuditavel<Long> {
 	}
 	public void addDatalheLancamento(DetalheLancamento detalheLancamento) {
         detalheLancamento.setLancamento(this); 
-        this.datalheLancamento.add(detalheLancamento);  		
+        this.detalheLancamento.add(detalheLancamento);  		
 	}
-	
+    public BigDecimal getValorPrestacao() {   
+        return total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
+}
 
 /*	 public void setSubCategoria(SubCategoria subCategoria) {
 	    	this.subCategoria = subCategoria; 

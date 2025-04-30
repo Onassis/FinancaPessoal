@@ -15,6 +15,7 @@ import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.abstrato.repositorio.GenericRepositoryAutenticado;
 import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 import br.com.fenix.dominio.enumerado.TipoConta;
+import br.com.fenix.dominio.modelo.Option;
 
 @Repository
 public interface ContaRepositorio extends JpaRepositoryAuditavel<Conta,Long> {
@@ -42,5 +43,8 @@ public interface ContaRepositorio extends JpaRepositoryAuditavel<Conta,Long> {
 	
 	@Query("select count(distinct c.id) = 1 from Conta c inner join DetalheLancamento d on d.contaLancamento = c.id where c.id = ?1")
 	boolean existsByContaLancamento (Long id);
+	
+	@Query("select new br.com.fenix.dominio.modelo.Option(o.id, o.apelido) from Conta o where o.tipoConta = ?1 and o.criadoPor.id = ?#{ principal.id} order by o.apelido")
+	List<Option> findOptionByTipoConta(TipoConta tipoConta);
 }
  

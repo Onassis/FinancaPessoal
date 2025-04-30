@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 
 import br.com.fenix.abstrato.repositorio.GenericRepository;
+import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 
-public interface OrcamentoRepositorio   extends GenericRepository<Orcamento>{
+public interface OrcamentoRepositorio   extends JpaRepositoryAuditavel<Orcamento,Long>{
 
 	@Override
 	@Query("from Orcamento o  right join subCategoria s where o.criadoPor.id = ?#{ principal.id}")

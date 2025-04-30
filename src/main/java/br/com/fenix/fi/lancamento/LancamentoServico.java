@@ -96,7 +96,7 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		LancamentoDTO lancamentoDTO = modelMapper.map(optDelLac.get(), LancamentoDTO.class); 
 //Busca o registro de conta destino 			  
 		if (lanc.isTransferencia()) { 
-			  for(DetalheLancamento lancDest : lanc.getDatalheLancamento())  { 
+			  for(DetalheLancamento lancDest : lanc.getDetalheLancamento())  { 
 				  if (!lancDest.equals(detLanc)) { 
 					  lancamentoDTO.setContaDestino(lancDest.getContaLancamento()) ;						  
 				  }					  

@@ -27,6 +27,7 @@ import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.dominio.enumerado.TipoConta;
+import br.com.fenix.dominio.modelo.AjudaSelect;
 import br.com.fenix.dominio.modelo.Option;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoDTO;
@@ -61,9 +62,15 @@ public class ContaController  extends ControleAbstratoDTO<Conta,ContaDTO,Long> i
 	@Cacheable("moeda")
 	public List<Option> listaDeMoedas() {
 		System.out.println("contacontrol");
-		 List<Option> options  = moedaRP.findAllByOrderByCodigoAsc().stream()	               
-	                .map(p -> new Option(p.getCodigo(), p.getMoeda()))
-	                .collect(Collectors.toList());
+		
+//		 List<AjudaSelect> selecoptions = moedaRP.findAjudaSelectAll();
+		 
+		 List<Option> options =  moedaRP.findOptionAll();
+		 
+//		List<Option> options  =  moedaRP.findOptionAll();
+//		 List<Option> options  =  moedaRP.findAllByOrderByCodigoAsc().stream()	               
+//	                .map(p -> new Option(p.getCodigo(), p.getMoeda()))
+//	                .collect(Collectors.toList());
 		 
 		 return options;
 	}	

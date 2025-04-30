@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import org.mapstruct.Mapper;
+
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -22,8 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-//@JsonIgnoreProperties({"hibernateLazyInitializer"})
-
+@Data
 public class DetalheLancDTO extends EntidadeAuditavel<Long> {
 
 	
@@ -32,11 +33,10 @@ public class DetalheLancDTO extends EntidadeAuditavel<Long> {
 	 */
 	private static final long serialVersionUID = -6598853038445483479L;
 	
-	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinColumn(name="lancamento_id",  nullable = false, updatable = false)
-// Evita o erro N+1	
-	@JsonBackReference
-	private Lancamento lancamento ;   
+	
+	
+	private LancDTO lancDTO ;   
+	
 	
 	@Column(nullable = false)
 	private int ano;
@@ -76,7 +76,6 @@ public class DetalheLancDTO extends EntidadeAuditavel<Long> {
     
     
     private boolean conciliado= false; 
-
     
 	@Transient
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
