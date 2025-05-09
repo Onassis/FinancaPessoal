@@ -1,7 +1,5 @@
 package br.com.fenix.fi.lancamento;
 
-import static org.junit.Assert.assertTrue;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -18,9 +16,13 @@ import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.favorecido.Favorecido;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 //@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,9 +31,12 @@ import lombok.ToString;
 		indexes = { 
 		@Index(name = "idx_dataPesquisa", columnList = "criado_por_id,dataVenc", unique = false) ,
 		@Index(name = "idx_AnoMes", columnList = "criado_por_id,Ano,Mes,conta_lancamento_id", unique = false) })
-@EqualsAndHashCode(callSuper=true)
+
 @Data
+@EqualsAndHashCode(callSuper =true)
+@AllArgsConstructor
 @ToString(callSuper =true)
+@SuperBuilder
 public class DetalheLancamento extends EntidadeAuditavel<Long> {
 
 	
@@ -57,7 +62,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	private TipoLancamento tipoLancamento;	
 	   
     @Column(nullable = true)
-    private int prestacao=1;
+    private int prestacao;
     
 	// ID do banco campo FITID do arquivo OFX
 	private String chaveBanco; 	
@@ -69,8 +74,12 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
     @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER ,optional = true )
  	private Conta contaLancamento ;
    
+    @JsonDeserialize(using = ContaDeserializer.class)
+    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER ,optional = true )
+ 	private Conta contaTransferencia ;
+    
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-	private BigDecimal valor = BigDecimal.ZERO;
+	private BigDecimal valor;
 	
 	
     @Column(nullable = false,columnDefinition = "DATE")	
@@ -83,7 +92,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 
     
     
-    private boolean conciliado= false; 
+    private boolean conciliado; 
 
     
 	@Transient
@@ -94,11 +103,13 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
 	private BigDecimal debito;
 	
-    
 	public DetalheLancamento() {
-		super();
+		super();		
 		valor = BigDecimal.ZERO;
+		prestacao = 1 ; 
+		conciliado = false; 		
 	}
+
 	
 	public DetalheLancamento(LocalDate dataVenc, Conta conta,TipoLancamento tipoLancamento, BigDecimal valor) {
         super();		

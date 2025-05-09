@@ -6,11 +6,12 @@
 			<div class="table-responsive">				
 				<table class="table table-striped table-hover table-sm">		
 					<thead>
-						<tr>
+						<th>
 							<th>ID</th>
 							<th>Descrição</th>
 							<th>Categoria</th>
 							<th>Tipo Lancamento</th>
+							<th>Prestação</th>
 							<th>Favorecido</th>
 							<th>Conta</th>
 							<th>Dt.Documento</th>
@@ -24,7 +25,9 @@
 					<td th:text="${l.id}">1</td>
 					<td th:text="${l?.lancDTO?.informacao}">Informação</td> 					
 					<td th:text="${l?.lancDTO?.SubCategoria?.getDescricao()}">Categorial</td>
-					<td th:text="${l?.tipoLancamento?.getDescricao()}">Tipo Lancamento</td>
+					<td th:text="${l?.tipoLancamento}">Tipo Lancamento</td>
+					<td th:text="${l?.prestacao}">Prestação</td>
+					
 					<td th:text="${l?.lancDTO?.Favorecido?.getNome()}">Favorecido</td>
 					<td th:text="${l?.contaLancamento?.getApelido()}">Conta lancamento</td>	
 					<td th:text="${#temporals.format(l.lancDTO?.DataDoc, 'dd/MM/yyyy')}">2017/08/14</td>					 			

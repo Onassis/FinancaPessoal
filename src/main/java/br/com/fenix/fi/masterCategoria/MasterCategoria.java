@@ -4,6 +4,7 @@ import java.beans.Transient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -11,9 +12,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
+import br.com.fenix.dominio.converter.rest.CategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.subCategoria.SubCategoria;
 
 
 
@@ -22,6 +27,7 @@ import br.com.fenix.dominio.enumerado.TipoLancamento;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper=true)
+@SuperBuilder
 public  abstract class MasterCategoria extends EntidadeAuditavel<Long> {
 
 	/**

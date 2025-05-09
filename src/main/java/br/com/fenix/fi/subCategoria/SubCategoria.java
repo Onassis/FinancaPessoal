@@ -1,16 +1,7 @@
 package br.com.fenix.fi.subCategoria;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-import java.util.List;
-
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -18,6 +9,18 @@ import br.com.fenix.dominio.converter.rest.CategoriaDeserializer;
 import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.masterCategoria.MasterCategoria;
 import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name="sub_categoria", indexes = { @Index(name = "subCategoriaDescricao", columnList = "criado_por_id,categoria_id,descricao", unique = true) })  
@@ -25,6 +28,7 @@ import br.com.fenix.fi.modeloCategoria.ModeloSubCategoria;
 @EqualsAndHashCode(callSuper=true)
 //@NoArgsConstructor
 @Data
+@SuperBuilder
 public class SubCategoria extends MasterCategoria {
 	 
 	/**

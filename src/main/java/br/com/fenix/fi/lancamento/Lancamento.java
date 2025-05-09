@@ -18,11 +18,17 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Singular;
+import lombok.experimental.SuperBuilder;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
+@SuperBuilder
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Entity 
 @Table(name="lancamento", indexes = {@Index(name = "idx_usuario", columnList = "criado_por_id")})
@@ -56,8 +62,9 @@ public class Lancamento extends EntidadeAuditavel<Long> {
     
 
  
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "lancamento")
-    private List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>()  ;    	
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "lancamento")    
+    @Singular("detalheLancamento")
+    private final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	
 
     @Column(nullable = false, columnDefinition = "DATE")	
     private LocalDate dataDoc;
@@ -75,7 +82,8 @@ public class Lancamento extends EntidadeAuditavel<Long> {
 	public Lancamento() {
 		super();
 	    this.nroPrestacao = 1;
-	    this.nroInicialPrestacao = 1;				
+	    this.nroInicialPrestacao = 1;		
+	  //  detalheLancamento = new ArrayList<DetalheLancamento>() ;
 	}
 	
 	public Lancamento (LocalDate dataDoc,TipoOperacao tipoOperacao,  BigDecimal valor,BigDecimal saldo ) {
@@ -84,10 +92,17 @@ public class Lancamento extends EntidadeAuditavel<Long> {
 	    this.nroInicialPrestacao = 1;		
 		this.tipoOperacao = tipoOperacao;
 		this.total = valor; 
+	    //detalheLancamento = new ArrayList<DetalheLancamento>() ;
 	}
-	public void addDatalheLancamento(DetalheLancamento detalheLancamento) {
-        detalheLancamento.setLancamento(this); 
-        this.detalheLancamento.add(detalheLancamento);  		
+	public void setSubCategoria(SubCategoria subCateroria) {
+		this.subCategoria = subCateroria;
+		if (subCateroria != null) {
+			this.categoria = subCateroria.getCategoria();
+		}
+	}
+	public void addDatalheLancamento(DetalheLancamento detalheLac) {
+		detalheLac.setLancamento(this); 
+		detalheLancamento.add(detalheLac);  		
 	}
     public BigDecimal getValorPrestacao() {   
         return total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	

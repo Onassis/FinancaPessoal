@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 
 public interface GenericMapper<E, D>  extends Converter<E, D> {
-	
+
+    void updateEntity(D dto, @MappingTarget E entity);
 
 }

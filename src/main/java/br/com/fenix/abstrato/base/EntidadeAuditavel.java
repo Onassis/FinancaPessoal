@@ -8,6 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.dominio.converter.rest.ContaDeserializer;
+import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
+import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.lancamento.DetalheLancamento;
+import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.seguranca.usuario.Usuario;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -18,12 +23,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
@@ -33,10 +42,11 @@ import java.time.Instant;
 )
 
 @Data
-@EqualsAndHashCode(callSuper=true)
+@SuperBuilder
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public abstract class EntidadeAuditavel<ID> extends EntidadeAbstrata<ID>   {
     /**

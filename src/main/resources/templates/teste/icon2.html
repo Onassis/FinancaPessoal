@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .operacoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .operacao {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .operacao:hover {
+            background-color: #f0f0f0;
+        }
+        .operacao i {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="operacoes">
+        <div class="operacao" title="Aplicação">
+            <i class="fa fa-briefcase"></i>
+            <span>Aplicação</span>
+        </div>
+        <div class="operacao" title="Cartão de crédito">
+            <i class="fa fa-credit-card"></i>
+            <span>Cartão de crédito</span>
+        </div>
+        <div class="operacao" title="Cheque">
+            <i class="fa fa-money-check"></i>
+            <span>Cheque</span>
+        </div>
+        <div class="operacao" title="Débito">
+            <i class="fa fa-minus-circle"></i>
+            <span>Débito</span>
+        </div>
+        <div class="operacao" title="Depósito">
+            <i class="fa fa-plus-circle"></i>
+            <span>Depósito</span>
+        </div>
+        <div class="operacao" title="Empréstimo">
+            <i class="fa fa-hand-holding-usd"></i>
+            <span>Empréstimo</span>
+        </div>
+        <div class="operacao" title="Estorno">
+            <i class="fa fa-undo"></i>
+            <span>Estorno</span>
+        </div>
+        <div class="operacao" title="Pix">
+            <i class="fa fa-qrcode"></i>
+            <span>Pix</span>
+        </div>
+        <div class="operacao" title="Pagamento">
+            <i class="fa fa-money-bill-wave"></i>
+            <span>Pagamento</span>
+        </div>
+        <div class="operacao" title="Saque">
+            <i class="fa fa-hand-holding-usd fa-rotate-180"></i>
+            <span>Saque</span>
+        </div>
+        <div class="operacao" title="Resgate">
+            <i class="fa fa-gift"></i>
+            <span>Resgate</span>
+        </div>
+        <div class="operacao" title="Transferência">
+            <i class="fa fa-exchange-alt"></i>
+            <span>Transferência</span>
+        </div>
+    </div>
+</body>
+</html>

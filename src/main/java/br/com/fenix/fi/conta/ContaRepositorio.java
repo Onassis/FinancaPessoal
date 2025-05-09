@@ -46,5 +46,9 @@ public interface ContaRepositorio extends JpaRepositoryAuditavel<Conta,Long> {
 	
 	@Query("select new br.com.fenix.dominio.modelo.Option(o.id, o.apelido) from Conta o where o.tipoConta = ?1 and o.criadoPor.id = ?#{ principal.id} order by o.apelido")
 	List<Option> findOptionByTipoConta(TipoConta tipoConta);
+	
+	@Query("select new br.com.fenix.dominio.modelo.Option(o.id, o.apelido) from Conta o where o.criadoPor.id = ?#{ principal.id} order by o.apelido")
+	List<Option> findOption();
+
 }
  

@@ -33,12 +33,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name="conta", indexes = { @Index(name = "contaApelido", columnList = "criado_por_id,apelido", unique = true) })  
 @Data
 @ToString
+@SuperBuilder
 public class Conta extends EntidadeAuditavel<Long> {
 	/**
 	 * 

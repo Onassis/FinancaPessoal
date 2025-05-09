@@ -17,7 +17,7 @@ public interface LancDTOMapper  extends GenericMapper<Lancamento, LancDTO> {
 	   LancDTO convertToDto(Lancamento entity);
 
 	   @br.com.fenix.abstrato.dto.ToEntity
-	   @Mapping(target = "detalheLancamento", ignore = true)
+
 	   Lancamento convertToEntity(LancDTO dto) ;
 
 	   @br.com.fenix.abstrato.dto.ToEntity

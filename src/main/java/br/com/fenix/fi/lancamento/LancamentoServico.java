@@ -51,6 +51,8 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 	SaldoContaRepositorio saldoRP;
 	@Autowired
 	SaldoServico saldoSC;
+	@Autowired
+	LancamentoConverter converter;
 
    @Autowired
    private ModelMapper modelMapper;
@@ -67,9 +69,9 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		return lancamentoRP;
 	}
 	@Override
-	public Converter<Lancamento, LancamentoDTO> getConverter() {
-		// TODO Auto-generated method stub
-		return null;
+	public LancamentoConverter getConverter() {
+
+		return converter;
 	}
 //   public List<LancamentoDTO> findAll () {
 //		
@@ -98,7 +100,7 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		if (lanc.isTransferencia()) { 
 			  for(DetalheLancamento lancDest : lanc.getDetalheLancamento())  { 
 				  if (!lancDest.equals(detLanc)) { 
-					  lancamentoDTO.setContaDestino(lancDest.getContaLancamento()) ;						  
+					  lancamentoDTO.setContaTransferencia (lancDest.getContaLancamento()) ;						  
 				  }					  
 			  }
 		  }			

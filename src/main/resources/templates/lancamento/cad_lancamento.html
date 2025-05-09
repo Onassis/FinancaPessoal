@@ -1,117 +1,75 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+<head><meta charset="UTF-8"></head>
 
- <div class="modal-header">
-	<h4 class="modal-title" id="modalTitilo">Cadastro de Contas</h4>
-	<button type="button" class="btn-close" data-bs-dismiss="modal"
-		aria-label="Close"></button>
-</div>
-<div class="row">
-	<div class="modal-body">
-		<div class="card">
-        	 <div class="card-body">
-	      			<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST">
-	                 	 <div class="form-group">
-	                	        <label for="Data">Data</label>
-	                	        <input type="date"  class="form-control" id="lancamentoDataDoc" placeholder="Data Compra " 
- 	                 	 	      	 th:field="*{lancamentoDataDoc}"    autofocus/>
-                 	 	      	 
-	                 	</div>		
-	                 	                       
-				                 	
-	             	     <div class="form-group">
-	              	          <label for="Valor">Valor</label>
-	              	          <input type="text" class="form-control"  id="Valor" data-mask="#.##0,00" placeholder="Valor " 
-	               		         	 th:field="*{lancamentoTotal}" />
-	             	    </div>	                  
-	                      <div class="form-group">
-	                     	 <label for="conta">Conta Corrente</label>
-	                       	 <select id="id_conta" class="form-control" th:field="*{contaLancamento}" 	>
-	                         	   <option value="">Selecione</option>
-	                         	   <option th:each="c : ${contas}" 
-	                                    th:value="${c.id}" th:text="${c.apelido}">conta</option>
-	                        	</select>
-	                   		</div>
-	                   	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input')}" />
-	                
+<main id="main" class="main" layout:fragment="corpo">
+   
+   <section class="layout-content" >
+	
+	        <nav class="navbar navbar-expand-md bg-light">
+	            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+	                <ul class="navbar-nav mr-auto">
+	                    <li class="nav-item active">
+	                        <i class="oi oi-caret-right"></i>
+	                        <span>Cadastrar Lançamento</span>
+	                    </li>
+	                </ul>
+	            </div>
+	            <a class="btn btn-primary btn-md" th:href="@{/lancamento/listar}" role="button">
+	                <span class="oi oi-spreadsheet" title="Cadastro" aria-hidden="true"></span>
+	                <span>Listar Lançamento</span>
+	            </a>
+	        </nav>
+	
+	        <div class="container" id="cadastro">
+		
+    <div class="col-lg-6 bg-light">
+	 <div class="card">
+		 <div class="card-body">
+			 <h5 class="card-title">Cadastro de Lançamento</h5>
+			<div th:replace="~{fragments/alert}"></div>	 
+		
+	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST">				
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='tipoOperacao', type='select',required='required',options= ${tipoOperacaoOp},readOnly='readOnly',rowClass='col-md-12')}" />
 
-	                   	<div class="col-md-12">
-        	          		<label for="validationCustom01" class="form-label">Tipo de Conta</label>
-            		    	<select id="id_lancamentoTipoOperacao" class="form-control" th:field="*{lancamentoTipoOperacao}" autofocus="autofocus" required>
-								<option value="" disabled="disabled"> -- select an option -- </option>								       
-	               				<option th:each="lancamentoTipoOperacao : ${T(br.com.fenix.dominio.enumerado.TipoOperacao).values()}"	               					               				 
-        							th:value="${lancamentoTipoOperacao}" th:text="${lancamentoTipoOperacao.descricao}">
-        						</option>
-        				 	</select>	
-                  			<div class="valid-feedback">
-                    	 		Ok!
-                  			</div>
-                		</div>
-	                   		
-	                   		
-	                   		 <div  class="col-md-6"> 
-	                     	      <label for="conta">Prestação</label>
-	 							  <input type="text" class="form-control"  id="nroInicialPrestacao" placeholder="Número de Prestacao Inicial "
-		                            		 th:field="*{lancamentoNroInicialPrestacao}" />	
-		                     </div>
-	   	                      <div class="col-md-6">
- 	                     	        <label for="conta">Nro de Prestação</label> 	 	                     	   
-	 								<input type="text" class="form-control"  id="lancamentoNroPrestacao" placeholder="Número de Prestacao "
-		                           		 th:field="*{lancamentoNroPrestacao}" />
-		                       </div>	
- 					<div  class="col-md-6"> 		                       
-		                  <div class="form-group">
-		                        <label for="nome">Informação</label>
-		                        <input type="text" class="form-control" id="Nome" placeholder="Informação"  
-		                        	 th:field="*{lancamentoInformacao}"/>
-		                 </div>		                   
-		              </div>   
-		              <div  class="col-md-6"> 	
-	                  <div class="form-group">
-	                      <label for="categoria">Favorecido</label>
-	                        <select id="id_favorecido" class="form-control" th:field="*{lancamentoFavorecido}" 	>
-	                            <option value="">Selecione</option>
-	                            <option th:each="f : ${favorecidos}" 
-	                                    th:value="${f.id}" th:text="${f.nome}">favorecido</option>
-	                        </select>
-	                   </div>        
-		              </div>
-	                   <div class="form-group">
-	                     	 <label for="conta">Conta Corrente</label>
-	                       	 <select id="id_conta" class="form-control" th:field="*{contaDestino}" 	>
-	                         	   <option value="">Selecione</option>
-	                         	   <option th:each="c : ${contas}" 
-	                                    th:value="${c.id}" th:text="${c.apelido}">conta</option>
-	                        	</select>
-	                   	</div>		              
-		              <div  class="col-md-6"> 	 
-          			 <div class="form-group">
-	                      <label for="categoria">Categoria</label>
-	                        <select id="id_categoria" class="form-control" th:field="*{lancamentoSubCategoria}" 	>
-	                            <option value="">Selecione</option>
-	                            <option th:each="c : ${categoriasDTO}" 
-	                                    th:value="${c.id}" th:text="${c.descricao}">categoria</option>
-	                        </select>
-	                   </div>	  
-		              </div>    
-		              <div  class="col-md-6"> 	                       
-	                  <div class="form-group">
-	                        <label for="lancamentoObservacao">Observação</label>
-	                        <input type="text" class="form-control" id="lancamentoObservacao" placeholder="Observação"  
-	                        	 th:field="*{lancamentoObservacao}"/>
-	                 </div>
-	                 </div>	                   
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-12')}" />     
+			       					  		   	
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='contaLancamento', type='select',required='required',options= ${contas},readOnly='readOnly',rowClass='col-md-6')}" /> 
 
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='contaTransferencia', type='select',options= ${contas},readOnly='readOnly',rowClass='col-md-6')}" /> 
+
+
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='favorecido', type='select',options= ${favorecidos},rowClass='col-md-12')}" /> 
+
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='subCategoria', type='select',options= ${subCategorias},readOnly='readOnly',rowClass='col-md-12')}" /> 
+			   
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='nroInicialPrestacao',  rowClass='col-md-4')}" />
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='nroPrestacao',  rowClass='col-md-4')}" />
+			  
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='total', type='moeda', rowClass='col-md-12')}" />
+			  
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='informacao',  rowClass='col-md-12')}" />    
+			 
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='observacao',  rowClass='col-md-12')}" />  
+			       	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input')}" />
+		                       
             	      <div class="form-group">
    						<input type="hidden" id="lancamentoId" th:field="*{lancamentoId}"/>   		
    						<input type="hidden" id="detalheLancamentoId" th:field="*{detalheLancamentoId}"/>   				
 	        	        <input type="hidden" id="lancAuxId" th:field="*{idLancAux}"/>
-	        	        <input type="hidden" id="id" th:field="*{detalheLancamentoId}"/>
-    				</div>             	                
-	    		 </form>
-			</div>           	                    
-		</div>
-	</div>
+	        	        <input type="hidden" id="id" th:field="*{id}"/>
+    				</div>    
+     		<div class="text-center">	   		
+	        	<button type="submit" id="btnSalvar" class="btn btn-primary"  >Salvar</button>
+				 <a  th:href="@{/lancamento/listar}" class="btn btn-secondary">Voltar</a>
+	        </div>    				         	                
+	     </form>
 </div>
-<div class="modal-footer">
-	<button type="button" id="btnSalvar" class="btn btn-primary" th:href="@{/lancamento}">Salvar</button>
-	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
 </div>
+</div>
+  <script th:src="@{/js/cadastro.js}"></script>
+ 
+ </section>
+	</main>
+ 
+</html>

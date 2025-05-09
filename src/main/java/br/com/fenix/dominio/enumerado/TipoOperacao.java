@@ -15,6 +15,7 @@ public enum TipoOperacao {
 	DB("DB","Débito"),
 	DP("DP","Depósito"),
 	EP("EP","Emprestimo"),
+	ES("ES","Estorno"),
 	PI("PI", "Pix"),
 	PG("PG","Pagamento"),
 	SQ("SQ","Saque"),

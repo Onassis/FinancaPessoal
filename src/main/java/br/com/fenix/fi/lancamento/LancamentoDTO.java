@@ -43,49 +43,51 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 	private Long  lancamentoId;
 	
 	 
-	private String lancamentoInformacao;
+	private String Informacao;
 	
-    private String lancamentoObservacao;
+    private String Observacao;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    protected LocalDate lancamentoDataDoc;
+    protected LocalDate dataDoc;
+    
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     protected LocalDate dataVenc;
     
     protected TipoLancamento tipoLancamento;
     
-	protected TipoOperacao lancamentoTipoOperacao;
+	protected TipoOperacao tipoOperacao;
 	
 	@JsonDeserialize(using = FavorecidoDeserializer.class)
     @JsonInclude(content = Include.NON_NULL)	
-    protected Favorecido lancamentoFavorecido;
+    protected Favorecido favorecido;
 	
     @JsonDeserialize(using = ContaDeserializer.class)
     @JsonInclude(content = Include.NON_NULL)    
     protected Conta contaLancamento ;
     
  // chave de lancamento da conta 
-    protected String chaveBanco; 
+    protected String chaveBanco;
+    
 	// Nro de referencia REFNUM do arquivo OFX (Ex. Nro do cheque)  
 	private String refBanco; 
 
     @JsonDeserialize(using = ContaDeserializer.class)
     @JsonInclude(content = Include.NON_NULL)
-    protected Conta contaDestino ;
+    protected Conta contaTransferencia ;
 
     @JsonDeserialize(using = SubCategoriaDeserializer.class)
     @JsonInclude(content = Include.NON_NULL)    
-    protected SubCategoria lancamentoSubCategoria;
+    protected SubCategoria subCategoria;
       
-    protected int lancamentoNroPrestacao;
-    protected int lancamentoNroInicialPrestacao ;
+    protected int nroPrestacao;
+    protected int nroInicialPrestacao ;
     /**
      * Prestação atual do parcelamento
      */
     protected int prestacao;
 
     @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal lancamentoTotal;
+	protected BigDecimal total;
     
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal valor;
@@ -108,25 +110,50 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     public LancamentoDTO() {    	
     	super();
     	this.valor = BigDecimal.ZERO; 
-    	this.lancamentoTotal = BigDecimal.ZERO;
-    	this.lancamentoTotal = BigDecimal.ZERO; 
+    	this.total = BigDecimal.ZERO;
     	this.credito = BigDecimal.ZERO; 
     	this.debito = BigDecimal.ZERO; 
-        this.lancamentoNroPrestacao = 1;
-        this.lancamentoNroInicialPrestacao = 1;
+        this.nroPrestacao = 1;
+        this.nroInicialPrestacao = 1;
     	
     }
+    public LancamentoDTO(Lancamento lancamento) {    	
+    	super();
+        this.nroPrestacao = lancamento.getNroInicialPrestacao();
+        this.nroInicialPrestacao = lancamento.getNroPrestacao();
+        this.dataDoc = lancamento.getDataDoc(); 
+        this.dataVenc = lancamento.getDataDoc(); 
+        
+        this.criadoPor = lancamento.getCriadoPor(); 
+
+        this.setLancamentoValor(lancamento.getTotal());
+
+    	this.tipoOperacao = lancamento.getTipoOperacao();
+ 
+    	this.favorecido = lancamento.getFavorecido(); 
+    	  
+//        this.chaveBanco = 
+//        
+//    	this.refBanco; 
+
+    	if  (lancamento.getDetalheLancamento().isEmpty() == false) {
+    		
+    		this.tipoLancamento = lancamento.getDetalheLancamento().get(0).getTipoLancamento(); 
+    		this.contaLancamento  = lancamento.getDetalheLancamento().get(0).getContaLancamento(); 
+    		this.contaTransferencia = lancamento.getDetalheLancamento().get(0).getContaTransferencia(); 
+    	}      
+   }
    
     public void setLancamentoValor( BigDecimal valor) { 
-    	this.lancamentoTotal = acertaSinal(valor); 
-    	this.valor = lancamentoTotal.divide(new BigDecimal(lancamentoNroPrestacao), 2, RoundingMode.HALF_UP);    	
+    	this.total = acertaSinal(valor); 
+    	this.valor = total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
     
 	 public String prestacao() {
 		 String sPrestacao; 
-		 sPrestacao = String.format("%02d",lancamentoNroInicialPrestacao);
+		 sPrestacao = String.format("%02d",nroInicialPrestacao);
 		 sPrestacao = sPrestacao.concat("/");
-		 sPrestacao = sPrestacao.concat(String.format("%02d",lancamentoNroPrestacao));
+		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
 		 return sPrestacao; 
 	 }
 	 /*
@@ -194,37 +221,37 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 	
 	public void setLancamentoSubCategoria(SubCategoria  subCategoria) { 
 		
-		this.lancamentoSubCategoria = subCategoria;
+		this.subCategoria = subCategoria;
 		if (subCategoria != null) 
 			this.tipoLancamento = subCategoria.getTipoLancamento();
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		LancamentoDTO other = (LancamentoDTO) obj;
-		if (lancamentoId != null)  
-		 	return Objects.equals(lancamentoId, other.lancamentoId);
-		if (detalheDestinoId != null)  
-		 	return Objects.equals(detalheDestinoId, other.detalheDestinoId);
-		if (idLancAux != null)  
-		 	return Objects.equals(idLancAux, other.idLancAux);
-		return Objects.equals(this.toString(), other.toString()); 
-			}
-	
-	@Override
-	public int hashCode() {
-		if (lancamentoId != null)  
-		 	return Objects.hash(lancamentoId);
-		if (detalheDestinoId != null)  
-		 	return Objects.hash(detalheDestinoId);
-		if (idLancAux != null)  
-		 	return Objects.hash(idLancAux);
-		
-		return Objects.hash(this.toString());		
-	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		LancamentoDTO other = (LancamentoDTO) obj;
+//		if (lancamentoId != null)  
+//		 	return Objects.equals(lancamentoId, other.lancamentoId);
+//		if (detalheDestinoId != null)  
+//		 	return Objects.equals(detalheDestinoId, other.detalheDestinoId);
+//		if (idLancAux != null)  
+//		 	return Objects.equals(idLancAux, other.idLancAux);
+//		return Objects.equals(this.toString(), other.toString()); 
+//			}
+//	
+//	@Override
+//	public int hashCode() {
+//		if (lancamentoId != null)  
+//		 	return Objects.hash(lancamentoId);
+//		if (detalheDestinoId != null)  
+//		 	return Objects.hash(detalheDestinoId);
+//		if (idLancAux != null)  
+//		 	return Objects.hash(idLancAux);
+//		
+//		return Objects.hash(this.toString());		
+//	}
 
 	public boolean possuiContaLancanto() {
 		return this.contaLancamento != null;  

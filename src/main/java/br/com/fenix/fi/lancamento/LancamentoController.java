@@ -1,11 +1,14 @@
 package br.com.fenix.fi.lancamento;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
+import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.dominio.modelo.Option;
 import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.conta.Conta;
@@ -29,8 +35,8 @@ import br.com.fenix.fi.formaPgto.FormaPgtoRepositorio;
 @Controller
 @RequestMapping("/lancamento")
 public class LancamentoController 
-//extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,Long> 
-//			implements IControleDTO<Lancamento,LancamentoDTO,Long>   
+	extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,Long> 
+ 			implements IControleDTO<Lancamento,LancamentoDTO,Long>   
 {
 
 
@@ -46,25 +52,35 @@ public class LancamentoController
 	@Autowired
 	LancamentoServico lancSC;;
 	@Autowired
-	DetalheLancServico detLancSC;;
-//	@Override
-//	public LancamentoServico getServico() {
-//		// TODO Auto-generated method stub
-//		return lancSC;
-//	}
+	DetalheLancServico detLancSC;
+	
+
+	
+	@Override
+	public LancamentoServico getServico() {
+	 	return lancSC;
+	}
+	
 	@ModelAttribute("formaPgtos")
 	public List<FormaPgto> listaDeFormaPgto() {
 		return formaRP.findByOrderByNomeAsc();
 	}	
-    
+	
 	@ModelAttribute("favorecidos")
-	public Iterable<Favorecido> listaDeFavorecido() {		
-	 return favorecidoRP.findAll();  
+	public Iterable<Option> listaDeFavorecido() {	
+		 return favorecidoRP.findOption();  
 	}
+
 	@ModelAttribute("contas")
-	public List<Conta> listaDeContas() {		
-		return contaRP.findByOrderByApelidoAsc();
+	public List<Option> listaDeContas() {	
+		return contaRP.findOption(); 
 	}	
+   
+	@ModelAttribute("tipoOperacaoOp")
+	public List<Option> listaTipoOperacao() { 
+		return TipoOperacao.listaTipoOperacao(); 
+	}
+	
 	
 	@ModelAttribute("mesesAno")
 	public List<LocalDate> listaMesAno() {
@@ -77,12 +93,21 @@ public class LancamentoController
 
 	    return todosMeses;
 	}
-	
-	@ModelAttribute("categoriasDTO")
-	public List<CategoriaDTO> listaDeCategorias() {		
-	 return categoriaSC.listaDeCategorias(TipoLancamento.D); 
+
+	@ModelAttribute("subCategorias")
+	public List<Option> listaDeCategorias() {			
+		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.D);		
+//	 return categoriaSC.listaDeCategorias(TipoLancamento.D); 
 	}
-	
+	@GetMapping("/listar")
+	@Override
+	public String  listarView(ModelMap model) {
+		LocalDateTime now = LocalDateTime.now(); 
+		String mesLancamento = now.getMonth().toString() + "/" + now.getDayOfYear();  
+	    List<DetalheLancDTO> dtos = detLancSC.listaPorMesAno(mesLancamento);
+		model.addAttribute(nomeClasseDTO(), dtos);
+		return listarHtml();
+	}	
 
 	@GetMapping("/listar/{mesLancamento}")  
 	public ModelAndView listarView(@PathVariable String mesLancamento) {	
@@ -92,5 +117,7 @@ public class LancamentoController
 
     	return new ModelAndView("lancamento/listar_lancamento","DetalheLancDTO", dados) ;		  			  
 	}
+
+
 
 }

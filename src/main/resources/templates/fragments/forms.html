@@ -139,6 +139,23 @@
     				</ul>	
 	             </div>                        
             </div>
+               <div  class="form-group" th:if="${type == 'date'}">
+              	<label class="form-label">
+                    <span th:text="#{'__${object}__.__${field}__.label'}"></span>
+                </label>
+                <input class="form-control" th:if="${type == 'date'}"
+                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}"
+                   	   th:id="|input_${#strings.toLowerCase(field)}|"      	                          
+                         th:required="${__${required}__} ? 'required' : null"
+                         th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
+                         th:readOnly="*{__${field}__} != null and ${__${readOnly}__} ==  'readOnly'" 
+                        />
+              	<div class="invalid-feedback">
+				    <ul>
+       					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    				</ul>	
+	             </div>                        
+            </div>
         </div>
 
     </body>

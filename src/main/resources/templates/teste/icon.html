@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Operations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .tile {
+                       width: 150px;
+            height: 150px;
+            margin: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .tile:hover {
+            transform: scale(1.05);
+        }
+        .tile i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .tile p {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tile">
+            <i class="fas fa-chart-line"></i>
+            <p>Aplicação</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-credit-card"></i>
+            <p>Cartão de crédito</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-receipt"></i>
+            <p>Cheque</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-money-bill-wave"></i>
+            <p>Débito</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-university"></i>
+            <p>Depósito</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-hand-holding-usd"></i>
+            <p>Emprestimo</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-undo-alt"></i>
+            <p>Estorno</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-link"></i>
+            <p>Pix</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-dollar-sign"></i>
+            <p>Pagamento</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-atm"></i>
+            <p>Saque</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-gift"></i>
+            <p>Resgate</p>
+        </div>
+        <div class="tile">
+            <i class="fas fa-exchange-alt"></i>
+            <p>Transferência</p>
+        </div>
+    </div>
+</body>
+</html>
