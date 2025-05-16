@@ -50,11 +50,13 @@ public class LancamentoController
 	CategoriaServico categoriaSC;
 	
 	@Autowired
-	LancamentoServico lancSC;;
+	LancamentoServico lancSC;
+	
 	@Autowired
 	DetalheLancServico detLancSC;
 	
-
+   @Autowired
+   ConverterLancamentoFactory converters;
 	
 	@Override
 	public LancamentoServico getServico() {
@@ -94,11 +96,17 @@ public class LancamentoController
 	    return todosMeses;
 	}
 
-	@ModelAttribute("subCategorias")
-	public List<Option> listaDeCategorias() {			
+	@ModelAttribute("subCategoriasDebito")
+	public List<Option> listaDeCategoriasDebitos() {			
 		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.D);		
 //	 return categoriaSC.listaDeCategorias(TipoLancamento.D); 
 	}
+	@ModelAttribute("subCategoriasCredito")
+	public List<Option> listaDeCategoriasCredito() {			
+		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.C);		
+//	 return categoriaSC.listaDeCategorias(TipoLancamento.D); 
+	}
+	
 	@GetMapping("/listar")
 	@Override
 	public String  listarView(ModelMap model) {
@@ -116,6 +124,18 @@ public class LancamentoController
     	List<DetalheLancDTO> dados = detLancSC.listaPorMesAno(mesLancamento);
 
     	return new ModelAndView("lancamento/listar_lancamento","DetalheLancDTO", dados) ;		  			  
+	}
+	
+	@GetMapping("/cadastrar/{tipoOperacao}")
+	public String cadastrar(@PathVariable String tipoOperacao, LancamentoDTO dto) {
+		
+		return converters.getCadastro(tipoOperacao) ;
+//		switch (tipoOperacao)){ 
+//			case DB -> lancamento = sacar (dto);
+////		case PG -> lancamento = sacar (dto);
+//	
+//		}
+//		return  cadastroHtml() ;
 	}
 
 

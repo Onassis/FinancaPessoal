@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.fenix.abstrato.dto.Converter;
@@ -12,7 +13,9 @@ import br.com.fenix.fi.conta.Conta;
 
 @Component
 public class LancamentoConverter implements Converter<Lancamento,LancamentoDTO> {
-
+	   @Autowired
+	   ConverterLancamentoFactory converters;
+	   
 	@Override
 	public LancamentoDTO ToDto(Lancamento entity) {
 		
@@ -21,6 +24,8 @@ public class LancamentoConverter implements Converter<Lancamento,LancamentoDTO> 
 
 	@Override
 	public Lancamento ToEntity(LancamentoDTO dto) {
+		
+		
 		Lancamento lancamento=null;
 		
 		switch (dto.getTipoOperacao()){
@@ -31,7 +36,7 @@ public class LancamentoConverter implements Converter<Lancamento,LancamentoDTO> 
 
 	
 // -------------------- Cheque  -------------------------- 		
-			case CH -> lancamento = comprarCheque (dto);
+//			case CH -> lancamento = comprarCheque (dto);
 
 // -------------------- Debito   -------------------------- 		
 
@@ -45,10 +50,11 @@ public class LancamentoConverter implements Converter<Lancamento,LancamentoDTO> 
 		
 // -------------------- Compra cartao de credito -------------------------- 				
 
-			case CC -> lancamento = comprarCartao (dto);		
+//			case CC -> lancamento = comprarCartao (dto);		
 		
-// -------------------- Transferencia  -------------------------- 	
-			case AP, SQ,PI, TR 		 -> lancamento = Transferir (dto);
+// -------------------- Transferencia  --------------------------
+//			AP, SQ,PI,		
+			case  TR 		 -> lancamento = Transferir (dto);
 		
 // -------------------- Investimento e Resgate------------------------- 
 		

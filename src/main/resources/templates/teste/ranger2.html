@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário com Range</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <form>
+            <div class="form-group">
+                <label for="rangeStart">Valor Inicial</label>
+                <input type="range" class="form-range" id="rangeStart" min="0" max="100" step="1" oninput="updateStartValue(this.value)">
+                <span id="startValue">50</span>
+            </div>
+            <div class="form-group">
+                <label for="rangeEnd">Valor Final</label>
+                <input type="range" class="form-range" id="rangeEnd" min="0" max="100" step="1" oninput="updateEndValue(this.value)">
+                <span id="endValue">50</span>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateStartValue(value) {
+            document.getElementById('startValue').textContent = value;
+        }
+
+        function updateEndValue(value) {
+            document.getElementById('endValue').textContent = value;
+        }
+    </script>
+</body>
+</html>

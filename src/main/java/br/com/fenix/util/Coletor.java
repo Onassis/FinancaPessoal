@@ -78,7 +78,7 @@ public class Coletor {
                 lanc.setLancamentoDataDoc(date) ;
                 
                 lanc.setDataVenc(dataCartao) ; 
-                lanc.setLancamentoTipoOperacao(TipoOperacao.CC); 
+
                 
                 prestacaoIni   = 1;
             	prestacaoFinal = 1;
@@ -116,9 +116,11 @@ public class Coletor {
           	    
           	    if (valor.compareTo(BigDecimal.ZERO) > 0) {
           	      lanc.setTipoLancamento(TipoLancamento.D); 
+                  lanc.setLancamentoTipoOperacao(TipoOperacao.DB); 
           	      }
           	      else {
               	      lanc.setTipoLancamento(TipoLancamento.C);          	    	  
+                      lanc.setLancamentoTipoOperacao(TipoOperacao.CR); 
           	      }
 
                 lanc.setValor(valor); 
@@ -144,7 +146,7 @@ public class Coletor {
 	        	case "TRNTYPE"    : System.out.println(tag.getTagValor() );
 	        						if (tag.getTagValor().equals("CREDIT")) { 
 	        							UltimoLancamento().setTipoLancamento(TipoLancamento.C); 
-	        							UltimoLancamento().setLancamentoTipoOperacao(TipoOperacao.DP);
+	        							UltimoLancamento().setLancamentoTipoOperacao(TipoOperacao.CR);
 	        						}	
 	        						else {
 	        							

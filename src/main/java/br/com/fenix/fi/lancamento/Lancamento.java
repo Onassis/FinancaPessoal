@@ -31,59 +31,73 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Entity 
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipoOperacao", discriminatorType = DiscriminatorType.STRING)
 @Table(name="lancamento", indexes = {@Index(name = "idx_usuario", columnList = "criado_por_id")})
-public class Lancamento extends EntidadeAuditavel<Long> {
+public  class Lancamento extends EntidadeAuditavel<Long> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
    
-    @Column(length = 2, nullable =  false)
+    @Column(length = 2, nullable =  false,insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
-	private TipoOperacao tipoOperacao;
+	protected TipoOperacao tipoOperacao;
     
     @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY ,optional = true )
     @JsonIgnore
-    private Categoria categoria;
+    protected Categoria categoria;
 
     @JsonDeserialize (using = SubCategoriaDeserializer.class)    
     @ManyToOne(cascade = CascadeType.PERSIST ,fetch = FetchType.EAGER ,optional = true  )
-    private SubCategoria subCategoria;
+    protected SubCategoria subCategoria;
     
     @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY ,optional = true  )
 	@JsonBackReference
-    private Favorecido favorecido;
+	protected Favorecido favorecido;
 	
     @Column(length = 80)
-	private String informacao;
+    protected String informacao;
 
-    private String observacao;
-    
-
- 
+    protected String observacao;
+  
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "lancamento")    
     @Singular("detalheLancamento")
-    private final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	
+    protected final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	
 
     @Column(nullable = false, columnDefinition = "DATE")	
-    private LocalDate dataDoc;
+    protected LocalDate dataDoc;
 
-    private int nroPrestacao;
-    private int nroInicialPrestacao;
+    protected int nroPrestacao;
+    protected int nroInicialPrestacao;
     
     @Column(nullable = true)
-    private boolean transferencia=false; 
+    protected boolean transferencia=false; 
     
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-	private BigDecimal total;
+	protected BigDecimal total;
 
 	
 	public Lancamento() {
 		super();
-	    this.nroPrestacao = 1;
-	    this.nroInicialPrestacao = 1;		
+//	    this.nroPrestacao = 1;
+//	    this.nroInicialPrestacao = 1;		
 	  //  detalheLancamento = new ArrayList<DetalheLancamento>() ;
+	}
+	
+	protected Lancamento(LancamentoDTO dto  ) {
+		super(); 
+		this.dataDoc = dto.dataDoc;  	    		
+	    this.nroInicialPrestacao = dto.nroInicialPrestacao; 
+		this.nroPrestacao = dto.nroPrestacao;
+	    this.informacao = dto.getInformacao(); 
+	    this.observacao = dto.getObservacao();
+    	this.subCategoria = dto.subCategoria;  
+	    this.favorecido = dto.favorecido;
+//        this.tipoOperacao(dto.tipoOperacao)
+ 	   this.total = dto.total;
+	    
 	}
 	
 	public Lancamento (LocalDate dataDoc,TipoOperacao tipoOperacao,  BigDecimal valor,BigDecimal saldo ) {
@@ -93,6 +107,9 @@ public class Lancamento extends EntidadeAuditavel<Long> {
 		this.tipoOperacao = tipoOperacao;
 		this.total = valor; 
 	    //detalheLancamento = new ArrayList<DetalheLancamento>() ;
+	}
+	public Lancamento (TipoOperacao tipoOperacao) {
+		this.tipoOperacao = tipoOperacao;
 	}
 	public void setSubCategoria(SubCategoria subCateroria) {
 		this.subCategoria = subCateroria;

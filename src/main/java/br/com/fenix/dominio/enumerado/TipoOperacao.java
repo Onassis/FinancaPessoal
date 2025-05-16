@@ -9,17 +9,19 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import br.com.fenix.dominio.modelo.Option;
 
 public enum TipoOperacao {
-	AP("AP", "Aplicação"), 
-	CC("CC","Cartão de crédito"),
-	CH("CH","Cheque"),
+//	AP("AP", "Aplicação"),
+	CP("CP","Compra parcelada"),
+	CR("CR","Credito"),
+//	CC("CC","Cartão de crédito"),
+//	CH("CH","Cheque"),
 	DB("DB","Débito"),
-	DP("DP","Depósito"),
+//	DP("DP","Depósito"),
 	EP("EP","Emprestimo"),
 	ES("ES","Estorno"),
-	PI("PI", "Pix"),
+//	PI("PI", "Pix"),
 	PG("PG","Pagamento"),
-	SQ("SQ","Saque"),
-	RG("RG", "Resgate"),	
+//	SQ("SQ","Saque"),
+//	RG("RG", "Resgate"),	
 	TR("TR", "Transferência");
 
 
