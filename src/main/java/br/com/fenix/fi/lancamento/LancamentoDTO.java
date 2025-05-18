@@ -109,6 +109,7 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 	
     public LancamentoDTO() {    	
     	super();
+    	this.dataDoc = LocalDate.now();
     	this.valor = BigDecimal.ZERO; 
     	this.total = BigDecimal.ZERO;
     	this.credito = BigDecimal.ZERO; 

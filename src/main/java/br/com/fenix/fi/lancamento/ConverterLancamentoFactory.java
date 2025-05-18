@@ -1,6 +1,11 @@
 package br.com.fenix.fi.lancamento;
 
 import br.com.fenix.abstrato.dto.Converter;
+import br.com.fenix.fi.lancamento.operacao.CompraParceladaConverter;
+import br.com.fenix.fi.lancamento.operacao.CreditoConverter;
+import br.com.fenix.fi.lancamento.operacao.DebitoConverter;
+import br.com.fenix.fi.lancamento.operacao.TransferenciaConverter;
+
 import java.util.HashMap;
 import org.springframework.stereotype.Component;
 import br.com.fenix.abstrato.dto.Converter;
@@ -9,7 +14,7 @@ import br.com.fenix.abstrato.dto.Converter;
 @Component
 public class ConverterLancamentoFactory {
     
-    private HashMap<String, Converter<?,?>> converters = new HashMap<>();
+    private HashMap<String, Converter<?, ?> > converters = new HashMap<>();
     
     private HashMap<String, String> cadastro = new HashMap<>(); 
     
@@ -29,6 +34,8 @@ public class ConverterLancamentoFactory {
     public Converter<?,?> getConverter(String discriminatorValue) {
         return converters.get(discriminatorValue);
     }
+
+	
     public String getCadastro(String discriminatorValue) {
         return cadastro.get(discriminatorValue);
     } 

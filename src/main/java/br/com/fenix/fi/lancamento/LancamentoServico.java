@@ -51,21 +51,15 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 	SaldoContaRepositorio saldoRP;
 	@Autowired
 	SaldoServico saldoSC;
-//	@Autowired
-//	LancamentoConverter converter;
+	@Autowired
+	LancamentoConverter converter;
 
    @Autowired
    private ModelMapper modelMapper;
    
-   @Autowired
-   ConverterLancamentoFactory converters;
-   
-   private String tipoOperacao="DB";
 
    public LancamentoServico(EntityManagerFactory emf) {
-
 		super(emf);
-		// TODO Auto-generated constructor stub
 	}
    
 	@Override
@@ -74,21 +68,10 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		return lancamentoRP;
 	}
 	@Override
-	public Converter<Lancamento,LancamentoDTO> getConverter() {
+	public LancamentoConverter getConverter() {
 
-		return (Converter<Lancamento, LancamentoDTO>) converters.getConverter(tipoOperacao); 
+		return converter; 
 		
-	}
-	@Override 
-	public LancamentoDTO criarDTO(LancamentoDTO dto)  throws Exception {
-	      tipoOperacao = dto.getTipoOperacao().toString(); 
-	      return criarDTO(dto);
-	}
-	
-	@Override
-	public LancamentoDTO atualizarDTO(LancamentoDTO dto) {
-		   tipoOperacao = dto.getTipoOperacao().toString(); 
-		   return atualizarDTO(dto);
 	}
 //   public List<LancamentoDTO> findAll () {
 //		

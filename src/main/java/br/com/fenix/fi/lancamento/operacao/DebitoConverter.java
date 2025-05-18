@@ -1,4 +1,4 @@
-package br.com.fenix.fi.lancamento;
+package br.com.fenix.fi.lancamento.operacao;
 
 import java.math.BigDecimal;
 
@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.lancamento.DetalheLancamento;
+import br.com.fenix.fi.lancamento.LancamentoDTO;
 
 @Component
 public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
@@ -22,19 +24,19 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 	@Override
 	public Debito ToEntity(LancamentoDTO dto) {
 		Debito lancamento = new Debito(dto); 
-		Conta conta = dto.contaLancamento; 
+		Conta conta = dto.getContaLancamento(); 
 		LocalDate data = conta.getDataFatura(dto.getDataDoc()); 
 
 		DetalheLancamento detalheLancamento = new DetalheLancamento().builder() 
 	 			.prestacao(1)
 	 			.valor(lancamento.getValorPrestacao()) 
-	 			.tipoLancamento(dto.tipoLancamento)
+	 			.tipoLancamento(dto.getTipoLancamento())
 	 			.dataVenc(data)
-	 			.contaLancamento(dto.contaLancamento)
-	 			.contaTransferencia(dto.contaTransferencia)
+	 			.contaLancamento(dto.getContaLancamento())
+	 			.contaTransferencia(dto.getContaTransferencia())
 	 			.ano(data.getYear()) 
 	 			.mes(data.getMonthValue())
-	 			.conciliado(dto.conciliado)
+	 			.conciliado(dto.isConciliado())
 	 			.tipoLancamento(TipoLancamento.D)
 	 			.build();
 		lancamento.addDatalheLancamento(detalheLancamento);
@@ -44,14 +46,14 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 	@Override
 	public void updateEntity(LancamentoDTO dto, Debito entity) {
 	
-		      entity.setFavorecido(dto.favorecido) ;
-		      entity.setSubCategoria(dto.subCategoria); 
+		      entity.setFavorecido(dto.getFavorecido()) ;
+		      entity.setSubCategoria(dto.getSubCategoria()); 
 		      entity.setInformacao(dto.getInformacao()); 
 		      entity.setObservacao(dto.getObservacao());
 		      
 		      
-		      entity.getDetalheLancamento().get(0).setConciliado(dto.conciliado); 
-		      entity.getDetalheLancamento().get(0).setDataVenc(dto.dataVenc);
+		      entity.getDetalheLancamento().get(0).setConciliado(dto.isConciliado()); 
+		      entity.getDetalheLancamento().get(0).setDataVenc(dto.getDataVenc());
 		      
 		      
 	}

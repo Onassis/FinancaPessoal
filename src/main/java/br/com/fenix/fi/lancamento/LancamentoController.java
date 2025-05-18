@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.fenix.abstrato.controle.ControleAbstratoDTO;
 import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
@@ -77,6 +79,10 @@ public class LancamentoController
 	public List<Option> listaDeContas() {	
 		return contaRP.findOption(); 
 	}	
+	@ModelAttribute("contasCorrente")
+	public List<Option> listaDeContasCorrente() {	
+		return contaRP.findOptionByTipoConta(TipoConta.CC);
+	}
    
 	@ModelAttribute("tipoOperacaoOp")
 	public List<Option> listaTipoOperacao() { 
@@ -99,12 +105,10 @@ public class LancamentoController
 	@ModelAttribute("subCategoriasDebito")
 	public List<Option> listaDeCategoriasDebitos() {			
 		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.D);		
-//	 return categoriaSC.listaDeCategorias(TipoLancamento.D); 
 	}
 	@ModelAttribute("subCategoriasCredito")
 	public List<Option> listaDeCategoriasCredito() {			
 		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.C);		
-//	 return categoriaSC.listaDeCategorias(TipoLancamento.D); 
 	}
 	
 	@GetMapping("/listar")
@@ -127,17 +131,41 @@ public class LancamentoController
 	}
 	
 	@GetMapping("/cadastrar/{tipoOperacao}")
-	public String cadastrar(@PathVariable String tipoOperacao, LancamentoDTO dto) {
-		
-		return converters.getCadastro(tipoOperacao) ;
-//		switch (tipoOperacao)){ 
-//			case DB -> lancamento = sacar (dto);
-////		case PG -> lancamento = sacar (dto);
-//	
-//		}
-//		return  cadastroHtml() ;
+	public String cadastrar(@PathVariable TipoOperacao tipoOperacao, LancamentoDTO dto) {
+		dto.setTipoOperacao(tipoOperacao);
+		return converters.getCadastro(tipoOperacao.toString()) ;
 	}
-
+	@Override
+	@GetMapping("/cadastrar")
+	public String cadastrar(LancamentoDTO dto) {
+		
+		TipoOperacao tipoOperacao = dto.getTipoOperacao();  
+		if (tipoOperacao == null) {
+			tipoOperacao = TipoOperacao.DB;
+			dto.setTipoOperacao(tipoOperacao);				
+		}
+		return converters.getCadastro(tipoOperacao.toString()) ;
+	} 
+	@GetMapping("/editar/{id}")
+	public String atualizarView(Long id, ModelMap model, RedirectAttributes attr) {
+		 TipoOperacao tipoOperacao =null;
+		 if (model.containsAttribute("Erro")) {
+			   LancamentoDTO dto = (LancamentoDTO) model.getAttribute(nomeClasseDTO() ) ;
+			    tipoOperacao = dto.getTipoOperacao();
+			   
+			   return converters.getCadastro(tipoOperacao.toString()) ;
+		 }
+		 try {
+		    LancamentoDTO dto =  getServico().buscaDTOPorId(id); 
+		    tipoOperacao = dto.getTipoOperacao();
+		    
+		   model.addAttribute(nomeClasseDTO() , dto);
+		 } catch (RegistroNaoExisteException e) {
+			 attr.addFlashAttribute("Erro", e.getMessage());   	
+			 return "redirect:".concat(urlListar()); 
+			 }		
+	   return converters.getCadastro(tipoOperacao.toString()) ;
+	}
 
 
 }

@@ -7,6 +7,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import br.com.fenix.abstrato.dto.Converter;
+import br.com.fenix.fi.lancamento.operacao.CompraParcelada;
+import br.com.fenix.fi.lancamento.operacao.CompraParceladaConverter;
+import br.com.fenix.fi.lancamento.operacao.Credito;
+import br.com.fenix.fi.lancamento.operacao.CreditoConverter;
+import br.com.fenix.fi.lancamento.operacao.Debito;
+import br.com.fenix.fi.lancamento.operacao.DebitoConverter;
 import jakarta.persistence.DiscriminatorValue;
 
 //@Component
