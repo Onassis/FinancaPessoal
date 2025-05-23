@@ -116,18 +116,19 @@ public class LancamentoController
 	public String  listarView(ModelMap model) {
 		LocalDateTime now = LocalDateTime.now(); 
 		String mesLancamento = now.getMonth().toString() + "/" + now.getDayOfYear();  
-	    List<DetalheLancDTO> dtos = detLancSC.listaPorMesAno(mesLancamento);
-		model.addAttribute(nomeClasseDTO(), dtos);
+//	    List<DetalheLancDTO> dtos = detLancSC.listaPorMesAno(mesLancamento);
+    	List<LancamentoDTO>  dados = lancSC.listaPorMesAno(mesLancamento);
+		model.addAttribute(nomeClasseDTO(), dados);
 		return listarHtml();
 	}	
 
 	@GetMapping("/listar/{mesLancamento}")  
 	public ModelAndView listarView(@PathVariable String mesLancamento) {	
 		System.out.println( mesLancamento);
-//    	List<LancamentoDTO>  dados = lancSC.listaPorMesAno(mesLancamento);
-    	List<DetalheLancDTO> dados = detLancSC.listaPorMesAno(mesLancamento);
+    	List<LancamentoDTO>  dados = lancSC.listaPorMesAno(mesLancamento);
+//    	List<DetalheLancDTO> dados = detLancSC.listaPorMesAno(mesLancamento);
 
-    	return new ModelAndView("lancamento/listar_lancamento","DetalheLancDTO", dados) ;		  			  
+    	return new ModelAndView("lancamento/listar_lancamento","lancamentoDTO", dados) ;		  			  
 	}
 	
 	@GetMapping("/cadastrar/{tipoOperacao}")
@@ -146,6 +147,7 @@ public class LancamentoController
 		}
 		return converters.getCadastro(tipoOperacao.toString()) ;
 	} 
+	@Override
 	@GetMapping("/editar/{id}")
 	public String atualizarView(Long id, ModelMap model, RedirectAttributes attr) {
 		 TipoOperacao tipoOperacao =null;

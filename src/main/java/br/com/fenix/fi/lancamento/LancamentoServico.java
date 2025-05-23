@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.*;
 import org.modelmapper.PropertyMap;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
+import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.categoria.Categoria;
@@ -63,7 +65,7 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 	}
    
 	@Override
-	public JpaRepository<Lancamento, Long> getRp() {
+	public LancamentoRepositorio getRp() {
 		// TODO Auto-generated method stub
 		return lancamentoRP;
 	}
@@ -73,40 +75,20 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		return converter; 
 		
 	}
-//   public List<LancamentoDTO> findAll () {
-//		
-//		Iterable<DetalheLancamento> detalheLancamentos = DtlancamentoRP.findAll();
-//		
-//		List<LancamentoDTO> lancamentosDTO =  new ArrayList<LancamentoDTO>(); 
-//		
-//		for(DetalheLancamento detLac : detalheLancamentos) {      
-//			LancamentoDTO lancamentoDTO = modelMapper.map(detLac, LancamentoDTO.class);
-//			lancamentosDTO.add(lancamentoDTO);
-//		}	
-//		return lancamentosDTO;
-//		
-//	}	
-	public LancamentoDTO findDetLanc (Long DetLancId) {
-		
-		Optional<DetalheLancamento>  optDelLac = DtlancamentoRP.findById(DetLancId); 
-		
-		if (optDelLac.isEmpty()) { 
-			return new LancamentoDTO(); 
-		}
-		DetalheLancamento detLanc = optDelLac.get(); 
-		Lancamento lanc = detLanc.getLancamento(); 
-		LancamentoDTO lancamentoDTO = modelMapper.map(optDelLac.get(), LancamentoDTO.class); 
-//Busca o registro de conta destino 			  
-		if (lanc.isTransferencia()) { 
-			  for(DetalheLancamento lancDest : lanc.getDetalheLancamento())  { 
-				  if (!lancDest.equals(detLanc)) { 
-					  lancamentoDTO.setContaTransferencia (lancDest.getContaLancamento()) ;						  
-				  }					  
-			  }
-		  }			
-		return lancamentoDTO;		
+	/**
+	 * Busca pelo ID do delalheLancamento 
+	 */
+	@Override
+	public LancamentoDTO buscaDTOPorId (Long id) throws RegistroNaoExisteException {
+		   Lancamento  entidade = getRp().findDetalheLancamentoById(id).orElseThrow(() -> new RegistroNaoExisteException("Registro  não encontrato:" + id) );
+		  LancamentoDTO dto =  getConverter().ToDto(entidade); 
+		return dto;
 	}
-//	
+	/**
+	 * Lista os lancamentos de um mês de referência
+	 * @param mesLancamento
+	 * @return
+	 */
 	public List<LancamentoDTO> listaPorMesAno (String mesLancamento ) {
 	    LocalDate dataInicio=null; 
 	    
@@ -120,22 +102,51 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		  
   	    LocalDate DataFim =  dataInicio.with(TemporalAdjusters.lastDayOfMonth()); 
 		
-		List<DetalheLancamento> detalheLancamentos = DtlancamentoRP.findAllBydataVenctoBetween(dataInicio,DataFim);
-	
-		List<LancamentoDTO> lancamentosDTO =  new ArrayList<LancamentoDTO>(); 
-		LancamentoDTO lancamentoDTO = new LancamentoDTO();  
-		for(DetalheLancamento detLanc : detalheLancamentos) {      
-			try { 
-			  lancamentoDTO = modelMapper.map(detLanc, LancamentoDTO.class);
-			} catch (Exception e) {
-				System.out.print("Erro de converção Detalhe -> LancamentoDTO : ");
-				System.out.println(detLanc.getId());
-			}
-			  lancamentosDTO.add(lancamentoDTO);
-		}			
-		  System.out.println("Lista todos ");
-		  return lancamentosDTO;
+  	    List<Lancamento> lancamentos = lancamentoRP.findAllBydataVenctoBetween(dataInicio, DataFim); 
+  	    List<LancamentoDTO> lancamentoDTO = 	    lancamentos
+  	    				.stream()
+                  .map(dado -> getConverter().ToDto(dado))
+                .collect(Collectors.toList());
+	   
+		return lancamentoDTO; 
+
 	}
+	
+//   public List<LancamentoDTO> findAll () {
+//		
+//		Iterable<DetalheLancamento> detalheLancamentos = DtlancamentoRP.findAll();
+//		
+//		List<LancamentoDTO> lancamentosDTO =  new ArrayList<LancamentoDTO>(); 
+//		
+//		for(DetalheLancamento detLac : detalheLancamentos) {      
+//			LancamentoDTO lancamentoDTO = modelMapper.map(detLac, LancamentoDTO.class);
+//			lancamentosDTO.add(lancamentoDTO);
+//		}	
+//		return lancamentosDTO;
+//		
+//	}	
+//	public LancamentoDTO findDetLanc (Long DetLancId) {
+//		
+//		Optional<DetalheLancamento>  optDelLac = DtlancamentoRP.findById(DetLancId); 
+//		
+//		if (optDelLac.isEmpty()) { 
+//			return new LancamentoDTO(); 
+//		}
+//		DetalheLancamento detLanc = optDelLac.get(); 
+//		Lancamento lanc = detLanc.getLancamento(); 
+//		 LancamentoDTO dto =  getConverter().ToDto(lanc); 
+////		LancamentoDTO lancamentoDTO = modelMapper.map(optDelLac.get(), LancamentoDTO.class); 
+////Busca o registro de conta destino 			  
+////		if (lanc.isTransferencia()) { 
+////			  for(DetalheLancamento lancDest : lanc.getDetalheLancamento())  { 
+////				  if (!lancDest.equals(detLanc)) { 
+////					  lancamentoDTO.setContaTransferencia (lancDest.getContaLancamento()) ;						  
+////				  }					  
+////			  }
+////		  }			
+////		return lancamentoDTO;		
+//	}
+//	
 //	
 //	@Transactional
 //    public Lancamento salvar (LancamentoDTO lancDTO) {

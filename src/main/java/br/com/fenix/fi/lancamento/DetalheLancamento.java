@@ -71,11 +71,11 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	private String refBanco; 
 
     @JsonDeserialize(using = ContaDeserializer.class)
-    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER ,optional = true )
+    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY ,optional = true )
  	private Conta contaLancamento ;
    
     @JsonDeserialize(using = ContaDeserializer.class)
-    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER ,optional = true )
+    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY ,optional = true )
  	private Conta contaTransferencia ;
     
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")

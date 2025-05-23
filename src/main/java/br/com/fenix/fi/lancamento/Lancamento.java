@@ -62,7 +62,7 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 
     protected String observacao;
   
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "lancamento")    
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "lancamento")    
     @Singular("detalheLancamento")
     protected final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	
 

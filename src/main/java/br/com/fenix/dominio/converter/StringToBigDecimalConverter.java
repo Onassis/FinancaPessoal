@@ -20,21 +20,34 @@ public class StringToBigDecimalConverter implements Converter<String, BigDecimal
 	}
     @Override
     public BigDecimal convert(String source) {
+
     	System.out.println("StringToBigDecimalConverter");
         if (source == null || source.isEmpty()) {
             return new BigDecimal(0);
         }
-        NumberFormat format = NumberFormat.getInstance(new Locale("pt", "BR"));
+        source = source.replaceAll("(?i)R\\$\\s*", "").trim();
+
+        
+        Locale localeBR = new Locale("pt", "BR");
+        NumberFormat formatadorNumero = NumberFormat.getNumberInstance(localeBR);
+        
+        NumberFormat format = NumberFormat.getCurrencyInstance(localeBR);
         try {
-        	  source = source.replace("R$", "").trim();
-        	  System.out.println(source);
-        	  BigDecimal number = parse(source, Locale.FRANCE);
-            return number;  
+            if (formatadorNumero instanceof DecimalFormat) {
+                ((DecimalFormat) formatadorNumero).setParseBigDecimal(true);
+                return (BigDecimal) formatadorNumero.parse(source);
+            } else {
+                // Fallback
+                Number numero = formatadorNumero.parse(source);
+                return new BigDecimal(numero.toString());
+            }
+          
         } catch (ParseException e) {
         	System.out.println(e.getMessage());
         	return  new BigDecimal(0);
      
 		}
     }
+    
 }
 

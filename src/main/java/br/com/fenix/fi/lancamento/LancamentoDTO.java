@@ -39,7 +39,8 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 	
 	private Long  idLancAux;
 	private Long  detalheLancamentoId;
-	private Long  detalheDestinoId;
+	
+//	private Long  detalheDestinoId;
 	private Long  lancamentoId;
 	
 	 
@@ -120,6 +121,8 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     }
     public LancamentoDTO(Lancamento lancamento) {    	
     	super();
+    	this.id = lancamento.getId(); 
+    	this.lancamentoId = lancamento.getId(); 
         this.nroPrestacao = lancamento.getNroInicialPrestacao();
         this.nroInicialPrestacao = lancamento.getNroPrestacao();
         this.dataDoc = lancamento.getDataDoc(); 
@@ -138,7 +141,8 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 //    	this.refBanco; 
 
     	if  (lancamento.getDetalheLancamento().isEmpty() == false) {
-    		
+    		this.detalheLancamentoId = lancamento.getDetalheLancamento().get(0).getId();
+//    		this.detalheDestinoId = lancamento.getDetalheLancamento().get(0).getId();
     		this.tipoLancamento = lancamento.getDetalheLancamento().get(0).getTipoLancamento(); 
     		this.contaLancamento  = lancamento.getDetalheLancamento().get(0).getContaLancamento(); 
     		this.contaTransferencia = lancamento.getDetalheLancamento().get(0).getContaTransferencia(); 

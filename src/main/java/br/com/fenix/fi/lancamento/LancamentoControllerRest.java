@@ -103,7 +103,8 @@ public class LancamentoControllerRest {
     @GetMapping("/editar/{id}")  
 	public ModelAndView atualizarView(@PathVariable long id) {    
     	System.out.println("Editar " + id  );
-		LancamentoDTO lancamentoDTO = lancSC.findDetLanc(id); 
+//		LancamentoDTO lancamentoDTO = lancSC.findDetLanc(id);
+		LancamentoDTO lancamentoDTO = lancSC.buscaDTOPorId(id); 		
 		return new ModelAndView("lancamento/cad_lancamento","lancamentoDTO",lancamentoDTO) ;		
     }
     
@@ -134,7 +135,7 @@ public class LancamentoControllerRest {
 	public ModelAndView listarView(@PathVariable String mesLancamento) {	
 		System.out.println( mesLancamento);
     	List<LancamentoDTO>  dados= lancSC.listaPorMesAno(mesLancamento);
-		return new ModelAndView("lancamento/listar_lancamento","lancamentosDTO", dados) ;		  			  
+		return new ModelAndView("lancamento/listar_lancamento","lancamentoDTO", dados) ;		  			  
 	}	
 	
 	/*----------------------- Lista os dados da tabela NAV TAB ------------------ */	
