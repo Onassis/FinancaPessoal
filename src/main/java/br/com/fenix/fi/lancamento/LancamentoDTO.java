@@ -123,14 +123,16 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     	super();
     	this.id = lancamento.getId(); 
     	this.lancamentoId = lancamento.getId(); 
-        this.nroPrestacao = lancamento.getNroInicialPrestacao();
-        this.nroInicialPrestacao = lancamento.getNroPrestacao();
+        this.nroPrestacao = lancamento.getNroPrestacao();
+        this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
         this.dataDoc = lancamento.getDataDoc(); 
-        this.dataVenc = lancamento.getDataDoc(); 
+        this.subCategoria  = lancamento.getSubCategoria(); 
+        
+        this.Observacao = lancamento.getObservacao();
         
         this.criadoPor = lancamento.getCriadoPor(); 
 
-        this.setLancamentoValor(lancamento.getTotal());
+        this.setLancamentoTotal(lancamento.getTotal());
 
     	this.tipoOperacao = lancamento.getTipoOperacao();
  
@@ -146,11 +148,14 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     		this.tipoLancamento = lancamento.getDetalheLancamento().get(0).getTipoLancamento(); 
     		this.contaLancamento  = lancamento.getDetalheLancamento().get(0).getContaLancamento(); 
     		this.contaTransferencia = lancamento.getDetalheLancamento().get(0).getContaTransferencia(); 
+    		this.valor	 = lancamento.getDetalheLancamento().get(0).getValor();
+            this.dataVenc = lancamento.getDetalheLancamento().get(0).getDataVenc(); 
+    		
     	}      
    }
    
-    public void setLancamentoValor( BigDecimal valor) { 
-    	this.total = acertaSinal(valor); 
+    public void setLancamentoTotal( BigDecimal total) { 
+    	this.total = acertaSinal(total); 
     	this.valor = total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
     

@@ -12,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
@@ -61,7 +64,8 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     protected String informacao;
 
     protected String observacao;
-  
+    
+ //   @Fetch(FetchMode.JOIN)
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "lancamento")    
     @Singular("detalheLancamento")
     protected final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	

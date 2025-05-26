@@ -194,23 +194,25 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	@Override
 	public DTO atualizarDTO(DTO dto)  throws Exception {	
 //		EntityTransaction tx = geradorTransacao();
-        T entidade=null;
+//        T entidade=null;
 		try {				
 //			 tx.begin();	
 			ID id = (ID) dto.getId(); 
 //			 Optional<T>  entidadeOp = buscarPorId(id).orElseThrow();
-			 entidade = buscarPorId(id).orElseThrow();
+			 T entidade = buscarPorId(id).orElseThrow();
 			 getConverter().updateEntity(dto,entidade); 
 			 entidade = atualizar(entidade);		
 			 depoisDeSalvar(entidade);
 //			 tx.commit();
+		
+			 dto = getConverter().ToDto(entidade); 
+			return dto;
+
 		} catch (Exception e) {
 //			tx.rollback();
 			handleException(OperacaoDB.UPT,e);
 		}
-		dto = getConverter().ToDto(entidade); 
-		return dto;
-
+	  return dto;
 	}
 
 	@Override

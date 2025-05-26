@@ -77,7 +77,9 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
     @JsonDeserialize(using = ContaDeserializer.class)
     @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY ,optional = true )
  	private Conta contaTransferencia ;
-    
+    /**
+     * Valor da prestaçãoo, usado para calcular o total do lançamento
+     **/
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
 	private BigDecimal valor;
 	
