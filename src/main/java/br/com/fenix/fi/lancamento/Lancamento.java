@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -66,7 +67,7 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     protected String observacao;
     
  //   @Fetch(FetchMode.JOIN)
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "lancamento")    
+    @OneToMany(mappedBy = "lancamento", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )    
     @Singular("detalheLancamento")
     protected final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	
 
@@ -81,6 +82,8 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
 	protected BigDecimal total;
+
+
 
 	
 	public Lancamento() {
@@ -111,6 +114,11 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 		this.tipoOperacao = tipoOperacao;
 		this.total = valor; 
 	    //detalheLancamento = new ArrayList<DetalheLancamento>() ;
+	}
+	public Optional<DetalheLancamento> filtroPorDetalheId (Long id) { 
+	  return    detalheLancamento.stream()	
+						.filter(d -> d.getId() == id)
+						.findFirst();
 	}
 	public Lancamento (TipoOperacao tipoOperacao) {
 		this.tipoOperacao = tipoOperacao;

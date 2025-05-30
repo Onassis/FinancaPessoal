@@ -33,6 +33,8 @@ import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.formaPgto.FormaPgto;
 import br.com.fenix.fi.formaPgto.FormaPgtoRepositorio;
+import br.com.fenix.fi.subCategoria.SubCategoriaRepositorio;
+import br.com.fenix.fi.subCategoria.SubCategoriaServico;
 
 @Controller
 @RequestMapping("/lancamento")
@@ -44,12 +46,14 @@ public class LancamentoController
 
 	@Autowired	
 	ContaRepositorio contaRP;
-	@Autowired
-	FormaPgtoRepositorio formaRP; 
+//	@Autowired
+//	FormaPgtoRepositorio formaRP; 
 	@Autowired
 	FavorecidoRepositorio favorecidoRP;
 	@Autowired
 	CategoriaServico categoriaSC;
+	@Autowired
+	SubCategoriaRepositorio subCategoriaRP;
 	
 	@Autowired
 	LancamentoServico lancSC;
@@ -65,20 +69,21 @@ public class LancamentoController
 	 	return lancSC;
 	}
 	
-	@ModelAttribute("formaPgtos")
-	public List<FormaPgto> listaDeFormaPgto() {
-		return formaRP.findByOrderByNomeAsc();
-	}	
-	
+//	@ModelAttribute("formaPgtos")
+//	public List<FormaPgto> listaDeFormaPgto() {
+//		return formaRP.findByOrderByNomeAsc();
+//	}	
+	@Cacheable("favorecidos")
 	@ModelAttribute("favorecidos")
 	public Iterable<Option> listaDeFavorecido() {	
 		 return favorecidoRP.findOption();  
 	}
-
+	@Cacheable("contas")
 	@ModelAttribute("contas")
 	public List<Option> listaDeContas() {	
 		return contaRP.findOption(); 
 	}	
+	@Cacheable("contasCorrente")
 	@ModelAttribute("contasCorrente")
 	public List<Option> listaDeContasCorrente() {	
 		return contaRP.findOptionByTipoConta(TipoConta.CC);
@@ -101,14 +106,17 @@ public class LancamentoController
 
 	    return todosMeses;
 	}
-
+	@Cacheable("subCategoriasDebito")
 	@ModelAttribute("subCategoriasDebito")
 	public List<Option> listaDeCategoriasDebitos() {			
-		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.D);		
+//		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.D);	
+		 return subCategoriaRP.findOptionByTipoCategoriaOrderByDescricaoAsc(TipoLancamento.D); 
 	}
+	@Cacheable("subCategoriasCredito")
 	@ModelAttribute("subCategoriasCredito")
 	public List<Option> listaDeCategoriasCredito() {			
-		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.C);		
+//		 return categoriaSC.listaDeCategoriasOpt(TipoLancamento.C);		
+		 return subCategoriaRP.findOptionByTipoCategoriaOrderByDescricaoAsc(TipoLancamento.C); 
 	}
 	
 	@GetMapping("/listar")

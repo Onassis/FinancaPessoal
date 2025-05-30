@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
+import br.com.fenix.dominio.modelo.Option;
 import br.com.fenix.fi.subCategoria.SubCategoria;
 
 @Repository
@@ -26,6 +27,7 @@ public interface CategoriaRepositorio extends JpaRepositoryAuditavel<Categoria,L
 	  
 	  @Query("select s from SubCategoria s where s.criadoPor.id = ?#{ principal?.id } and s.id = ?1" )
 	  Optional<SubCategoria> findBySubCategoriaId(Long  id);
+
 
 //	  @Modifying
 //	  @Query("delete from SubCategoria b where b.id= ?1")

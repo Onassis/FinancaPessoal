@@ -21,7 +21,7 @@ public interface LancamentoRepositorio extends JpaRepositoryAuditavel<Lancamento
 	@Query("select l, d from Lancamento l join fetch l.detalheLancamento d where d.id = :detalheId and d.criadoPor.id = ?#{ principal.id}")
 	Optional<Lancamento> findDetalheLancamentoById (@Param("detalheId") Long id);
 	 
-	@Query("select l,d from Lancamento l join fetch l.detalheLancamento d  where d.dataVenc between :dataInicio and :dataFim  and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
+	@Query("select distinct l,d from Lancamento l join fetch l.detalheLancamento d  where d.dataVenc between :dataInicio and :dataFim  and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
 	List <Lancamento> findAllBydataVenctoBetween(@Param("dataInicio") LocalDate dataInicio,@Param("dataFim")  LocalDate dataFim); 
 	 
 }

@@ -2,6 +2,7 @@ package br.com.fenix.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,12 @@ public class HomeController {
 		super();
 		this.contaRP = contaRP;
 	}
-
+	
+	@ModelAttribute("dataSistema")
+	public LocalDateTime dataSistema() {
+		return LocalDateTime.now();
+	}
+	
 	@ModelAttribute("totalconta")
 	public double  TotalContas() {
 

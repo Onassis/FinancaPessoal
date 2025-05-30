@@ -50,11 +50,15 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 		      entity.setSubCategoria(dto.getSubCategoria()); 
 		      entity.setInformacao(dto.getInformacao()); 
 		      entity.setObservacao(dto.getObservacao());
+		      entity.setDataDoc(dto.getDataDoc());
+		      entity.setTotal(dto.getTotal());
 		      
 		      
-		      entity.getDetalheLancamento().get(0).setConciliado(dto.isConciliado()); 
-		      entity.getDetalheLancamento().get(0).setDataVenc(dto.getDataVenc());
-		      
+		      DetalheLancamento detLanc = entity.getDetalheLancamento().get(0);
+
+		      detLanc.setValor(dto.getTotal());
+		      detLanc.setConciliado(dto.isConciliado()); 
+		      detLanc.setDataVenc(dto.getDataVenc());		      
 		      
 	}
 

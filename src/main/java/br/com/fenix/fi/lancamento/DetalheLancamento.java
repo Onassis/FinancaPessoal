@@ -45,7 +45,7 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	 */
 	private static final long serialVersionUID = -6598853038445483479L;
 	
-	@ManyToOne(cascade=CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@ManyToOne(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="lancamento_id",  nullable = false, updatable = false)
 // Evita o erro N+1	
 	@JsonBackReference

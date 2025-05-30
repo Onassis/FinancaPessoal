@@ -85,7 +85,7 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     /**
      * Prestação atual do parcelamento
      */
-    protected int prestacao;
+//    protected int prestacao;
 
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal total;
@@ -104,19 +104,22 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
    
     @JsonDeserialize(using = NumericBooleanDeserializer.class)
 	protected boolean conciliado ;
-	
+    @JsonDeserialize(using = NumericBooleanDeserializer.class)
+   	protected boolean entrada ;
+    
 	@JsonDeserialize(using = UsuarioDeserializer.class)
     private Usuario criadoPor;
 	
     public LancamentoDTO() {    	
     	super();
     	this.dataDoc = LocalDate.now();
+    	this.dataVenc = LocalDate.now();
     	this.valor = BigDecimal.ZERO; 
     	this.total = BigDecimal.ZERO;
     	this.credito = BigDecimal.ZERO; 
     	this.debito = BigDecimal.ZERO; 
-        this.nroPrestacao = 1;
-        this.nroInicialPrestacao = 1;
+//        this.nroPrestacao = 1;
+//        this.nroInicialPrestacao = 1;
     	
     }
     public LancamentoDTO(Lancamento lancamento) {    	
@@ -143,16 +146,53 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 //    	this.refBanco; 
 
     	if  (lancamento.getDetalheLancamento().isEmpty() == false) {
-    		this.detalheLancamentoId = lancamento.getDetalheLancamento().get(0).getId();
+    		DetalheLancamento delLanc = lancamento.getDetalheLancamento().get(0);
+    		this.detalheLancamentoId = delLanc.getId();
 //    		this.detalheDestinoId = lancamento.getDetalheLancamento().get(0).getId();
-    		this.tipoLancamento = lancamento.getDetalheLancamento().get(0).getTipoLancamento(); 
-    		this.contaLancamento  = lancamento.getDetalheLancamento().get(0).getContaLancamento(); 
-    		this.contaTransferencia = lancamento.getDetalheLancamento().get(0).getContaTransferencia(); 
-    		this.valor	 = lancamento.getDetalheLancamento().get(0).getValor();
-            this.dataVenc = lancamento.getDetalheLancamento().get(0).getDataVenc(); 
+    		this.tipoLancamento = delLanc.getTipoLancamento(); 
+    		this.contaLancamento  = delLanc.getContaLancamento(); 
+    		this.contaTransferencia = delLanc.getContaTransferencia(); 
+    		this.valor	 = delLanc.getValor();
+            this.dataVenc = delLanc.getDataVenc(); 
+            this.conciliado = delLanc.isConciliado();
     		
     	}      
    }
+    public LancamentoDTO(DetalheLancamento detLanc) {    	
+    	super();
+    	
+    	Lancamento lancamento = detLanc.getLancamento();
+    	
+    	this.id = lancamento.getId(); 
+    	this.lancamentoId = lancamento.getId(); 
+        this.nroPrestacao = lancamento.getNroPrestacao();
+        this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
+        this.dataDoc = lancamento.getDataDoc(); 
+        this.subCategoria  = lancamento.getSubCategoria(); 
+        
+        this.Observacao = lancamento.getObservacao();
+        
+        this.criadoPor = lancamento.getCriadoPor(); 
+
+        this.setLancamentoTotal(lancamento.getTotal());
+
+    	this.tipoOperacao = lancamento.getTipoOperacao();
+ 
+    	this.favorecido = lancamento.getFavorecido(); 
+    	  
+//        this.chaveBanco = 
+//        
+//    	this.refBanco; 
+
+   		this.detalheLancamentoId = detLanc.getId();
+//    		this.detalheDestinoId = lancamento.getDetalheLancamento().get(0).getId();
+    	this.tipoLancamento = detLanc.getTipoLancamento(); 
+    	this.contaLancamento  = detLanc.getContaLancamento(); 
+    	this.contaTransferencia = detLanc.getContaTransferencia(); 
+    	this.valor	 = detLanc.getValor();
+        this.dataVenc = detLanc.getDataVenc(); 
+        this.conciliado = detLanc.isConciliado();    		
+    } 
    
     public void setLancamentoTotal( BigDecimal total) { 
     	this.total = acertaSinal(total); 

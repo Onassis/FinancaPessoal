@@ -51,7 +51,8 @@
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='informacao',  rowClass='col-md-12')}" />    
 			 
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='observacao',  rowClass='col-md-12')}" />  
-			       	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input')}" />
+			  
+			  	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input')}" />
 		                       
             	      <div class="form-group">
    						<input type="hidden" id="lancamentoId" th:field="*{lancamentoId}"/>   		

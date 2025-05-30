@@ -49,7 +49,7 @@
           </a>
         </li>        
         <li>
-          <a th:href="@{/lancamento/listar/{dataAtual} (dataAtual=${#temporals.format(localDate, 'MMyyyy')})}">
+          <a th:href="@{/lancamento/listar/{dataAtual} (dataAtual=${#temporals.format(dataSistema, 'MMyyyy')})}">
             <i class="bi bi-circle"></i><span>Lançamento</span>
           </a>
         </li>

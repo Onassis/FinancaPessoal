@@ -27,6 +27,7 @@ import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
+import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.categoria.Categoria;
@@ -75,6 +76,27 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		return converter; 
 		
 	}
+	@Override
+	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
+	public void excluirPorId(Long id)throws Exception {
+		try {
+			antesDeExcluir(id);
+
+			DetalheLancamento detLanc = DtlancamentoRP.findById(id).orElseThrow(); 
+			Long idLanc = detLanc.getLancamento().getId(); 
+			if ( detLanc.getLancamento().tipoOperacao == TipoOperacao.CP) {
+				DtlancamentoRP.deleteById(id);				
+			}
+			else {
+				DtlancamentoRP.deleteById(id);								
+				getRp().deleteById(idLanc);
+			}
+				
+		} catch (Exception e) {
+			handleException(OperacaoDB.DEL,e);
+		}
+	}
+	
 	/**
 	 * Busca pelo ID do delalheLancamento 
 	 */
@@ -102,11 +124,13 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		  
   	    LocalDate DataFim =  dataInicio.with(TemporalAdjusters.lastDayOfMonth()); 
 		
-  	    List<Lancamento> lancamentos = lancamentoRP.findAllBydataVenctoBetween(dataInicio, DataFim); 
-  	    List<LancamentoDTO> lancamentoDTO = 	    lancamentos
+//  	    List<Lancamento> lancamentos = lancamentoRP.findAllBydataVenctoBetween(dataInicio, DataFim);
+  	  List<DetalheLancamento> detLancamentos = DtlancamentoRP.findAllBydataVenctoBetween(dataInicio, DataFim); 
+  	    
+  	  List<LancamentoDTO> lancamentoDTO = 	    detLancamentos
   	    				.stream()
-                  .map(dado -> getConverter().ToDto(dado))
-                .collect(Collectors.toList());
+  	    				.map(dado -> new LancamentoDTO(dado))
+  	    				.collect(Collectors.toList());
 	   
 		return lancamentoDTO; 
 

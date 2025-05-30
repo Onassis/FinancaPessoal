@@ -150,15 +150,18 @@ public class LancamentoConverter implements Converter<Lancamento,LancamentoDTO> 
 //  }
 	@Override
 	public void updateEntity(LancamentoDTO dto, Lancamento entity) {
-	
-		      entity.setFavorecido(dto.favorecido) ;
-		      entity.setSubCategoria(dto.subCategoria); 
-		      entity.setInformacao(dto.getInformacao()); 
-		      entity.setObservacao(dto.getObservacao());
-		      
-		      
-		      entity.getDetalheLancamento().get(0).setConciliado(dto.conciliado); 
-		      entity.getDetalheLancamento().get(0).setDataVenc(dto.dataVenc);
+		TipoOperacao  tipoOperacao = dto.getTipoOperacao();
+		Converter converter = converters.getConverter(tipoOperacao.toString());
+	     converter.updateEntity(dto, entity);  
+//		
+//		      entity.setFavorecido(dto.favorecido) ;
+//		      entity.setSubCategoria(dto.subCategoria); 
+//		      entity.setInformacao(dto.getInformacao()); 
+//		      entity.setObservacao(dto.getObservacao());
+//		      
+//		      
+//		      entity.getDetalheLancamento().get(0).setConciliado(dto.conciliado); 
+//		      entity.getDetalheLancamento().get(0).setDataVenc(dto.dataVenc);
 		      
 		      
 	}

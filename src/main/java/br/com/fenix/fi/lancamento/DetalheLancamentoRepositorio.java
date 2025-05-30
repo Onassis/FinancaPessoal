@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.fenix.abstrato.repositorio.GenericRepository;
@@ -22,8 +23,9 @@ public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<Det
 	@Query("from DetalheLancamento d JOIN FETCH d.lancamento l where d.id = ?1 and d.criadoPor.id = ?#{ principal.id}")
 	Optional<DetalheLancamento> findById (Long id);
 
-	@Query("from DetalheLancamento d JOIN FETCH d.lancamento l where d.dataVenc between ?1 and ?2 and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
-	List <DetalheLancamento> findAllBydataVenctoBetween( LocalDate dataInicio, LocalDate dataFim);
+// 	@Query("select d, l , s from DetalheLancamento d JOIN FETCH d.lancamento l JOIN FETCH l.subCategoria s where d.dataVenc between :dataInicio and :dataFim   and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
+	@Query("from DetalheLancamento d where d.dataVenc between :dataInicio and :dataFim   and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
+	List <DetalheLancamento> findAllBydataVenctoBetween( @Param("dataInicio")  LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
 //	@Query("from DetalheLancamento l where l.dataCompensacao is null and l.criadoPor.id = ?#{ principal.id} order by l.dataLancamento ")
 //	List <DetalheLancamento> findAllBydataCompensacaoIsNull();

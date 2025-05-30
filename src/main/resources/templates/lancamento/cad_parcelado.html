@@ -39,15 +39,15 @@
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataVenc', type='date', rowClass='col-md-12')}" />     
 			</div>
 			       					  		   	
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='contaLancamento', type='select',required='required',options= ${contas},readOnly='readOnly',rowClass='col-md-6')}" /> 
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='contaLancamento', type='select',,options= ${contas},readOnly='readOnly',rowClass='col-md-6')}" /> 
 
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='favorecido', type='select',options= ${favorecidos},rowClass='col-md-12')}" /> 
 			  
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='subCategoria', type='select',options= ${subCategoriasDebito},rowClass='col-md-12')}" /> 
 			  			   
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='nroInicialPrestacao',  rowClass='col-md-4',readOnly='readOnly')}" />
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='nroInicialPrestacao',  rowClass='col-md-4')}" />
 			  
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='nroPrestacao',  rowClass='col-md-4',readOnly='readOnly')}" />
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='nroPrestacao',  rowClass='col-md-4')}" />
 		
 			   <div th:if="${lancamentoDTO.new}"> 
 			  	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='total', type='moeda', rowClass='col-md-12')}" />
@@ -56,7 +56,7 @@
 			   		<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='valor', type='moeda', rowClass='col-md-12')}" />
 			   </div>
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='informacao',  rowClass='col-md-12')}" />    
-			 
+			 	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='entrada', type='checkbox',inputClass='form-check-input')}" />
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='observacao',  rowClass='col-md-12')}" />  
 			       	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input')}" />
 		                       

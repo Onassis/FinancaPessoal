@@ -21,32 +21,32 @@ public class StringToBigDecimalConverter implements Converter<String, BigDecimal
     @Override
     public BigDecimal convert(String source) {
 
-    	System.out.println("StringToBigDecimalConverter");
-        if (source == null || source.isEmpty()) {
-            return new BigDecimal(0);
-        }
-        source = source.replaceAll("(?i)R\\$\\s*", "").trim();
+        Locale brasil = new Locale("pt", "BR");
 
-        
-        Locale localeBR = new Locale("pt", "BR");
-        NumberFormat formatadorNumero = NumberFormat.getNumberInstance(localeBR);
-        
-        NumberFormat format = NumberFormat.getCurrencyInstance(localeBR);
+        // 1. Remove o símbolo da moeda (R$) e espaços em branco extras.
+        //    Regex para remover "R$", "r$", com ou sem espaço depois.
+        String valorNumerico = source.replaceAll("(?i)R\\$\\s*", "").trim();
+        // valorNumerico agora deve ser algo como "1.234,57"
+
+        // 2. Usa NumberFormat.getNumberInstance() para parsear a string numérica
+        NumberFormat formatadorNumero = NumberFormat.getNumberInstance(brasil);
+
         try {
             if (formatadorNumero instanceof DecimalFormat) {
                 ((DecimalFormat) formatadorNumero).setParseBigDecimal(true);
-                return (BigDecimal) formatadorNumero.parse(source);
+                BigDecimal valor = (BigDecimal) formatadorNumero.parse(valorNumerico); 
+                return valor;
             } else {
                 // Fallback
-                Number numero = formatadorNumero.parse(source);
-                return new BigDecimal(numero.toString());
+                Number numero = formatadorNumero.parse(valorNumerico);
+                BigDecimal valor = new BigDecimal(numero.toString());
+                return valor;
             }
-          
         } catch (ParseException e) {
-        	System.out.println(e.getMessage());
-        	return  new BigDecimal(0);
-     
-		}
+ //           System.err.println("Erro ao converter a string numérica '" + valorNumerico + "' (originada de '" + valorMoeda + "'): Formato inválido.");
+            e.printStackTrace();
+            throw new IllegalArgumentException("Formato de número inválido após remover símbolo da moeda: " + valorNumerico, e);
+        }
     }
     
 }

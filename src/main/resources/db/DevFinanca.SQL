@@ -37,7 +37,7 @@ CREATE or REPLACE  view view_total_dia_lanc as
     sum ( CASE  WHEN tipo_lancamento = 'C' THEN valor  else 0  END ) as credito,
     sum (valor) as total
 from detalhe_lancamento
-where conta_id is not null and conciliado = true 
+where conta_lancamento_id is not null and conciliado = true 
 group by conta_lancamento_id, criado_por_id, data_venc
 
 CREATE or REPLACE  view view_saldo  as  

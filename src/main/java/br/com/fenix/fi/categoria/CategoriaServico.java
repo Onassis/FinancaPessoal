@@ -90,14 +90,19 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	
 
 	public List<Option>  listaDeCategoriasOpt(TipoCategoria  tipoCategoria) {
-		   List<Option> options =  listaPorTipoCategorias(tipoCategoria)
-		   		.stream()    
-				.map(categoria  -> new Option(categoria.getId(), categoria.getDescricao()))
-	            .collect(Collectors.toList());
+		
+		  List<Option> options = subCategoriaRP.findOptionByTipoCategoriaOrderByDescricaoAsc(tipoCategoria); 
+		
+//		   List<Option> options =  listaPorTipoCategorias(tipoCategoria)
+//		   		.stream()    
+//				.map(categoria  -> new Option(categoria.getId(), categoria.getDescricao()))
+//	            .collect(Collectors.toList());
 			return options;			
 	}	
  
 	public List<Option>  listaDeCategoriasOpt(TipoLancamento tipoLancamento) {
+		
+	
 		   List<Option> options =  listaDeCategorias(tipoLancamento)
 		   		.stream()    
 				.map(categoria  -> new Option(categoria.getId(), categoria.getDescricao()))
