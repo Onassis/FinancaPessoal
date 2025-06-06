@@ -16,7 +16,7 @@ import br.com.fenix.dominio.converter.rest.ContaDeserializer;
 import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.fi.conta.Conta;
-import br.com.fenix.fi.lancamento.DetalheLancamento;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.seguranca.usuario.Usuario;
 import jakarta.persistence.*;

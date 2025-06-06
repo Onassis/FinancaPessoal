@@ -29,7 +29,9 @@
 			 <h5 class="card-title">Lançamento Credito</h5>
 			<div th:replace="~{fragments/alert}"></div>	 
 		
-	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST">				
+	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST">	
+				
+					<input type="input"  id="filterInput" placeholder="Filter options">			
 
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-6')}" />
 			  
@@ -37,7 +39,10 @@
 			    
 			       					  		   	
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='contaLancamento', type='select',required='required',options= ${contasCorrente},readOnly='readOnly',rowClass='col-md-12')}" /> 
-
+		
+		
+	
+		
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='subCategoria', type='select',options= ${subCategoriasCredito},readOnly='readOnly',rowClass='col-md-12')}" /> 
 			  
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='informacao',  rowClass='col-md-12')}" />    
@@ -56,6 +61,7 @@
 	        	        <input type="hidden" id="lancAuxId" th:field="*{idLancAux}"/>
 	        	        <input type="hidden" id="id" th:field="*{id}"/>
     				</div>    
+    		
      		<div class="text-center">	   		
 	        	<button type="submit" id="btnSalvar" class="btn btn-primary"  >Salvar</button>
 				 <a  th:href="@{/lancamento/listar}" class="btn btn-secondary">Voltar</a>
@@ -65,7 +71,24 @@
 </div>
 </div>
   <script th:src="@{/js/cadastro.js}"></script>
- 
+ <script>
+	$("#input_subcategoria").on("keyup", function() {
+	  var filterText = $(this).val().toLowerCase();
+ 	   console.log(filterText)
+	  $("#filterInput").val = $("#filterInput").val +   filterText;
+	  filterText = $("#filterInput").val ;
+	  $("#input_subcategoria option").each(function() {
+	    var optionText = $(this).text().toLowerCase();
+	    if (optionText.indexOf(filterText) > -1) {
+	      $(this).show();
+	    } else {
+	      $(this).hide();
+	    }
+	  });
+	});
+</script>
+	 
+ </script>
  </section>
 	</main>
  

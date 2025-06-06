@@ -30,6 +30,7 @@ import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.categoria.IControleCategoriaRest;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamentoRepositorio;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.formaPgto.FormaPgto;

@@ -33,7 +33,26 @@
 	 				
 	 				document.location.href = $("#btnExcluirModal").attr('href');
 	 			});
+	
+		$(".mySelect").on("keyup", function() {
+	  		var filterText = $(this).val().toLowerCase();
+ 	   		console.log(filterText);
+ 	   
+		  $("#filterInput").val = $("#filterInput").val +   filterText;
+		  filterText = $("#filterInput").val ;
+	  	$("#mySelect option").each(function() {
+		    var optionText = $(this).text().toLowerCase();
+		    if (optionText.indexOf(filterText) > -1) {
+	    	  $(this).show();
+	    	} else {
+	      	$(this).hide();
+	    	}
+	  	});
+	});	 			
 	 	$(".alert").delay(5000).slideUp(200, function () {
         	$(this).alert('close');
-    	});		
-	 	})
+    	});
+    		$('.moeda').mask('000.000.000.000.000,00', {reverse: true});		
+    		$('.cep').mask('00000-000');
+	 }
+	)

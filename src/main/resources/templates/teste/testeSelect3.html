@@ -1,0 +1,21 @@
+<input type="text"  id="filterInput" placeholder="Filter options">
+<select name="sel_id" id="sel_id" >
+  <option value="0">Choose a new fixer...</option>
+    <optgroup label="Group A">
+    <option value="6366">Test User useruser</option>
+  </optgroup>
+  <optgroup label="Group B">
+    <option value="5831">First Guy</option>
+    <option value="1123">Second Guy</option>
+    <option value="7232">Second Second Guy</option>
+  </optgroup>
+</select>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	
+$(document).keypress(function(e){
+	var activeElement = document.activeElement;
+    console.log(activeElement.tagName, activeElement.type || 'N/A');
+    console.log(String.fromCharCode(e.keyCode));
+});
+</script>

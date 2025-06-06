@@ -50,7 +50,7 @@
                     <label class="form-label">
                        <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                     </label>
-        			<select th:field="*{__${field}__}"  class="form-select"     
+        			<select th:field="*{__${field}__}"  class="form-select mySelect"     
         					th:id="|input_${#strings.toLowerCase(field)}|"   
         					th:classappend="${inputClassappend}" 
         					th:required="${__${required}__} ? 'required' : null"
@@ -72,12 +72,13 @@
               	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
-                <input class="form-control moeda_input"  type="text" 
-                      	th:id="|input_${#strings.toLowerCase(field)}|"      	                 
+                <input class="form-control moeda"  type="text" 
                 		data-mask="#.##0,00" data-mask-reverse="true" 
+                      	th:id="|input_${#strings.toLowerCase(field)}|"      	                 
                 		style="text-align:right"                 		                	
-						data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal=","
-                        th:field="*{__${field}__}" th:classappend="${inputClassappend}" 
+						data-affixes-stay="true"
+						data-prefix="R$ " data-thousands="." data-decimal=","
+                        th:field="*{__${field}__}" th:classappend="${inputClassappend}"                      
                         th:required="${__${required}__} ? 'required' : null"
                         th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}" />
             	<div class="invalid-feedback">
@@ -90,7 +91,7 @@
               	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
-                <input class="form-control cep_input"  type="text"
+                <input class="form-control cep"  type="text"
                    	   th:id="|input_${#strings.toLowerCase(field)}|"      	                  
                 		data-mask="00000-000" data-mask-reverse="true" 
                 		style="text-align:right" 
@@ -108,7 +109,7 @@
               	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
-                <input class="form-control cpf_input"  type="text"
+                <input class="form-control cpf"  type="text"
                       	th:id="|input_${#strings.toLowerCase(field)}|"      	                  
                 		data-mask="00000-000" data-mask-reverse="true" 
                 		style="text-align:right" 
@@ -121,12 +122,29 @@
        					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
     				</ul>	
 	             </div> 
-            </div>            
-            <div  class="form-group" th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' ||  type == 'number'}">
+            </div>    
+            <div  class="form-group" th:if="${type == 'telefone' }">
               	<label class="form-label">
                     <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                 </label>
-                <input class="form-control" th:if="${type == 'text' || type == 'password' || type == 'email' || type == 'tel' || type == 'number'}"
+                <input class="form-control telefone" th:if="${type == 'telefone'  }"
+                        th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}"
+                   	   th:id="|input_${#strings.toLowerCase(field)}|"      	                          
+                         th:required="${__${required}__} ? 'required' : null"
+                         th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
+                         th:readOnly="*{__${field}__} != null and ${__${readOnly}__} ==  'readOnly'" 
+                        />
+              	<div class="invalid-feedback">
+				    <ul>
+       					 <li th:each="err : ${#fields.errors('*{__${field}__}')}" th:text="${err}" class="error" />
+    				</ul>	
+	             </div>                        
+            </div>                    
+            <div  class="form-group" th:if="${type == 'text' || type == 'password' || type == 'email' ||  type == 'number'}">
+              	<label class="form-label">
+                    <span th:text="#{'__${object}__.__${field}__.label'}"></span>
+                </label>
+                <input class="form-control" th:if="${type == 'text' || type == 'password' || type == 'email' }"
                         th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}"
                    	   th:id="|input_${#strings.toLowerCase(field)}|"      	                          
                          th:required="${__${required}__} ? 'required' : null"
@@ -145,7 +163,7 @@
                 </label>
                 <input class="form-control" th:if="${type == 'date'}"
                         th:type="${type}" th:field="*{__${field}__}" th:classappend="${inputClassappend}"
-                   	   th:id="|input_${#strings.toLowerCase(field)}|"      	                          
+                   	   th:id="|input_${#strings.toLowerCase(field)}|"      	                                         
                          th:required="${__${required}__} ? 'required' : null"
                          th:placeholder="${#messages.msgOrNull('__${object}__.__${field}__.placeholder')}"
                          th:readOnly="*{__${field}__} != null and ${__${readOnly}__} ==  'readOnly'" 

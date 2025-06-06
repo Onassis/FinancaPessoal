@@ -1,0 +1,12 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="jquery.maskMoney.js" type="text/javascript"></script>
+</head>
+<body>
+  <input type="text" id="currency" value="1563.35"  style="text-align:right" />
+</body>
+<script>
+  $(function() {
+    $('#currency').maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
+  })
+</script>

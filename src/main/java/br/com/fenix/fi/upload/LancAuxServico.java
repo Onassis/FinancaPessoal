@@ -28,7 +28,7 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.automacao.AutomacaoServico;
 import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.conta.Conta;
-import br.com.fenix.fi.lancamento.DetalheLancamentoRepositorio;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamentoRepositorio;
 import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
 import br.com.fenix.fi.lancamento.LancamentoRepositorio;

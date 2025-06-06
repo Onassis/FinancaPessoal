@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrar Select Options</title>
+</head>
+<body>
+
+<form id="meuFormulario">
+<input type="text"  id="filterInput" placeholder="Filter options">
+<div id="selecionar">
+<select id="mySelect">
+  <option value="1">Option 1</option>
+  <option value="2">Option 2</option>
+  <option value="3">Option 3</option>
+  <option value="4">Option 4</option>
+    <option value="5">teste 4</option>
+    <option value="6">casa</option>
+    <option value="7">caixa</option>
+    <option value="8">loja</option>
+    <option value="9">lona</option>
+    
+</select>
+</div>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+	
+	const input  = document.querySelector("input");
+	const select = document.getElementById("mySelect");
+
+select.addEventListener("keyup", logKey);
+
+function logKey(e) {
+  input.textContent += String.fromCharCode(e.keyCode);
+  console.log(String.fromCharCode(e.keyCode));
+}
+</script>
+<script>
+/*	
+$("#selecionar").on("keyup", function() {
+ 	
+  var filterText =  $("#filterInput").val() +  $(this).val().toLowerCase();
+  console.log(filterText);
+  
+  $("#filterInput").val(filterText);
+  $("#mySelect option").each(function() {
+    var optionText = $(this).text().toLowerCase();
+    if (optionText.indexOf(filterText) > -1) {
+      $(this).show();
+    } else {
+      $(this).hide();
+    }
+  });
+});
+*/
+</script>
+</body>
+</html>

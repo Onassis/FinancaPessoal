@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.view.ITotalMesDetalhe;
 import br.com.fenix.fi.conta.Conta;
-import br.com.fenix.fi.lancamento.DetalheLancamentoRepositorio;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamentoRepositorio;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;

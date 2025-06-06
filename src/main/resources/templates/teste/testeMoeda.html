@@ -1,0 +1,87 @@
+HTML
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Moeda</title>
+</head>
+<body>
+    <form>
+        <label for="moeda">Moeda:</label>
+        <input type="text" id="moeda" name="moeda">
+    </form>
+
+    <script>
+// Função para formatar moeda com base na locale do navegador
+function formatarMoeda(valor) {
+    const locale = navigator.language;
+    let currencyCode;
+
+    // Define o código da moeda com base no idioma do navegador
+    switch (locale) {
+        case 'en-US':
+        case 'en':
+            currencyCode = 'USD'; // Dólar americano
+            break;
+        case 'pt-BR':
+        case 'pt-PT':
+        case 'pt':
+            currencyCode = 'BRL'; // Real brasileiro
+            break;
+        case 'de-DE':
+        case 'de':
+        case 'fr-FR':
+        case 'fr':
+        case 'es-ES':
+        case 'es':
+            currencyCode = 'EUR'; // Euro
+            break;
+        default:
+            currencyCode = 'USD'; // Padrão para dólar americano
+            break;
+    }
+
+    const formatter = new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currencyCode,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+    return formatter.format(valor);
+}
+
+// Função para parsear string de moeda para número
+function parseMoeda(str) {
+    return parseFloat(str.replace(/[^\d.,-]/g, '').replace(',', '.'));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const inputMoeda = document.getElementById('moeda');
+
+    inputMoeda.addEventListener('focus', function() {
+        // Remove a formatação quando o campo recebe foco
+        inputMoeda.value = parseMoeda(inputMoeda.value).toFixed(2);
+    });
+
+    inputMoeda.addEventListener('blur', function() {
+        // Formata o valor quando o campo perde o foco
+        const valor = parseFloat(inputMoeda.value);
+        if (!isNaN(valor)) {
+            inputMoeda.value = formatarMoeda(valor);
+        }
+    });
+
+    inputMoeda.addEventListener('input', function() {
+        // Permite que o usuário digite o valor
+        const valor = inputMoeda.value.replace(/[^\d.,-]/g, '');
+        if (!isNaN(parseFloat(valor.replace(',', '.')))) {
+            inputMoeda.value = valor;
+        } else {
+            inputMoeda.value = inputMoeda.value.replace(/[^0-9.,]/g, '');
+        }
+    });
+});
+	</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Form</title>
+</head>
+<body>
+    <form id="currencyForm">
+        <label for="currency">Valor:</label>
+        <input type="text" id="currency" name="currency" placeholder="Digite o valor">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        document.getElementById('currency').addEventListener('blur', function (e) {
+            const value = e.target.value.replace(',', '.'); // Substitui vírgula por ponto
+            const userLocale = navigator.language;
+            const currencyCode = getCurrencyCode(userLocale);
+            const formattedValue = new Intl.NumberFormat(userLocale, {
+                style: 'currency',
+                currencyCode
+            }).format(value);
+            e.target.value = formattedValue.replace('.', ','); // Substitui ponto por vírgula na exibição
+        });
+
+        function getCurrencyCode(locale) {
+            const currencyMap = {
+                'en-US': 'USD',
+                'pt-BR': 'BRL',
+                'en-GB': 'GBP',
+                'de-DE': 'EUR',
+                // Adicione mais locais e moedas conforme necessário
+            };
+            return currencyMap[locale] || 'USD'; // Padrão para USD se o local não estiver no mapa
+        }
+    </script>
+</body>
+</html>

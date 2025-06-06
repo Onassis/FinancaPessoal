@@ -20,6 +20,7 @@ import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.categoria.Categoria;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
 import lombok.AllArgsConstructor;
@@ -49,15 +50,15 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     @Enumerated(EnumType.STRING)
 	protected TipoOperacao tipoOperacao;
     
-    @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY ,optional = true )
+    @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER ,optional = true )
     @JsonIgnore
     protected Categoria categoria;
 
     @JsonDeserialize (using = SubCategoriaDeserializer.class)    
-    @ManyToOne(cascade = CascadeType.PERSIST ,fetch = FetchType.EAGER ,optional = true  )
+    @ManyToOne(cascade = CascadeType.DETACH ,fetch = FetchType.EAGER ,optional = true  )
     protected SubCategoria subCategoria;
     
-    @ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY ,optional = true  )
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER ,optional = true  )
 	@JsonBackReference
 	protected Favorecido favorecido;
 	
@@ -67,7 +68,7 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     protected String observacao;
     
  //   @Fetch(FetchMode.JOIN)
-    @OneToMany(mappedBy = "lancamento", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true )    
+    @OneToMany(mappedBy = "lancamento", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true )    
     @Singular("detalheLancamento")
     protected final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	
 

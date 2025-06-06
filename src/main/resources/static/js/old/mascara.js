@@ -1,5 +1,5 @@
 $(document).ready(function () {
-   $('.moeda_input').maskMoney();
+    $('.moeda_input').maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false});
     $('.numberOnly').ForceNumericOnly();
     $('.numbers').keyup(function () {
    		this.value = this.value.replace(/[^0-9\.]/g,'');

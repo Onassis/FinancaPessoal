@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exolab.castor.types.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,8 @@ import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.fi.conta.ContaServico;
+import br.com.fenix.fi.detalheLancamento.DetalheLancServico;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.formaPgto.FormaPgto;
@@ -38,16 +41,11 @@ import br.com.fenix.fi.subCategoria.SubCategoriaServico;
 
 @Controller
 @RequestMapping("/lancamento")
-public class LancamentoController 
-	extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,Long> 
- 			implements IControleDTO<Lancamento,LancamentoDTO,Long>   
-{
+public class LancamentoController extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,Long>  implements IControleDTO<Lancamento,LancamentoDTO,Long> {
 
 
 	@Autowired	
 	ContaRepositorio contaRP;
-//	@Autowired
-//	FormaPgtoRepositorio formaRP; 
 	@Autowired
 	FavorecidoRepositorio favorecidoRP;
 	@Autowired
@@ -69,16 +67,13 @@ public class LancamentoController
 	 	return lancSC;
 	}
 	
-//	@ModelAttribute("formaPgtos")
-//	public List<FormaPgto> listaDeFormaPgto() {
-//		return formaRP.findByOrderByNomeAsc();
-//	}	
 	@Cacheable("favorecidos")
 	@ModelAttribute("favorecidos")
 	public Iterable<Option> listaDeFavorecido() {	
 		 return favorecidoRP.findOption();  
 	}
-	@Cacheable("contas")
+
+	@Cacheable(value = "contas")
 	@ModelAttribute("contas")
 	public List<Option> listaDeContas() {	
 		return contaRP.findOption(); 
@@ -158,15 +153,18 @@ public class LancamentoController
 	@Override
 	@GetMapping("/editar/{id}")
 	public String atualizarView(Long id, ModelMap model, RedirectAttributes attr) {
+		
 		 TipoOperacao tipoOperacao =null;
 		 if (model.containsAttribute("Erro")) {
+			 
 			   LancamentoDTO dto = (LancamentoDTO) model.getAttribute(nomeClasseDTO() ) ;
+				String mesAno = dto.getMesAnoLancamento();
 			    tipoOperacao = dto.getTipoOperacao();
 			   
 			   return converters.getCadastro(tipoOperacao.toString()) ;
 		 }
 		 try {
-		    LancamentoDTO dto =  getServico().buscaDTOPorId(id); 
+		    LancamentoDTO dto =  detLancSC.buscaDTOPorId(id); 
 		    tipoOperacao = dto.getTipoOperacao();
 		    
 		   model.addAttribute(nomeClasseDTO() , dto);
@@ -176,6 +174,46 @@ public class LancamentoController
 			 }		
 	   return converters.getCadastro(tipoOperacao.toString()) ;
 	}
-
+	@Override
+	public String alterar(LancamentoDTO dto, RedirectAttributes attr) {
+		String mesAno = dto.getMesAnoLancamento();
+		try {	
+//			dto = getServico().atualizarDTO(dto);
+	        
+			dto = detLancSC.atualizarDTO(dto); 
+	        
+			attr.addFlashAttribute("Sucesso", "Registro alterardo com sucesso.");
+		}
+		catch (Exception e) {
+			System.out.println("ControleAbstrato-> Salvar -> Exception");
+			attr.addFlashAttribute("Erro", e.getMessage());			
+			attr.addFlashAttribute(nomeClasseDTO(), dto );			
+			return "redirect:".concat(urlEditar(  dto.getId()));		
+			}
+		 			
+		return "redirect:".concat(urlListar()) 
+				.concat("/")
+				.concat(mesAno);	
+	}
+	@Override
+	@GetMapping("/excluir/{id}")   
+	public String excluirPorId(@PathVariable Long id, RedirectAttributes attr) {
+		LocalDate dataAtual = LocalDate.now() ;
+		String mesAno = String.format("%02d",dataAtual.getMonthValue())   
+				.concat("/")
+				.concat(String.valueOf(dataAtual.getYear()));
+		try {
+			LancamentoDTO dto = getServico().buscaDTOPorId(id);
+			mesAno = dto.getMesAnoLancamento();
+			getServico().excluirPorId(id);
+			attr.addFlashAttribute("Sucesso", "Registro excluido com sucesso.");
+		}	
+		catch (Exception e) {
+			attr.addFlashAttribute("Erro", e.getMessage()); 
+		}		
+		return "redirect:".concat(urlListar()) 
+				.concat("/")
+				.concat(mesAno);
+	}
 
 }

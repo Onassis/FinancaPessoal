@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.fi.conta.Conta;
-import br.com.fenix.fi.lancamento.DetalheLancamento;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
 
 @Component

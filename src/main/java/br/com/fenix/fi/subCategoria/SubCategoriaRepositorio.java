@@ -3,6 +3,7 @@ package br.com.fenix.fi.subCategoria;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,9 +18,9 @@ import br.com.fenix.dominio.modelo.Option;
 public interface SubCategoriaRepositorio extends JpaRepositoryAuditavel<SubCategoria,Long> {
 	
 	  
-
+	  @Cacheable(value = "subCategoria", key = "#id")
 	  @Override	   
-	  @Query("select s from SubCategoria s  LEFT JOIN FETCH s.categoria c where s.criadoPor.id = ?#{ principal?.id } and s.id = ?1" )
+	  @Query("select s from SubCategoria s  LEFT JOIN FETCH s.categoria where s.criadoPor.id = ?#{ principal?.id } and s.id = ?1" )
 	  Optional<SubCategoria> findById(Long  id);
 	  
 	  @Modifying

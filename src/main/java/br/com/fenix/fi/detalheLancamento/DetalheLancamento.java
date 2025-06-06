@@ -1,4 +1,4 @@
-package br.com.fenix.fi.lancamento;
+package br.com.fenix.fi.detalheLancamento;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,6 +16,7 @@ import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.favorecido.Favorecido;
+import br.com.fenix.fi.lancamento.Lancamento;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -71,11 +72,11 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	private String refBanco; 
 
     @JsonDeserialize(using = ContaDeserializer.class)
-    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY ,optional = true )
+    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER  ,optional = true )
  	private Conta contaLancamento ;
    
     @JsonDeserialize(using = ContaDeserializer.class)
-    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY ,optional = true )
+    @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER ,optional = true )
  	private Conta contaTransferencia ;
     /**
      * Valor da prestaçãoo, usado para calcular o total do lançamento
@@ -175,5 +176,14 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	}
 	public boolean possuiContaLancamento() {
 		return this.contaLancamento != null;  
+	}
+	public String getMesAnoLancamento() { 
+		String mesAno; 
+		if( dataVenc != null ) {
+			mesAno = String.valueOf(dataVenc.getMonthValue()); 
+			mesAno = mesAno + dataVenc.getYear(); 
+			return mesAno;					
+		}
+		return null;
 	}
 }

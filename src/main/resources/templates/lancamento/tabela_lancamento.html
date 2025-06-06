@@ -21,7 +21,7 @@
 						</tr>		
 			<tbody>
 				<tr th:each="l : ${lancamentoDTO}">
-					<td th:text="${l.id}">ido</td>
+						<td th:text="${l.lancamentoId}">ido</td>
 					<td th:text="${l.detalheLancamentoId}">detalhe</td> 		 		
 					<td th:text="${#temporals.format(l.dataVenc, 'dd/MM/yyyy')}">2017/08/14</td>
 					<td th:text="${l?.contaLancamento?.getApelido()}">Conta lancamento</td>	

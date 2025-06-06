@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrar Select Options</title>
+</head>
+<body>
+
+<form id="meuFormulario">
+    <select id="pais" class="filtro-select">
+        <option value="">Selecione um País</option>
+        <option value="Brasil">Brasil</option>
+        <option value="Argentina">Argentina</option>
+        <option value="Chile">Chile</option>
+    </select>
+
+    <select id="estado" class="filtro-select">
+        <option value="">Selecione um Estado</option>
+        <option value="São Paulo" data-pais="Brasil">São Paulo</option>
+        <option value="Rio de Janeiro" data-pais="Brasil">Rio de Janeiro</option>
+        <option value="Buenos Aires" data-pais="Argentina">Buenos Aires</option>
+        <option value="Santiago" data-pais="Chile">Santiago</option>
+    </select>
+
+    <select id="cidade" class="filtro-select">
+        <option value="">Selecione uma Cidade</option>
+        <option value="São Paulo" data-estado="São Paulo">São Paulo</option>
+        <option value="Santos"    data-estado="São Paulo">Santos</option>                
+        <option value="Campinas" data-estado="São Paulo">Campinas</option>
+        <option value="Rio de Janeiro" data-estado="Rio de Janeiro">Rio de Janeiro</option>
+        <option value="Buenos Aires" data-estado="Buenos Aires">Buenos Aires</option>
+        <option value="Santiago" data-estado="Santiago">Santiago</option>
+    </select>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selects = document.querySelectorAll('.filtro-select');
+
+    selects.forEach((select, index) => {
+        select.addEventListener('change', function() {
+            const valorSelecionado = this.value;
+            const proximoSelect = selects[index + 1];
+
+            if (proximoSelect) {
+                filtrarOpcoes(proximoSelect, valorSelecionado, index);
+            }
+        });
+    });
+
+    function filtrarOpcoes(select, valor, indice) {
+        const atributo = `data-${selects[indice - 1].id}`;
+        const options = select.querySelectorAll('option');
+        const opcoesFiltradas = [];
+
+        // Salva a primeira opção (Selecione...)
+        opcoesFiltradas.push(options[0].outerHTML);
+
+        options.forEach(option => {
+            if (option.value === "") return; // Ignora a primeira opção
+
+            const valorAtributo = option.getAttribute(atributo);
+            if (valorAtributo === valor) {
+                opcoesFiltradas.push(option.outerHTML);
+            }
+        });
+
+        select.innerHTML = opcoesFiltradas.join('');
+
+        // Reseta os selects subsequentes
+        for (let i = indice + 1; i < selects.length; i++) {
+            selects[i].innerHTML = `<option value="">Selecione...</option>`;
+        }
+    }
+});
+
+
+</script>
+</body>
+</html>

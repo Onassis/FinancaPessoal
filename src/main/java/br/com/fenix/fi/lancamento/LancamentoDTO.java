@@ -25,6 +25,7 @@ import br.com.fenix.dominio.converter.rest.UsuarioDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
 import br.com.fenix.seguranca.usuario.Usuario;
@@ -114,10 +115,10 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     	super();
     	this.dataDoc = LocalDate.now();
     	this.dataVenc = LocalDate.now();
-    	this.valor = BigDecimal.ZERO; 
-    	this.total = BigDecimal.ZERO;
-    	this.credito = BigDecimal.ZERO; 
-    	this.debito = BigDecimal.ZERO; 
+//    	this.valor = BigDecimal.ZERO; 
+//    	this.total = BigDecimal.ZERO;
+//    	this.credito = BigDecimal.ZERO; 
+//    	this.debito = BigDecimal.ZERO; 
 //        this.nroPrestacao = 1;
 //        this.nroInicialPrestacao = 1;
     	
@@ -163,7 +164,8 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     	
     	Lancamento lancamento = detLanc.getLancamento();
     	
-    	this.id = lancamento.getId(); 
+    	this.id = detLanc.getId();
+    	
     	this.lancamentoId = lancamento.getId(); 
         this.nroPrestacao = lancamento.getNroPrestacao();
         this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
@@ -306,6 +308,17 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 	public boolean possuiContaLancanto() {
 		return this.contaLancamento != null;  
 	}
-
+   
+	public String getMesAnoLancamento() { 
+		String mesAno; 
+		if( dataVenc != null ) {
+			mesAno = String.format("%02d",dataVenc.getMonthValue()); 
+			mesAno = mesAno + dataVenc.getYear(); 
+			return mesAno;					
+		}
+		mesAno = String.valueOf(dataDoc.getMonthValue());
+		mesAno = mesAno + dataDoc.getYear(); 
+		return mesAno;
+	}
 	
 }

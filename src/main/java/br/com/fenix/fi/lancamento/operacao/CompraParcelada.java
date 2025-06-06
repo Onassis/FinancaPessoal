@@ -2,7 +2,7 @@ package br.com.fenix.fi.lancamento.operacao;
 
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
-import br.com.fenix.fi.lancamento.DetalheLancamento;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
 import jakarta.persistence.DiscriminatorValue;
