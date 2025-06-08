@@ -17,6 +17,7 @@ import br.com.fenix.abstrato.controle.IControleDTO;
 import br.com.fenix.abstrato.dto.GenericConverter;
 import br.com.fenix.abstrato.servico.ServicoAbstrato;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
+import br.com.fenix.dominio.enumerado.TipoCategoria;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.modelo.Option;
@@ -54,10 +55,8 @@ public class FavorecidoControle extends ControleAbstratoDTO<Favorecido,Favorecid
    @ModelAttribute("categoriasDTO")
    @Cacheable(value="categoria", sync = true)
 	public List<Option> listaDeCategorias() {	
-	   List<Option> options =  categoriaSC.listaDeCategorias(TipoLancamento.D).stream()
-				.map(categoria -> new Option(categoria.getId(), categoria.getDescricao()))
-	            .collect(Collectors.toList());
-			   			   			   
+	   List<Option> options =  categoriaSC.listaDeCategoriasOpt(TipoCategoria.DP );
+			   		   			   
 	   return options;
 	}
 @Override

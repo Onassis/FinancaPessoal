@@ -36,8 +36,8 @@
         			 		th:disabled="*{__${field}__} != null and ${__${readOnly}__} ==  'readOnly'" >
         				 <option value="0" selected hidden >- Selecione -</option>
         		
-					   		<option th:each="option : ${options}" th:value="${option.id}" th:text="${option.ajuda}"
-					        		th:selected="${option.id}==*{__${field}__}">
+					   		<option th:each="option : ${options}" 
+					   				th:value="${option.id}" th:text="${option.ajuda}" th:selected="${option.id}==*{__${field}__}">
 					   </option> 				 
         			</select>   
         			<div class="invalid-feedback">
@@ -50,7 +50,7 @@
                     <label class="form-label">
                        <span th:text="#{'__${object}__.__${field}__.label'}"></span>
                     </label>
-        			<select th:field="*{__${field}__}"  class="form-select mySelect"     
+        			<select th:field="*{__${field}__}"  class="form-select seletOpt"     
         					th:id="|input_${#strings.toLowerCase(field)}|"   
         					th:classappend="${inputClassappend}" 
         					th:required="${__${required}__} ? 'required' : null"

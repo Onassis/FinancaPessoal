@@ -1,0 +1,52 @@
+/* O contêiner principal do nosso select filtrável */
+.filtro-select-container {
+    position: relative; /* Essencial para posicionar a lista de opções */
+    width: 100%;
+}
+
+/* O campo que mostra o valor selecionado e o input de filtro */
+.filtro-select-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+    cursor: pointer;
+    background-color: #fff;
+}
+
+/* A lista de opções que aparecerá abaixo */
+.filtro-select-opcoes {
+    position: absolute;
+    top: 100%; /* Posiciona logo abaixo do input */
+    left: 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    background-color: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none; /* Começa escondida */
+}
+
+/* Cada item da lista */
+.filtro-select-opcoes li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* Efeito ao passar o mouse sobre um item */
+.filtro-select-opcoes li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Item destacado (usado para navegação com teclado, não implementado neste exemplo simples) */
+.filtro-select-opcoes li.highlight {
+    background-color: #007bff;
+    color: white;
+}

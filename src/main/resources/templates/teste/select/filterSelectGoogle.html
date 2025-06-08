@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Select com jQuery (Usando Classe)</title>
+    <link rel="stylesheet" href="styleSelect.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Filtro de Select Reutilizável</h1>
+        <p>Ambos os selects abaixo usam a mesma classe <code>.seletOpt</code> e são transformados pelo mesmo script.</p>
+
+        <form action="#">
+            <!-- Exemplo 1: Estados -->
+            <label for="estados-brasil">Selecione um Estado:</label>
+            <select id="estados-brasil" name="estado" class="seletOpt" placeholder="Filtrar estados...">
+        <option value="">Selecione...</option>
+                <option value="AC">Acre</option>
+                <option value="AL">Alagoas</option>
+                <option value="AP">Amapá</option>
+                <option value="AM">Amazonas</option>
+                <option value="BA">Bahia</option>
+                <option value="CE">Ceará</option>
+                <option value="DF">Distrito Federal</option>
+                <option value="ES">Espírito Santo</option>
+                <option value="GO">Goiás</option>
+                <option value="MA">Maranhão</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="PA">Pará</option>
+                <option value="PB">Paraíba</option>
+                <option value="PR">Paraná</option>
+                <option value="PE">Pernambuco</option>
+                <option value="PI">Piauí</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RO">Rondônia</option>
+                <option value="RR">Roraima</option>
+                <option value="SC">Santa Catarina</option>
+                <option value="SP">São Paulo</option>
+                <option value="SE">Sergipe</option>
+                <option value="TO">Tocantins</option>
+            </select>
+            
+            <hr style="margin: 30px 0;">
+
+            <!-- Exemplo 2: Produtos -->
+            <label for="produtos">Selecione um Produto:</label>
+            <select id="produtos" name="produto" class="seletOpt" placeholder="Buscar produto...">
+                <option value="">Selecione...</option>
+                <option value="1">Notebook Gamer Pro</option>
+                <option value="2">Mouse Óptico Sem Fio</option>
+                <option value="3">Teclado Mecânico RGB</option>
+                <option value="4">Monitor UltraWide 34"</option>
+                <option value="5">Headset 7.1 Surround</option>
+                <option value="6">Cadeira Gamer Ergonômica</option>
+                <option value="7">Webcam Full HD 1080p</option>
+            </select>
+
+            <br><br>
+            <button type="submit">Enviar Formulário</button>
+        </form>
+    </div>
+
+    <!-- Incluindo o jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Nosso script personalizado -->
+    <script src="filtro-select.js"></script>
+
+</body>
+</html>

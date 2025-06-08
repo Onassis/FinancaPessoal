@@ -48,5 +48,23 @@
 		</div>
 	</div>
 </table>
-
+	<script>
+/* This script filters the table based on the input in the search box */	
+$(document).ready(function () {
+$("#Search").on("keyup", function () {
+var value = $(this).val().toLowerCase();
+$("table tbody tr").filter(function () {
+$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+});
+ 
+// Show the 'No result' row if there are no matching rows
+var noResultRow = $("tr.warning.no-result");
+if ($("table tbody tr:visible").length === 0) {
+noResultRow.show();
+} else {
+noResultRow.hide();
+}
+});
+});
+</script>
 </div>

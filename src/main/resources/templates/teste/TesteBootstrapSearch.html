@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="TesteBottstrap.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<!-- Add Font Awesome for the warning icon -->
+<title>Bootstrap Table Search</title>
+<style>
+/* Add your CSS styles here */
+</style>
+</head>
+<body>
+	<div class="container mt-5">
+		<div class="form-group pull-right">
+			<input type="text" id="tableSearch" class="search form-control"
+				placeholder="What are you looking for?">
+		</div>
+		<span class="counter pull-right"></span>
+		<table class="table table-hover table-bordered results">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th class="col-md-5 col-xs-5">Name / Surname</th>
+					<th class="col-md-4 col-xs-4">Job</th>
+					<th class="col-md-3 col-xs-3">City</th>
+				</tr>
+				<tr class="warning no-result">
+					<td colspan="4"><i class="fa fa-warning"></i> No result</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>Alice Johnson</td>
+					<td>Web Designer</td>
+					<td>New York</td>
+				</tr>
+				<tr>
+					<th scope="row">2</th>
+					<td>David Smith</td>
+					<td>Software Engineer</td>
+					<td>Los Angeles</td>
+				</tr>
+				<tr>
+					<th scope="row">3</th>
+					<td>Sarah Brown</td>
+					<td>Marketing Manager</td>
+					<td>Chicago</td>
+				</tr>
+				<tr>
+					<th scope="row">4</th>
+					<td>Michael Davis</td>
+					<td>Sales Representative</td>
+					<td>Houston</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+$(document).ready(function () {
+$("#tableSearch").on("keyup", function () {
+var value = $(this).val().toLowerCase();
+$("table tbody tr").filter(function () {
+$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+});
+ 
+// Show the 'No result' row if there are no matching rows
+var noResultRow = $("tr.warning.no-result");
+if ($("table tbody tr:visible").length === 0) {
+noResultRow.show();
+} else {
+noResultRow.hide();
+}
+});
+});
+</script>
+</body>
+</html>

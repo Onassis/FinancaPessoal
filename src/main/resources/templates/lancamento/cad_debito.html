@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <head><meta charset="UTF-8"></head>
-
+  
+     
 <main id="main" class="main" layout:fragment="corpo">
    
    <section class="layout-content" >
@@ -39,8 +40,6 @@
 
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='favorecido', type='select',options= ${favorecidos},rowClass='col-md-12')}" /> 
 
-<input type="input"  id="filterInput" placeholder="Filter options">
-
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='subCategoria', type='select',options= ${subCategoriasDebito},rowClass='col-md-12')}" /> 
 			   
 			  
@@ -68,7 +67,7 @@
 </div>
 </div>
   <script th:src="@{/js/cadastro.js}"></script>
- 
+ <script th:src="@{/js/filtro-select.js}"></script>
  </section>
 	</main>
  

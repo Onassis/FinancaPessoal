@@ -1,0 +1,37 @@
+body {
+padding: 20px;
+background-color: #f0f0f0; /* Background color for the body */
+}
+ 
+.results tr[visible='false'],
+.no-result {
+display: none;
+}
+ 
+.results tr[visible='true'] {
+display: table-row;
+}
+ 
+.counter {
+padding: 8px;
+color: #ccc;
+}
+ 
+/* Table Background and Row Colors */
+.results tr:nth-child(odd) {
+background-color: #f2f2f2; /* Alternate row background color */
+}
+ 
+.results th {
+background-color: #555; /* Header row background color */
+color: #fff; /* Header row text color */
+}
+ 
+.results td {
+background-color: #fff; /* Table cell background color */
+}
+ 
+/* Search Input Styles */
+.search {
+background-color: #e0e0e0; /* Background color for search input */
+}
