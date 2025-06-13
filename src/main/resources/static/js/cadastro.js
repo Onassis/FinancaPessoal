@@ -1,4 +1,4 @@
- function ShowAlert(msg_title, msg_body, msg_type) {
+	 function ShowAlert(msg_title, msg_body, msg_type) {
     var AlertMsg = $('div[role="alert"]');
     $(AlertMsg).find('strong').html(msg_title);
     $(AlertMsg).find('p').html(msg_body);
@@ -52,7 +52,14 @@
 	 	$(".alert").delay(5000).slideUp(200, function () {
         	$(this).alert('close');
     	});
-    		$('.moeda').mask('000.000.000.000.000,00', {reverse: true});		
+			$('.moeda').mask('000000000000,00', {
+		            reverse: true,
+		            translation: { 
+		                '0': { pattern: /-|\d/, recursive: true}
+		            },
+					onChange: function(value, e) {
+		    		e.target.value = value.replace(/^-\./, '-').replace(/^-,/, '-').replace(/(?!^)-/g, ''); }
+		    });    		
     		$('.cep').mask('00000-000');
 	 }
 	)

@@ -10,10 +10,12 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
+import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
@@ -44,8 +46,8 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 	private ModelMapper modelMapper;
 
 
-	public LancamentoServico(EntityManagerFactory emf) {
-		super(emf);
+	public LancamentoServico() {
+		super();
 	}
 
 	@Override
@@ -59,9 +61,15 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		return converter; 
 
 	}
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void depoisDeSalvar(Lancamento entidade) throws NegocioException {
+		DetalheLancamento detalhe = entidade.getDetalheLancamento().get(0); 
+		saldoSC.atualizaSaldo( detalhe.getContaLancamento(), detalhe.getDataVenc(),detalhe.getValor());
+	}
 
 	@Override
-	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void excluirPorId(Long id)throws Exception {
 		try {
 			antesDeExcluir(id);
@@ -85,6 +93,7 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 	 * Busca pelo ID do delalheLancamento 
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public LancamentoDTO buscaDTOPorId (Long id) throws RegistroNaoExisteException {
 //		Lancamento  entidade = getRp().findDetalheLancamentoById(id).orElseThrow(() -> new RegistroNaoExisteException("Registro  não encontrato:" + id) );
 //		LancamentoDTO dto =  getConverter().ToDto(entidade);

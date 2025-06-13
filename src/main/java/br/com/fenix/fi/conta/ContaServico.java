@@ -37,8 +37,8 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 //	
 //   private GenericConverter<Conta, ContaDTO> converter; 
 //   
-	public ContaServico(EntityManagerFactory emf) {
-    	super(emf);
+	public ContaServico() {
+    	super();
 	//	this.converter = new GenericConverter<>(Conta.class, ContaDTO.class);		
 	}
 	@Override

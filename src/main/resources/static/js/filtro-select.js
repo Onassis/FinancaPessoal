@@ -18,6 +18,9 @@ $(document).ready(function() {
     // Transforma qualquer select com a classe '.seletOpt' em um select filtrável
     $('.seletOpt').each(function() {
         const $selectOriginal = $(this);
+        if ($selectOriginal.is(':disabled')) {
+			return;
+		}
         $selectOriginal.hide(); // Esconde o select original
 
         // 1. CRIA OS NOVOS ELEMENTOS

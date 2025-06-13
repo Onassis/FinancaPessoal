@@ -24,8 +24,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(
-		indexes = {@Index(name = "idx_saldo", columnList = "criado_por_id,data,conta_id", unique = true)})				   
+@Table(name="saldo_conta",
+		indexes = { @Index(name = "idx_saldo", columnList = "criado_por_id,data,conta_id", unique = true)})				   
 public class SaldoConta extends EntidadeAuditavel<Long> {
 
 	
@@ -55,9 +55,11 @@ public class SaldoConta extends EntidadeAuditavel<Long> {
 	}
 
 
-	public SaldoConta() {		
+	public SaldoConta(Conta conta, LocalDate dataSaldo, BigDecimal saldoAnterior) {		
 		super();
-		saldoInicial = BigDecimal.ZERO;
+		this.conta = conta; 
+		this.setData(dataSaldo);
+		this.saldoInicial = saldoAnterior;
 	}
 
 	public SaldoConta(Conta conta, LocalDate data) {
@@ -67,6 +69,11 @@ public class SaldoConta extends EntidadeAuditavel<Long> {
 		this.conta = conta;
 		setData(data);
 	}
+	public SaldoConta() {
+		super();
+	}
+
+
 	public boolean isAnoMesCorrente() {
 		return (ano == LocalDate.now().getYear() && mes == LocalDate.now().getMonthValue());
 	}

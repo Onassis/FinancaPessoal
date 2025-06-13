@@ -64,8 +64,8 @@ public class CategoriaServico extends ServicoAbstratoDTO<Categoria,CategoriaDTO,
 	@Autowired
 	private SubCategoriaMapper converterSub;
 	
-    public CategoriaServico(EntityManagerFactory emf) {
-    	super(emf);
+    public CategoriaServico() {
+    	super();
 	}
     @Override
     public JpaRepository<Categoria, Long> getRp() {

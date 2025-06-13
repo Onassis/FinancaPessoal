@@ -35,8 +35,8 @@ public class FavorecidoServico  extends ServicoAbstratoDTO<Favorecido,Favorecido
 	@Autowired
 	private FavorecidoMapper converter;
 	
-	public FavorecidoServico(EntityManagerFactory emf) {
-    	super(emf);
+	public FavorecidoServico() {
+    	super();
 	}
 	@Override
 	public FavorecidoMapper getConverter() {	

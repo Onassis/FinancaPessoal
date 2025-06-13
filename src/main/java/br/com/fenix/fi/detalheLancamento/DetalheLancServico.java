@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.abstrato.servico.IServicoDTO;
 import br.com.fenix.abstrato.servico.ServicoAbstratoDTO;
+import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.categoria.Categoria;
@@ -33,6 +34,7 @@ import br.com.fenix.fi.categoria.CategoriaDTO;
 import br.com.fenix.fi.conta.Conta;
 
 import br.com.fenix.fi.lancamento.LancamentoDTO;
+import br.com.fenix.fi.saldo.LancamentoAlteradoEvent;
 import br.com.fenix.fi.saldo.SaldoConta;
 import br.com.fenix.fi.saldo.SaldoContaRepositorio;
 import br.com.fenix.fi.saldo.SaldoServico;
@@ -40,24 +42,29 @@ import br.com.fenix.fi.upload.LancAux;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DetalheLancServico  extends ServicoAbstratoDTO<DetalheLancamento,LancamentoDTO,Long> implements IServicoDTO<DetalheLancamento,LancamentoDTO ,Long> { 
 	
 	@Autowired
 	DetalheLancamentoRepositorio DtlancamentoRP;
+	@Autowired
+	private ApplicationEventPublisher eventPublisher; // Para publicar eventos
 
-//	@Autowired
-//	SaldoContaRepositorio saldoRP;
-//	@Autowired
-//	SaldoServico saldoSC;
+	@Autowired
+	SaldoServico saldoSC;
 
    @Autowired
    private DetalheLancamentoConverter converter;
 
-   public DetalheLancServico(EntityManagerFactory emf) {
-		super(emf);
-	}
+//   public DetalheLancServico() {
+//	   super();
+//	}
    
 	@Override
 	public DetalheLancamentoRepositorio getRp() {	
@@ -171,4 +178,11 @@ return null;
  
 	return lancDTO;
   }
+
+  @Override
+ public void depoisDeSalvar(DetalheLancamento entidade) throws NegocioException { 
+	  saldoSC.atualizaSaldo(entidade.getContaLancamento(), entidade.getDataVenc(),entidade.getValor());
+	  // Publica o evento para que o listener possa agir	  
+//      eventPublisher.publishEvent(new LancamentoAlteradoEvent(entidade.getContaLancamento().getId(), entidade.getDataVenc()));
+ }
 }

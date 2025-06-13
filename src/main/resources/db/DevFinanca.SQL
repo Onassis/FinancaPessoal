@@ -77,6 +77,22 @@ SELECT detalhe_lancamento.conta_lancamento_id,
             detalhe_lancamento.criado_por_id,
             detalhe_lancamento.ano,
             detalhe_lancamento.mes;
+/*
+    View mostar o saldo Inicial , total realizado mes e saldo atual 
+*/                
+CREATE or REPLACE  view view_SaldoMes   as 
+select  a.id as id, 
+		a.conta_id, a.ano,a.mes, a.data,
+		a.flag_compensacao,
+		a.saldo_inicial,
+		b.total,
+        (a.saldo_inicial + b.total) as saldo_atual   
+from saldo_conta as a  
+left join view_TotalAnoMes as b on a.conta_id = b.conta_lancamento_id and
+a.ano = b.ano and a.mes = b.mes   
+order by a.ano = b.ano and a.mes = b.mes   
+
+                
 /************************************************************************************************************************************************/
 /*                                                      Funcao                                                                                  */
 /************************************************************************************************************************************************/
@@ -189,6 +205,9 @@ CREATE TRIGGER tr_saldo_conta_insr
     FOR EACH ROW
     EXECUTE FUNCTION f_before_saldo_insr();
 
+/******************************************************************************/
+Atualiza saldo do mes 
+/******************************************************************************/
 CREATE OR REPLACE FUNCTION f_before_saldo_insr ()
 RETURNS trigger AS
 $$
@@ -199,6 +218,7 @@ $$
         new.versao = 0; 
         new.Ano = extract( year from new.data);
         new.mes = extract( month from new.data);
+        NEW.data = DATE_TRUNC('month', NEW.data);
         new.dt_alteracao = now();
         new.alterado_por_id = new.criado_por_id;
         RETURN NEW;

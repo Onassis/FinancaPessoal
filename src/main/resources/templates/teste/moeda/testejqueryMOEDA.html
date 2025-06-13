@@ -10,12 +10,24 @@
      <h1>Máscara para campos monetários com jquery + maskMoney</h1>
      <form>
             Valor:
-            <input type="text" value="1520.33" class="money" />
+            <input type="text" id="input" value="1520.33" class="money" />
      </form>
      	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
     <script>
-	 $('.money').mask('000.000.000.000.000,00', {reverse: true});
+/*			 $('.money').mask('-000.000.000.000.000,00', {reverse: true}); */ 
+$('.money').mask('000.000.000.000,00', {
+            reverse: true,
+            translation: { 
+                '0': {
+                    pattern: /-|\d/,
+                    recursive: true
+                }
+            },
+onChange: function(value, e) {
+    e.target.value = value.replace(/^-\./, '-').replace(/^-,/, '-').replace(/(?!^)-/g, '');
+    }
+});
     </script>
 </body>
 </html>

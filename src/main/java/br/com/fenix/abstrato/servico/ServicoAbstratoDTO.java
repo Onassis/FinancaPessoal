@@ -18,6 +18,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.abstrato.dto.GenericConverter;
@@ -70,7 +71,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
     public abstract   Converter<T, DTO> getConverter(); 
 	
 
-	public ServicoAbstratoDTO(EntityManagerFactory emf) {
+	public ServicoAbstratoDTO() {
 		super();
 //		this.emf = emf;
 	
@@ -109,7 +110,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	}
 
 	@Override
-	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.NESTED)
 // Verifica se o usuario é o dono do registro	
 //	@PreAuthorize("#entidade.criadoPor.id == principal.id")
 	public T atualizar(T entidade)  throws Exception {	
@@ -133,7 +134,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 
 	}
 	@Override
-	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.NESTED)
 	public void excluirPorId(ID id)throws Exception {
 //		EntityTransaction tx = geradorTransacao();
 		try {				
@@ -147,33 +148,39 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 		}
 	}
 	@Override
-	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.NESTED)
 	public void excluirTodos(){
 		getRp().deleteAll();
 	}
 	
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public T  antesDeSalvar(T entidade) throws NegocioException {
 		return entidade;
 	}
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public T antesDeAlterar(T entidade) throws NegocioException {		
 		return entidade;
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void depoisDeSalvar(T entidade) throws NegocioException {	
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void depoisDeAlterar(T entidade) throws NegocioException {	
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void antesDeExcluir(ID id) throws NegocioException {		
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void handleException(OperacaoDB op,Exception e) throws Exception {
  	  throw e ;		
 	}
@@ -192,6 +199,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.NESTED)
 	public DTO atualizarDTO(DTO dto)  throws Exception {	
 //		EntityTransaction tx = geradorTransacao();
 //        T entidade=null;
@@ -216,6 +224,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.NESTED)
 	public DTO criarDTO(DTO dto)  throws Exception {
 		System.out.println("ServicoAbstratoDTO -> Crair ");
 		T entidade = getConverter().ToEntity(dto);
@@ -224,7 +233,7 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 		return getConverter().ToDto(entidade);
 	}
 	@Override
-	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.NESTED)
 	public T criar( T entidade ) throws Exception {
 //		EntityTransaction tx = geradorTransacao();
 		try {				

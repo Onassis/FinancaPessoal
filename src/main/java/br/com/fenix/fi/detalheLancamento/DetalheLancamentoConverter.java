@@ -23,26 +23,23 @@ public class DetalheLancamentoConverter  implements Converter<DetalheLancamento,
 
 	@Override
 	public void updateEntity(LancamentoDTO dto, DetalheLancamento entity) {
-		
+	    Lancamento lanc = entity.getLancamento();
+		entity.setConciliado(dto.isConciliado()); 
+		entity.setDataVenc(dto.getDataVenc());		
+	    
 		TipoOperacao tipo = dto.getTipoOperacao();
 		if ( tipo == TipoOperacao.CP) { 
 			entity.setValor(dto.getValor());
 		}
 		else { 
 			entity.setValor(dto.getTotal());
+			lanc.setTotal(dto.getTotal());
 		}
-		
-		entity.setConciliado(dto.isConciliado()); 
-		entity.setDataVenc(dto.getDataVenc());		
-		
-	    Lancamento lanc = entity.getLancamento(); 
 	    lanc.setFavorecido(dto.getFavorecido()) ;
 	    lanc.setSubCategoria(dto.getSubCategoria()); 
 	    lanc.setInformacao(dto.getInformacao()); 
 	    lanc.setObservacao(dto.getObservacao());
-	    lanc.setDataDoc(dto.getDataDoc());
-	    lanc.setTotal(dto.getTotal());
-
+	    lanc.setDataDoc(dto.getDataDoc());	   
 	}
 	
 

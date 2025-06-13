@@ -1,0 +1,566 @@
+Excelente problema! Este é um cenário clássico em sistemas financeiros onde uma ação (um lançamento) dispara uma atualização em uma tabela de sumarização (saldo diário). O melhor padrão de projeto para isso é o **Padrão Observer (Observador)**, que em Spring Boot é elegantemente implementado através do sistema de **Eventos de Aplicação (Application Events)**.
+
+### Por que o Padrão Observer com Eventos?
+
+1.  **Desacoplamento:** O `LancamentoService` não precisa saber sobre o `SaldoService`.
+ Ele só tem a responsabilidade de criar um lançamento e "anunciar" que isso aconteceu.
+  Qualquer parte do sistema interessada nesse evento (como o `SaldoService`) pode "ouvir" e reagir.
+2.  **Responsabilidade Única (SRP):** Cada serviço mantém seu foco:
+    *   `LancamentoService`: Gerencia o CRUD de Lançamentos.
+    *   `SaldoService`: Gerencia a lógica complexa de cálculo e persistência de Saldos.
+    *   `SaldoEventListener`: Atua como a "cola" entre os dois, ouvindo eventos de lançamento e acionando o serviço de saldo.
+3.  **Extensibilidade:** Se no futuro você precisar enviar uma notificação por e-mail ou gerar um log específico sempre que um lançamento for feito, basta criar um novo *Listener* para o mesmo evento, sem modificar o `LancamentoService`.
+4.  **Transacionalidade e Assincronia:** Os listeners de eventos do Spring podem ser transacionais e até mesmo assíncronos (`@Async`), o que é ótimo para performance se o cálculo do saldo for demorado.
+
+---
+
+## Estrutura do Projeto
+
+Aqui está a estrutura de um projeto Spring Boot completo para resolver seu problema.
+
+```
+.
+├── pom.xml
+└── src
+    └── main
+        ├── java
+        │   └── com
+        │       └── example
+        │           └── financeiro
+        │               ├── FinanceiroApplication.java
+        │               ├── controller
+        │               │   ├── ContaController.java
+        │               │   └── LancamentoController.java
+        │               ├── dto
+        │               │   └── LancamentoDTO.java
+        │               ├── entity
+        │               │   ├── Conta.java
+        │               │   ├── Lancamento.java
+        │               │   └── Saldo.java
+        │               ├── event
+        │               │   └── LancamentoAlteradoEvent.java
+        │               ├── listener
+        │               │   └── SaldoEventListener.java
+        │               ├── repository
+        │               │   ├── ContaRepository.java
+        │               │   ├── LancamentoRepository.java
+        │               │   └── SaldoRepository.java
+        │               └── service
+        │                   ├── LancamentoService.java
+        │                   └── SaldoService.java
+        └── resources
+            ├── application.properties
+            └── data.sql
+```
+
+---
+
+### 1. Dependências (pom.xml)
+
+Certifique-se de ter as dependências básicas do Spring Boot.
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
+```
+
+### 2. Entidades (JPA Entities)
+
+As classes que você definiu, agora anotadas para JPA.
+
+**`entity/Conta.java`**
+```java
+import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+
+@Entity
+@Data
+public class Conta {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String apelido;
+
+    @Column(nullable = false)
+    private BigDecimal saldo; // Saldo inicial/de referência
+}
+```
+
+**`entity/Lancamento.java`**
+```java
+import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Entity
+@Data
+public class Lancamento {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private LocalDate data;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "conta_id")
+    private Conta conta;
+
+    @Column(nullable = false)
+    private BigDecimal valor;
+}
+```
+
+**`entity/Saldo.java`**
+```java
+import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Entity
+@Data
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"conta_id", "data"})
+})
+public class Saldo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private LocalDate data;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "conta_id")
+    private Conta conta;
+
+    @Column(nullable = false)
+    private BigDecimal saldoAnterior;
+
+    @Column(nullable = false)
+    private BigDecimal totalLancamento;
+
+    // Método de conveniência para calcular o saldo final do dia
+    @Transient // Não será persistido no banco
+    public BigDecimal getSaldoFinalDoDia() {
+        return this.saldoAnterior.add(this.totalLancamento);
+    }
+}
+```
+
+### 3. Repositórios (Spring Data JPA)
+
+Interfaces para interagir com o banco de dados.
+
+**`repository/ContaRepository.java`**
+```java
+import com.example.financeiro.entity.Conta;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ContaRepository extends JpaRepository<Conta, Long> {
+}
+```
+
+**`repository/LancamentoRepository.java`**
+```java
+import com.example.financeiro.entity.Conta;
+import com.example.financeiro.entity.Lancamento;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
+
+    @Query("SELECT COALESCE(SUM(l.valor), 0) FROM Lancamento l WHERE l.conta = :conta AND l.data = :data")
+    BigDecimal sumTotalValorByContaAndData(@Param("conta") Conta conta, @Param("data") LocalDate data);
+}
+```
+
+**`repository/SaldoRepository.java`**
+```java
+import com.example.financeiro.entity.Conta;
+import com.example.financeiro.entity.Saldo;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+public interface SaldoRepository extends JpaRepository<Saldo, Long> {
+
+    Optional<Saldo> findByContaAndData(Conta conta, LocalDate data);
+
+    // Busca o último registro de saldo para uma conta ANTES de uma data específica
+    Optional<Saldo> findTopByContaAndDataBeforeOrderByDataDesc(Conta conta, LocalDate data);
+
+    // Busca todos os saldos a partir de uma data para recalcular em cascata
+    List<Saldo> findByContaAndDataGreaterThanOrderByDataAsc(Conta conta, LocalDate data);
+}
+```
+
+### 4. O Evento e o Listener (Padrão Observer)
+
+**`event/LancamentoAlteradoEvent.java`**
+Este é um objeto simples que carrega a informação necessária para o listener.
+
+```java
+import lombok.Getter;
+import java.time.LocalDate;
+
+@Getter
+public class LancamentoAlteradoEvent {
+    private final Long contaId;
+    private final LocalDate data;
+
+    public LancamentoAlteradoEvent(Long contaId, LocalDate data) {
+        this.contaId = contaId;
+        this.data = data;
+    }
+}
+```
+
+**`listener/SaldoEventListener.java`**
+Esta classe ouve o evento e aciona a lógica de cálculo.
+
+```java
+import com.example.financeiro.event.LancamentoAlteradoEvent;
+import com.example.financeiro.service.SaldoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
+
+@Component
+@RequiredArgsConstructor
+public class SaldoEventListener {
+
+    private final SaldoService saldoService;
+
+    // Ouve o evento APÓS a transação do lançamento ser comitada com sucesso.
+    @TransactionalEventListener
+    public void handleLancamentoAlteradoEvent(LancamentoAlteradoEvent event) {
+        // A lógica principal está no SaldoService para manter a coesão.
+        // A atualização é propagada para os dias seguintes.
+        saldoService.recalcularSaldosAPartirDe(event.getContaId(), event.getData());
+    }
+}
+```
+*Nota: `@TransactionalEventListener` garante que a lógica do listener só rode se a transação que publicou o evento (a criação do lançamento) for bem-sucedida.*
+
+### 5. Lógica de Negócio (Services)
+
+**`service/SaldoService.java`**
+Este é o coração da lógica de cálculo.
+
+```java
+import com.example.financeiro.entity.Conta;
+import com.example.financeiro.entity.Saldo;
+import com.example.financeiro.repository.ContaRepository;
+import com.example.financeiro.repository.LancamentoRepository;
+import com.example.financeiro.repository.SaldoRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class SaldoService {
+
+    private final SaldoRepository saldoRepository;
+    private final LancamentoRepository lancamentoRepository;
+    private final ContaRepository contaRepository;
+
+    /**
+     * Recalcula o saldo para uma data específica e propaga a atualização para os dias subsequentes.
+     * Este é o método principal a ser chamado pelo listener.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW) // Roda em uma nova transação
+    public void recalcularSaldosAPartirDe(Long contaId, LocalDate dataInicial) {
+        Conta conta = contaRepository.findById(contaId)
+                .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada: " + contaId));
+
+        // 1. Calcular o saldo para a data do lançamento que foi alterado
+        BigDecimal saldoFinalDiaAnterior = calcularSaldoParaDia(conta, dataInicial);
+
+        // 2. Propagar a mudança para os dias seguintes que já possuem registro de saldo
+        List<Saldo> saldosSubsequentes = saldoRepository.findByContaAndDataGreaterThanOrderByDataAsc(conta, dataInicial);
+
+        for (Saldo saldoDiaSeguinte : saldosSubsequentes) {
+            // O saldo anterior do dia seguinte é o saldo final do dia que acabamos de calcular
+            saldoDiaSeguinte.setSaldoAnterior(saldoFinalDiaAnterior);
+            saldoRepository.save(saldoDiaSeguinte);
+
+            // Atualiza o saldo final para a próxima iteração
+            saldoFinalDiaAnterior = saldoDiaSeguinte.getSaldoFinalDoDia();
+        }
+    }
+
+    /**
+     * Calcula e salva/atualiza o saldo para um único dia.
+     * Retorna o saldo final desse dia.
+     */
+    private BigDecimal calcularSaldoParaDia(Conta conta, LocalDate data) {
+        // Passo 1: Buscar o saldo do dia anterior
+        BigDecimal saldoAnteriorValor = buscarSaldoFinalDiaAnterior(conta, data);
+
+        // Passo 2: Calcular o total de lançamentos do dia
+        BigDecimal totalLancamentosDia = lancamentoRepository.sumTotalValorByContaAndData(conta, data);
+
+        // Passo 3: Criar ou atualizar o registro de Saldo para o dia atual
+        Saldo saldoDoDia = saldoRepository.findByContaAndData(conta, data)
+                .orElse(new Saldo()); // Cria um novo se não existir
+
+        saldoDoDia.setConta(conta);
+        saldoDoDia.setData(data);
+        saldoDoDia.setSaldoAnterior(saldoAnteriorValor);
+        saldoDoDia.setTotalLancamento(totalLancamentosDia);
+
+        saldoRepository.save(saldoDoDia);
+
+        return saldoDoDia.getSaldoFinalDoDia();
+    }
+
+    /**
+     * Encontra o valor do saldo final do dia anterior à data fornecida.
+     */
+    private BigDecimal buscarSaldoFinalDiaAnterior(Conta conta, LocalDate data) {
+        // Tenta encontrar o registro de Saldo mais recente ANTES da data atual
+        Optional<Saldo> ultimoSaldo = saldoRepository.findTopByContaAndDataBeforeOrderByDataDesc(conta, data);
+
+        // Se encontrou um registro de saldo, o saldo final dele é o saldo anterior de hoje.
+        // O cálculo do saldo final é: saldo_anterior + total_lancamentos
+        if (ultimoSaldo.isPresent()) {
+            Saldo s = ultimoSaldo.get();
+            // A interpretação correta da regra é que o saldo final de um dia é o saldo anterior + movimentos.
+            return s.getSaldoAnterior().add(s.getTotalLancamento());
+        } else {
+            // Se não encontrou NENHUM registro de saldo anterior, usa o saldo inicial da CONTA.
+            return conta.getSaldo();
+        }
+    }
+}
+```
+
+**`service/LancamentoService.java`**
+Este serviço publica o evento, mantendo-se desacoplado.
+
+```java
+import com.example.financeiro.dto.LancamentoDTO;
+import com.example.financeiro.entity.Conta;
+import com.example.financeiro.entity.Lancamento;
+import com.example.financeiro.event.LancamentoAlteradoEvent;
+import com.example.financeiro.repository.ContaRepository;
+import com.example.financeiro.repository.LancamentoRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+
+@Service
+@RequiredArgsConstructor
+public class LancamentoService {
+
+    private final LancamentoRepository lancamentoRepository;
+    private final ContaRepository contaRepository;
+    private final ApplicationEventPublisher eventPublisher; // Para publicar eventos
+
+    @Transactional
+    public Lancamento criarLancamento(LancamentoDTO dto) {
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada: " + dto.getContaId()));
+
+        Lancamento lancamento = new Lancamento();
+        lancamento.setConta(conta);
+        lancamento.setData(dto.getData());
+        lancamento.setValor(dto.getValor());
+
+        Lancamento savedLancamento = lancamentoRepository.save(lancamento);
+
+        // Publica o evento para que o listener possa agir
+        eventPublisher.publishEvent(new LancamentoAlteradoEvent(conta.getId(), savedLancamento.getData()));
+
+        return savedLancamento;
+    }
+
+    @Transactional
+    public void deletarLancamento(Long id) {
+        Lancamento lancamento = lancamentoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Lançamento não encontrado: " + id));
+
+        Long contaId = lancamento.getConta().getId();
+        LocalDate data = lancamento.getData();
+
+        lancamentoRepository.delete(lancamento);
+
+        // Publica o evento para o recálculo
+        eventPublisher.publishEvent(new LancamentoAlteradoEvent(contaId, data));
+    }
+
+    @Transactional
+    public Lancamento atualizarLancamento(Long id, LancamentoDTO dto) {
+        Lancamento lancamentoExistente = lancamentoRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Lançamento não encontrado: " + id));
+
+        // Guarda os dados antigos para o caso de a data mudar
+        Long contaIdAntigo = lancamentoExistente.getConta().getId();
+        LocalDate dataAntiga = lancamentoExistente.getData();
+
+        Conta novaConta = contaRepository.findById(dto.getContaId())
+            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada: " + dto.getContaId()));
+
+        lancamentoExistente.setConta(novaConta);
+        lancamentoExistente.setData(dto.getData());
+        lancamentoExistente.setValor(dto.getValor());
+
+        Lancamento lancamentoAtualizado = lancamentoRepository.save(lancamentoExistente);
+
+        // Dispara evento para a data antiga para limpar/recalcular o saldo dela
+        eventPublisher.publishEvent(new LancamentoAlteradoEvent(contaIdAntigo, dataAntiga));
+
+        // Se a data mudou, também precisa recalcular a nova data
+        if (!dataAntiga.isEqual(dto.getData())) {
+            eventPublisher.publishEvent(new LancamentoAlteradoEvent(novaConta.getId(), dto.getData()));
+        }
+
+        return lancamentoAtualizado;
+    }
+}
+```
+
+### 6. Camada de API (Controller) e DTO
+
+**`dto/LancamentoDTO.java`**
+Um DTO (Data Transfer Object) para desacoplar a API da entidade.
+
+```java
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Data
+public class LancamentoDTO {
+    private Long contaId;
+    private LocalDate data;
+    private BigDecimal valor;
+}
+```
+
+**`controller/LancamentoController.java`**
+O endpoint para interagir com o sistema.
+
+```java
+import com.example.financeiro.dto.LancamentoDTO;
+import com.example.financeiro.entity.Lancamento;
+import com.example.financeiro.service.LancamentoService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/lancamentos")
+@RequiredArgsConstructor
+public class LancamentoController {
+
+    private final LancamentoService lancamentoService;
+
+    @PostMapping
+    public ResponseEntity<Lancamento> criar(@RequestBody LancamentoDTO dto) {
+        Lancamento novoLancamento = lancamentoService.criarLancamento(dto);
+        return new ResponseEntity<>(novoLancamento, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Lancamento> atualizar(@PathVariable Long id, @RequestBody LancamentoDTO dto) {
+        Lancamento lancamentoAtualizado = lancamentoService.atualizarLancamento(id, dto);
+        return ResponseEntity.ok(lancamentoAtualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        lancamentoService.deletarLancamento(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+```
+
+### 7. Dados Iniciais (Opcional, mas útil)
+
+**`resources/data.sql`**
+Para ter uma conta para testar assim que a aplicação iniciar.
+
+```sql
+INSERT INTO conta (apelido, saldo) VALUES ('Conta Corrente', 1000.00);
+INSERT INTO conta (apelido, saldo) VALUES ('Poupança', 5000.00);
+```
+
+**`resources/application.properties`**
+```properties
+# H2 Console
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+# JPA / Datasource
+spring.datasource.url=jdbc:h2:mem:financeirodb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=update
+```
+
+### Como Executar e Testar
+
+1.  Rode a aplicação.
+2.  Use uma ferramenta como Postman ou `curl` para fazer as chamadas:
+
+    **Criar um Lançamento:**
+    `POST http://localhost:8080/lancamentos`
+    Body (JSON):
+    ```json
+    {
+      "contaId": 1,
+      "data": "2024-05-20",
+      "valor": -50.00
+    }
+    ```
+
+3.  Após a chamada, verifique seu banco de dados (acessando `http://localhost:8080/h2-console`). Você verá que além do registro na tabela `LANCAMENTO`, um novo registro foi criado (ou atualizado) na tabela `SALDO` para a conta 1 na data '2024-05-20', com `saldo_anterior` de 1000.00 e `total_lancamento` de -50.00.
+
+4.  Crie outro lançamento para o mesmo dia e veja o registro de `SALDO` ser atualizado. Crie um para o dia seguinte e veja o `saldo_anterior` ser calculado corretamente a partir do saldo final do dia anterior.

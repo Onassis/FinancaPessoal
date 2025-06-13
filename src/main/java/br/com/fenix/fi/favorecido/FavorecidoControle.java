@@ -43,8 +43,10 @@ public class FavorecidoControle extends ControleAbstratoDTO<Favorecido,Favorecid
 	@ModelAttribute("contas")
 	@Cacheable(value="conta", sync = true)
 	public List<Option>  listaDeContas() {
-		   List<Option> options = contaRP.findOptionByTipoConta(TipoConta.CC); 
+		   List<Option> options = 
+				   // contaRP.findOptionByTipoConta(TipoConta.CC); 
 				   
+				    contaRP.findOption2() ;
 //				   contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC).stream()    
 //				.map(conta -> new Option(conta.getId(), conta.getAjuda()))
 //	            .collect(Collectors.toList());

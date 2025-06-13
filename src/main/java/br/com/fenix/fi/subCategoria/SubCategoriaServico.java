@@ -22,8 +22,8 @@ public class SubCategoriaServico extends ServicoAbstratoDTO<SubCategoria,SubCate
 	private SubCategoriaMapper converterSub;
 
 	
-	public SubCategoriaServico(EntityManagerFactory emf) {
-		super(emf);
+	public SubCategoriaServico() {
+		super();
 	}
 
 
