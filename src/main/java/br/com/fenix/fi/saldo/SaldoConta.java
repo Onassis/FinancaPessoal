@@ -25,7 +25,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="saldo_conta",
-		indexes = { @Index(name = "idx_saldo", columnList = "criado_por_id,data,conta_id", unique = true)})				   
+		indexes = { @Index(name = "idx_saldo", columnList = "criado_por_id,conta_id,data", unique = true)})				   
 public class SaldoConta extends EntidadeAuditavel<Long> {
 
 	

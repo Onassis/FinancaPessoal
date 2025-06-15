@@ -56,41 +56,41 @@ CREATE or REPLACE  view view_SaldoAtual  as
   		   where  c.conta_id  = a.conta_id  );
 
 CREATE or REPLACE  view view_TotalAnoMes   as             
-SELECT detalhe_lancamento.conta_lancamento_id,
-    detalhe_lancamento.criado_por_id,
-    detalhe_lancamento.ano,
-    detalhe_lancamento.mes,
+SELECT a.conta_lancamento_id,
+    a.criado_por_id,
+    a.ano,
+    a.mes,
     sum(
         CASE
-            WHEN detalhe_lancamento.tipo_lancamento::text = 'D'::text THEN detalhe_lancamento.valor
+            WHEN a.tipo_lancamento::text = 'D'::text THEN a.valor
             ELSE 0::numeric
         END) AS debito,
     sum(
         CASE
-            WHEN detalhe_lancamento.tipo_lancamento::text = 'C'::text THEN detalhe_lancamento.valor
+            WHEN a.tipo_lancamento::text = 'C'::text THEN a.valor
             ELSE 0::numeric
         END) AS credito,
-    sum(detalhe_lancamento.valor) AS total
-   FROM detalhe_lancamento
-  WHERE detalhe_lancamento.conta_lancamento_id IS NOT NULL AND detalhe_lancamento.conciliado = true
-  GROUP BY  detalhe_lancamento.conta_lancamento_id,
-            detalhe_lancamento.criado_por_id,
-            detalhe_lancamento.ano,
-            detalhe_lancamento.mes;
+    sum(a.valor) AS total
+   FROM detalhe_lancamento as a 
+  WHERE a.conta_lancamento_id IS NOT NULL AND a.conciliado = true
+  GROUP BY  a.conta_lancamento_id,
+            a.criado_por_id,
+            a.ano,
+            a.mes;
 /*
     View mostar o saldo Inicial , total realizado mes e saldo atual 
 */                
 CREATE or REPLACE  view view_SaldoMes   as 
 select  a.id as id, 
-		a.conta_id, a.ano,a.mes, a.data,
+		a.conta_id, a.ano,a.mes, 
+		a.data,
 		a.flag_compensacao,
 		a.saldo_inicial,
 		b.total,
         (a.saldo_inicial + b.total) as saldo_atual   
 from saldo_conta as a  
-left join view_TotalAnoMes as b on a.conta_id = b.conta_lancamento_id and
-a.ano = b.ano and a.mes = b.mes   
-order by a.ano = b.ano and a.mes = b.mes   
+left join view_TotalAnoMes as b on a.conta_id = b.conta_lancamento_id and a.ano = b.ano and a.mes = b.mes   
+order by a.conta_id, a.ano,a.mes   
 
                 
 /************************************************************************************************************************************************/

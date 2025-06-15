@@ -111,23 +111,14 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 
 	@Override
 	@Transactional(propagation = Propagation.NESTED)
-// Verifica se o usuario é o dono do registro	
 //	@PreAuthorize("#entidade.criadoPor.id == principal.id")
 	public T atualizar(T entidade)  throws Exception {	
-//		EntityTransaction tx = geradorTransacao();
-//		Session session = sessionFactory.openSession(); // (2)
 		try {				
-//			tx.begin();
-//			session.getTransaction().begin();
 			entidade = antesDeAlterar(entidade);
 			entidade =  getRp().saveAndFlush(entidade);
 			depoisDeSalvar(entidade);
-//			session.getTransaction().commit();
-
-//			tx.commit();
 		} catch (Exception e) {
-//			session.getTransaction().rollback();
-//			tx.rollback();
+
 			handleException(OperacaoDB.UPT,e);
 		}
 		return entidade;
@@ -136,14 +127,11 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	@Override
 	@Transactional(propagation = Propagation.NESTED)
 	public void excluirPorId(ID id)throws Exception {
-//		EntityTransaction tx = geradorTransacao();
 		try {				
-//			tx.begin();	
 			antesDeExcluir(id);
 			getRp().deleteById(id);
-//			tx.commit();
+			
 		} catch (Exception e) {
-//			tx.rollback();
 			handleException(OperacaoDB.DEL,e);
 		}
 	}
@@ -168,10 +156,15 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void depoisDeSalvar(T entidade) throws NegocioException {	
 	}
-
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void depoisDeAlterar(T entidade) throws NegocioException {	
+		
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void depoisDeAlterar(T entidade, DTO dto) throws NegocioException {	
 	}
 
 	@Override
@@ -209,7 +202,8 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 //			 Optional<T>  entidadeOp = buscarPorId(id).orElseThrow();
 			 T entidade = buscarPorId(id).orElseThrow();
 			 getConverter().updateEntity(dto,entidade); 
-			 entidade = atualizar(entidade);		
+			 entidade = atualizar(entidade);
+			 depoisDeAlterar(entidade, dto);
 			 depoisDeSalvar(entidade);
 //			 tx.commit();
 		

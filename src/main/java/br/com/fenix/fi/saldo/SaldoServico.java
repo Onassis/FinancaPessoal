@@ -31,24 +31,26 @@ public class SaldoServico {
 	
 	@Transactional(propagation = Propagation.REQUIRED) 
 	public void atualizaSaldo ( Conta conta, LocalDate data, BigDecimal valor ) {
+		
+		/* Verifica se a data é futura. Se for, não atualiza o saldo. */
 		if(data.isAfter(LocalDate.now())) {
 			return;
 		}
 		/* Data do Saldo mensal               */ 
 		LocalDate dataSaldo = LocalDate.of(data.getYear(), data.getMonth(), 1); 
 		
-		Optional<SaldoConta> saldoDia = saldoRP.findByContaAndData(conta,dataSaldo);
-
-		saldoRP.atualizaContaGeDataSaldo(conta.getId(), dataSaldo, valor);       
+		Optional<SaldoConta> saldoMes = saldoRP.findByContaAndData(conta,dataSaldo);
     	
-		if (saldoDia.isPresent()) { 
+		if (saldoMes.isPresent()) {
+			saldoRP.atualizaContaGeDataSaldo(conta.getId(), dataSaldo, valor);       
 			return; 
 		}
+		
 		BigDecimal saldoAnterior =  buscarSaldoFinalDiaAnterior(conta,dataSaldo); 
 		
 		SaldoConta  saldo = new SaldoConta(conta,dataSaldo,saldoAnterior) ;
 		saldoRP.save(saldo);
-		
+		saldoRP.atualizaContaGeDataSaldo(conta.getId(), dataSaldo, valor);       
 	}	
 	
     /**
@@ -56,44 +58,50 @@ public class SaldoServico {
      */
     private BigDecimal buscarSaldoFinalDiaAnterior(Conta conta, LocalDate data) {
     	
-        // Tenta encontrar o registro de Saldo mais recente ANTES da data atual
-        Optional<SaldoConta> ultimoSaldo = saldoRP.findByContaDataSaldoAnterior(UtilSerguranca.userId(),conta.getId() , data);
-
-        if (ultimoSaldo.isPresent()) {
-            SaldoConta saldo = ultimoSaldo.get();
-//            // A interpretação correta da regra é que o saldo final de um dia é o saldo anterior + movimentos.
-             return saldo.getSaldoInicial(); 
-             
-        }
-//            // Se não encontrou NENHUM registro de saldo anterior, usa o saldo inicial da CONTA.
+    	// Busca a data anterior do ultimo saldo registrado para a conta e data especificada.
+    	
+    	Optional<LocalDate> dataAnterior =  saldoRP.findUltimaDataSaldo(conta, data); 
+    	
+//
+    	if (dataAnterior.isEmpty()) {
+			// Se não encontrou nenhum saldo anterior, retorna o saldo inicial da conta.
+			return conta.getSaldo();
+    	}
+    	Optional<ISaldoMes>  saldoMesAnterior = saldoRP.findSaldosByContaByData(conta, dataAnterior.get());
+    	if (saldoMesAnterior	.isPresent()) {
+    		// Se encontrou um saldo anterior, retorna o saldo inicial desse registro.
+    		return saldoMesAnterior.get().getSaldoAtual();
+    	
+    	}
+    	
        return conta.getSaldo();
 //        
     }
-	public SaldoConta buscaSaldoAtualAnterior ( Conta conta, LocalDate data   )  { 
-		
-		Usuario usuario = UtilSerguranca.currentUser().get();
-	    Optional<SaldoConta> saldoAnterior = saldoRP
-	    					.findByContaDataSaldoAnterior(usuario.getId(),
-	    							conta.getId(),
-	    							data ) ;
-		if (!saldoAnterior.isEmpty()) {
-				return saldoAnterior.get();	
-		}
-		return null;	
-	}
-	public SaldoConta buscaSaldo ( Conta conta, LocalDate data   ) {
-		
-// Retorna saldo do dia 		
-//
-// Cria saldo do dia baseado no saldo Anterior 
-		
-		Usuario usuario = UtilSerguranca.currentUser().get();
-	    Optional<SaldoConta> saldoAntOp = saldoRP
-		    					.findByContaDataSaldoAnterior(usuario.getId(),
-		    							conta.getId(),
-		    							data ) ;
-       return null; 
-	}
+//	public SaldoConta buscaSaldoAtualAnterior ( Conta conta, LocalDate data   )  { 
+//		
+//		Usuario usuario = UtilSerguranca.currentUser().get();
+//	    Optional<SaldoConta> saldoAnterior = saldoRP
+//	    					.findByContaDataSaldoAnterior(usuario.getId(),
+//	    							conta.getId(),
+//	    							data ) ;
+//		if (!saldoAnterior.isEmpty()) {
+//				return saldoAnterior.get();	
+//		}
+//		return null;	
+//	}
+//	public SaldoConta buscaSaldo ( Conta conta, LocalDate data   ) {
+//		
+//// Retorna saldo do dia 		
+////
+//// Cria saldo do dia baseado no saldo Anterior 
+//		
+//		Usuario usuario = UtilSerguranca.currentUser().get();
+//	    Optional<SaldoConta> saldoAntOp = saldoRP
+//		    					.findByContaDataSaldoAnterior(usuario.getId(),
+//		    							conta.getId(),
+//		    							data ) ;
+//       return null; 
+//	}
     
 //	  /**
 //     * Recalcula o saldo para uma data específica e propaga a atualização para os dias subsequentes.

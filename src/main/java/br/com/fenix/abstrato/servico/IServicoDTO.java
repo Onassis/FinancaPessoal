@@ -25,6 +25,8 @@ public interface IServicoDTO<T, DTO, ID> extends IServico<T,ID> {
 //	T DTOtoEntidade(DTO dto, T entidade) throws NegocioException;
 	DTO buscaDTOPorId(ID id) ;
 	
+	void depoisDeAlterar(T entidade, DTO dto)  throws NegocioException;
+	
 	DTO criarDTO(DTO dto) throws Exception; 
 	DTO atualizarDTO(DTO dto) throws Exception;
 
