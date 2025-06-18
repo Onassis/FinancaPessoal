@@ -115,8 +115,8 @@ public class LancAuxServico {
 				 dataCartao,
 				 saldoIni);
 */				 
-		saldoRP.f_atualiza_saldo(lanc.getCriadoPor().getId(), lanc.getContaLanc().getId(),
-				lanc.getDataVenc(), lanc.getSaldoAnterior());			
+//		saldoRP.f_atualiza_saldo(lanc.getCriadoPor().getId(), lanc.getContaLanc().getId(),
+//				lanc.getDataVenc(), lanc.getSaldoAnterior());			
 	}				
 	public Coletor  processaCartao(Conta conta,String mesCarga,BigDecimal saldoIni,List<String> conteudo) {
 

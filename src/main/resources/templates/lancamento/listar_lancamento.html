@@ -21,17 +21,17 @@
 						<span>Lista de Lançamento</span></li>
 				</ul>
 			</div>
-<input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
-<label class="btn btn-secondary" for="option1">Checked</label>
-
-<input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
-<label class="btn btn-secondary" for="option2">Radio</label>
-
-<input type="radio" class="btn-check" name="options" id="option3" autocomplete="off" disabled>
-<label class="btn btn-secondary" for="option3">Disabled</label>
-
-<input type="radio" class="btn-check" name="options" id="option4" autocomplete="off">
-<label class="btn btn-secondary" for="option4">Radio</label>
+<li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
 			
 		    <a id="btnadd" class="btn btn-primary btn-md"
 				th:href="@{/lancamento/cadastrar/DB}" role="button"> <span

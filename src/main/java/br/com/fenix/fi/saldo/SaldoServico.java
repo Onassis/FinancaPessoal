@@ -33,11 +33,12 @@ public class SaldoServico {
 	public void atualizaSaldo ( Conta conta, LocalDate data, BigDecimal valor ) {
 		
 		/* Verifica se a data é futura. Se for, não atualiza o saldo. */
-		if(data.isAfter(LocalDate.now())) {
+		if(conta.isContaCorrente() && data.isAfter(LocalDate.now())) {
 			return;
 		}
-		/* Data do Saldo mensal               */ 
-		LocalDate dataSaldo = LocalDate.of(data.getYear(), data.getMonth(), 1); 
+		/* Data do Saldo mensal              LocalDate.of(data.getYear(), data.getMonth(), 1); */ 
+		LocalDate dataSaldo = conta.dataSaldoAnterior(data);
+				 
 		
 		Optional<SaldoConta> saldoMes = saldoRP.findByContaAndData(conta,dataSaldo);
     	
@@ -67,11 +68,12 @@ public class SaldoServico {
 			// Se não encontrou nenhum saldo anterior, retorna o saldo inicial da conta.
 			return conta.getSaldo();
     	}
-    	Optional<ISaldoMes>  saldoMesAnterior = saldoRP.findSaldosByContaByData(conta, dataAnterior.get());
-    	if (saldoMesAnterior	.isPresent()) {
-    		// Se encontrou um saldo anterior, retorna o saldo inicial desse registro.
+//    	List<SaldoContaView>  saldoMesAnterior = saldoRP.findSaldoMesByContaByData(conta.getId(), dataAnterior.get());
+    	Optional< ISaldoMes> saldoMesAnterior = saldoRP.findSaldoMesByContaByData(conta.getId(), dataAnterior.get());
+    	if (saldoMesAnterior.isPresent()) {
+//    		// Se encontrou um saldo anterior, retorna o saldo inicial desse registro.
     		return saldoMesAnterior.get().getSaldoAtual();
-    	
+//    	
     	}
     	
        return conta.getSaldo();

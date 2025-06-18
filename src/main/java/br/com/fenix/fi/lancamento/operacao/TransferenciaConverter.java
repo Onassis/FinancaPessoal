@@ -40,6 +40,7 @@ public class TransferenciaConverter implements Converter<Transferencia,Lancament
 	 			.conciliado(dto.isConciliado())
 	 			.tipoLancamento(TipoLancamento.D)
 	 			.build();
+		detalheLancamento.ajustaValor();
 		lancamento.addDatalheLancamento(detalheLancamento);
 		
 
@@ -56,6 +57,7 @@ public class TransferenciaConverter implements Converter<Transferencia,Lancament
 	 			.mes(data.getMonthValue())
 	 			.conciliado(dto.isConciliado())
 	 			.build();
+	 	detalheLancTransf.ajustaValor();	 	
 		lancamento.addDatalheLancamento(detalheLancTransf);
 		}
    return lancamento; 

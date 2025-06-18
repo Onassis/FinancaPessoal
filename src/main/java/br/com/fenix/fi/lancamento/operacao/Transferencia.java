@@ -19,6 +19,7 @@ public class Transferencia extends Lancamento {
 	
 	public Transferencia() {
 		super(TipoOperacao.TR);
+		
 	}
 	
 	public Transferencia(LancamentoDTO dto) {

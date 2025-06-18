@@ -55,22 +55,52 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
     @Query("SELECT MAX(s.data) FROM SaldoConta s WHERE s.conta = :conta AND s.data < :data")
     Optional<LocalDate> findUltimaDataSaldo(@Param("conta") Conta conta, @Param("data") LocalDate data);
     
+//  "    a.conta, " +
+//  "    a.ano as ano, " +
+//  "    a.mes as mes , " +
+//  "    a.flag_compensacao AS flagCompensacao, " +
+//  "    a.saldo_inicial AS saldoInicial, " +
+//  "    a.total as total," +
+//  "new br.fenix.fi.saldo.SaldoContaView ( " +
+//  ") " +
+///            "    a.data as data, " +
     
-    @Query(value = "SELECT " +
-            "    a.id, " +
-            "    a.conta_id AS contaId, " +
-            "    a.ano, " +
-            "    a.mes, " +
-            "    a.data, " +
-            "    a.flag_compensacao AS flagCompensacao, " +
-            "    a.saldo_inicial AS saldoInicial, " +
-            "    b.total, " +
-            "    a.saldo_inicial AS saldoInicial " +
-            "   FROM view_saldomes a " + 
-            "   where a.conta_id = :conta and data = :data " ,            
-            nativeQuery = true)
-	Optional<ISaldoMes> findSaldosByContaByData(Conta conta, LocalDate data);
+    @Query(value = 
+    		"SELECT a.id , " + 
+    	     "a.contaid as contaId," +
+             "a.data as data," +
+             "a.ano as ano," +
+             "a.mes as mes," + 
+    		 "a.saldoinicial as saldoInicial,  " +
+    		 "a.total as total, " +
+    		 "a.flagcompensacao as flagCompensacao, " +
+    	     "a.saldoatual as saldoAtual " +
+    		"FROM view_saldomes a " + 
+            "where a.contaid = :conta and a.data = :data "
+            , nativeQuery = true
+            )
+    Optional<ISaldoMes> findSaldoMesByContaByData(@Param("conta")  Long conta, @Param("data") LocalDate data);
+//	List< ISaldoMes> findSaldoMesByContaByData(Conta conta, LocalDate data);
     
+
+
+//    // Ou usando JPQL
+//    @Query("SELECT s FROM SaldoContaView s WHERE s.contaId = :contaId AND data = :data")
+//    SaldoContaView obterSaldoContaJPQL(@Param("contaId") Conta conta, @Param("data") LocalDate data);
+
+     
+    
+  @Transactional(propagation = Propagation.MANDATORY) // Operações de modificação devem ser transacionais.
+  @Modifying // Essencial para indicar que esta é uma query de UPDATE, DELETE ou INSERT.
+  @Query("UPDATE SaldoConta sc " +
+         "SET sc.saldoInicial = sc.saldoInicial + :valorAdicional " +
+         "WHERE sc.conta.id = :contaId AND sc.data > :dataReferencia and flag_compensacao = false" )
+  int atualizaContaGeDataSaldo(
+          @Param("contaId") Long contaId,
+          @Param("dataReferencia") LocalDate dataReferencia,
+          @Param("valorAdicional") BigDecimal valorAdicional
+          );
+}
     
 //	@Query(value= "SELECT  max(data) as data FROM saldo_conta where criado_por_id = :usuario and conta_id = :conta  and data < :data")   
 //	LocalDate findMaxData(Long usuario, Long conta,LocalDate data);
@@ -102,16 +132,7 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
 //	@Query("from SaldoConta s where s.conta = ?1  and s.data >= ?2 and s.criadoPor.id = ?#{ principal.id} ")
 //	public List<SaldoConta> findByContaGeData(); 
     
-    @Transactional(propagation = Propagation.MANDATORY) // Operações de modificação devem ser transacionais.
-    @Modifying // Essencial para indicar que esta é uma query de UPDATE, DELETE ou INSERT.
-    @Query("UPDATE SaldoConta sc " +
-           "SET sc.saldoInicial = sc.saldoInicial + :valorAdicional " +
-           "WHERE sc.conta.id = :contaId AND sc.data > :dataReferencia and flag_compensacao = false" )
-    int atualizaContaGeDataSaldo(
-            @Param("contaId") Long contaId,
-            @Param("dataReferencia") LocalDate dataReferencia,
-            @Param("valorAdicional") BigDecimal valorAdicional
-            );
+
 	    
 //    @Modifying
 //    @Transactional(propagation = Propagation.MANDATORY)
@@ -120,5 +141,5 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
 //			 ,nativeQuery = true)	
 //	public void atualizaContaGeDataSaldo(Long conta, LocalDate data, BigDecimal valor);
 ////@Param("conta") Long conta,@Param("data") LocalDate data,			
-}
+
  

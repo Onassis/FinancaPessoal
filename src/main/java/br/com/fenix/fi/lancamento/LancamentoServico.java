@@ -63,9 +63,22 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 	}
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
+	public Lancamento antesDeSalvar  (Lancamento entidade) throws NegocioException { 
+		if (entidade.isTransferencia()) { 
+			DetalheLancamento detalhe = entidade.getDetalheLancamento().get(0);
+			if (detalhe.getContaLancamento().equals(detalhe.getContaTransferencia()))  {
+				 throw new NegocioException("Transferência não pode ser para a mesma conta");
+			}
+		}
+		return entidade;
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.MANDATORY)
 	public void depoisDeSalvar(Lancamento entidade) throws NegocioException {
-		DetalheLancamento detalhe = entidade.getDetalheLancamento().get(0); 
-		saldoSC.atualizaSaldo( detalhe.getContaLancamento(), detalhe.getDataVenc(),detalhe.getValor());
+		for (DetalheLancamento detalhe : entidade.getDetalheLancamento()) { 
+			saldoSC.atualizaSaldo( detalhe.getContaLancamento(), detalhe.getDataVenc(),detalhe.getValor()) ;
+		}
 	}
 
 	@Override

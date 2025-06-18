@@ -29,7 +29,7 @@
 			 <h5 class="card-title">Cadastro de Lançamento</h5>
 			<div th:replace="~{fragments/alert}"></div>	 
 		
-	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST">			
+	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST" class="row g-3 needs-validation">			
 	    	 <input type="hidden" id="tipoOperacao" th:field="*{tipoOperacao}" th:value='DB'/>  	
    			
    			<div th:if="${lancamentoDTO.new}"> 

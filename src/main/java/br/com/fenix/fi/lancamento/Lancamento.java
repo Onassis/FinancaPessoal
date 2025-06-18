@@ -78,8 +78,9 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     protected int nroPrestacao;
     protected int nroInicialPrestacao;
     
-    @Column(nullable = true)
-    protected boolean transferencia=false; 
+//    @Column(nullable = true)
+//    @Transient
+//    private boolean transferencia=false; 
     
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
 	protected BigDecimal total;
@@ -115,6 +116,10 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 		this.tipoOperacao = tipoOperacao;
 		this.total = valor; 
 	    //detalheLancamento = new ArrayList<DetalheLancamento>() ;
+	}
+	public Boolean isTransferencia() {
+		return tipoOperacao == TipoOperacao.TR;
+		
 	}
 	public Optional<DetalheLancamento> filtroPorDetalheId (Long id) { 
 	  return    detalheLancamento.stream()	

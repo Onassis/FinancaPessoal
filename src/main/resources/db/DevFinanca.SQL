@@ -79,18 +79,20 @@ SELECT a.conta_lancamento_id,
             a.mes;
 /*
     View mostar o saldo Inicial , total realizado mes e saldo atual 
-*/                
-CREATE or REPLACE  view view_SaldoMes   as 
+*/     
+DROP VIEW view_SaldoMes; 
+           
+CREATE  view view_SaldoMes   as 
 select  a.id as id, 
-		a.conta_id, a.ano,a.mes, 
+		a.conta_id as contaId, a.ano,a.mes, 
 		a.data,
-		a.flag_compensacao,
-		a.saldo_inicial,
+		a.flag_compensacao as flagCompensacao,
+		a.saldo_inicial as saldoInicial,
 		b.total,
-        (a.saldo_inicial + b.total) as saldo_atual   
+        (a.saldo_inicial + b.total) as saldoAtual   
 from saldo_conta as a  
 left join view_TotalAnoMes as b on a.conta_id = b.conta_lancamento_id and a.ano = b.ano and a.mes = b.mes   
-order by a.conta_id, a.ano,a.mes   
+  
 
                 
 /************************************************************************************************************************************************/
