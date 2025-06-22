@@ -31,7 +31,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name="detalheLancamento", 
 		indexes = { 
 		@Index(name = "idx_dataPesquisa", columnList = "criado_por_id,dataVenc", unique = false) ,
-		@Index(name = "idx_AnoMes", columnList = "criado_por_id,Ano,Mes,conta_lancamento_id", unique = false) })
+		@Index(name = "idx_ContaAnoMes", columnList = "conta_lancamento_id,Ano,Mes", unique = false) })
 
 @Data
 @EqualsAndHashCode(callSuper =true)

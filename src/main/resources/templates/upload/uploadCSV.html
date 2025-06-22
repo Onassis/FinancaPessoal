@@ -93,7 +93,7 @@ function upload2()
 		{
 	   	    type:'POST',			
 			contentType : "application/json; charset=utf-8",
-			url : 'upload',
+			url : 'upload/cartao',
 			body: formData,
 			cache : false,
 		    success : function(result) {
@@ -112,7 +112,7 @@ async function uploadFile() {
 
   formData.append("file", fileupload.files[0]);
   
-  let response = await fetch('upload', {
+  let response = await fetch('upload/cartao', {
     method: "POST", 
     body: formData
   }); 

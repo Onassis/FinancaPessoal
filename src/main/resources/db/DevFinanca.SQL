@@ -57,7 +57,6 @@ CREATE or REPLACE  view view_SaldoAtual  as
 
 CREATE or REPLACE  view view_TotalAnoMes   as             
 SELECT a.conta_lancamento_id,
-    a.criado_por_id,
     a.ano,
     a.mes,
     sum(
@@ -74,7 +73,6 @@ SELECT a.conta_lancamento_id,
    FROM detalhe_lancamento as a 
   WHERE a.conta_lancamento_id IS NOT NULL AND a.conciliado = true
   GROUP BY  a.conta_lancamento_id,
-            a.criado_por_id,
             a.ano,
             a.mes;
 /*

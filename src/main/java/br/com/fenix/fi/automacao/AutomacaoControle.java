@@ -24,6 +24,7 @@ import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.dominio.modelo.Option;
 import br.com.fenix.fi.categoria.CategoriaDTO;
+import br.com.fenix.fi.categoria.CategoriaRepositorio;
 import br.com.fenix.fi.categoria.CategoriaServico;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
@@ -32,6 +33,7 @@ import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.favorecido.FavorecidoServico;
 import br.com.fenix.fi.moeda.MoedaRepositorio;
+import br.com.fenix.fi.subCategoria.SubCategoriaRepositorio;
 
 @Controller
 @RequestMapping("/automacao")
@@ -40,7 +42,8 @@ public class AutomacaoControle  extends ControleAbstrato<AutomacaoServico,Automa
 	@Autowired
 	FavorecidoServico favorecidoSC;
 	@Autowired
-	CategoriaServico categoriaSC;
+	SubCategoriaRepositorio subCategoriaRP;
+	
 	@Autowired
 	ContaServico contaSC;
 
@@ -62,9 +65,7 @@ public class AutomacaoControle  extends ControleAbstrato<AutomacaoServico,Automa
 	}	
    @ModelAttribute("categoriasDTO")	
 	public List<Option>  listaDeCategorias() {
-	  //TODO: verificar se o retorno é correto
-	   
-	   return null;
-//	      return categoriaSC.listaDeCategoriasOpt(null);
+
+	      return subCategoriaRP.findAllOption();
 	}	
 }

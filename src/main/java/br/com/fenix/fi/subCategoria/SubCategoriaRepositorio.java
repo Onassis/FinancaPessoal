@@ -31,4 +31,6 @@ public interface SubCategoriaRepositorio extends JpaRepositoryAuditavel<SubCateg
 	  List<Option> findOptionByTipoCategoriaOrderByDescricaoAsc(TipoCategoria  tipoCategoria);
 	  @Query("select new br.com.fenix.dominio.modelo.Option(s.id, c.descricao || '->' ||  s.descricao ) from Categoria c LEFT JOIN  c.subCategoria s where c.criadoPor.id = ?#{ principal?.id } and c.tipoLancamento = ?1 order by c.descricao,s.descricao" )
 	  List<Option> findOptionByTipoCategoriaOrderByDescricaoAsc(TipoLancamento  tipoLancamento);
+	  @Query("select new br.com.fenix.dominio.modelo.Option(s.id, c.descricao || '->' ||  s.descricao ) from Categoria c LEFT JOIN  c.subCategoria s where c.criadoPor.id = ?#{ principal?.id } order by c.descricao,s.descricao" )
+	  List<Option> findAllOption();
 }

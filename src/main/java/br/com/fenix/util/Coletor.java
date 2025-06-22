@@ -112,16 +112,20 @@ public class Coletor {
            	 	    valor = BigDecimal.ZERO;                   	
             	}             		    
           	    lanc.setLancamentoValor(valor.multiply( new BigDecimal(prestacaoFinal)));
-          	    
-          	    
+         	    
           	    if (valor.compareTo(BigDecimal.ZERO) > 0) {
-          	      lanc.setTipoLancamento(TipoLancamento.D); 
-                  lanc.setLancamentoTipoOperacao(TipoOperacao.DB); 
-          	      }
-          	      else {
+          	    	lanc.setTipoLancamento(TipoLancamento.D); 
+          	    	if (prestacaoFinal > 1) {
+          	    		lanc.setLancamentoTipoOperacao(TipoOperacao.CP);
+          	    	} else {
+						lanc.setLancamentoTipoOperacao(TipoOperacao.DB);
+					}
+                  
+          	    } else {
               	      lanc.setTipoLancamento(TipoLancamento.C);          	    	  
                       lanc.setLancamentoTipoOperacao(TipoOperacao.CR); 
-          	      }
+          	    }
+     
 
                 lanc.setValor(valor); 
                 scanner.close();

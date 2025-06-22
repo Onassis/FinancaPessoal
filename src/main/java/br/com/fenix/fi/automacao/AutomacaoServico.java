@@ -55,9 +55,11 @@ public class AutomacaoServico  extends ServicoAbstrato<Automacao,Long> implement
 
 			System.out.println("Categoria" + auto.getSubCategoria().getDescricao());
 			for (String criterio : auto.getCriterios()) { 
- 				System.out.println("criterio" + criterio);
+ 				
  				criterio = Singularizer.converterParaSingular(criterio);
 				normalizedTexto = TextProcessor.normalizaTexto(criterio);
+				System.out.println("criterio" + criterio);
+				System.out.println("normalizedTexto" + normalizedTexto);
 			    automacaoMap.put(normalizedTexto.hashCode(), auto);	
 			}			
 		}		
