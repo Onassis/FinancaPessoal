@@ -28,6 +28,8 @@ import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
@@ -35,6 +37,8 @@ import lombok.ToString;
 @Entity
 @Table(name="LancAux" , indexes = {@Index(name = "idx_usuario", columnList = "criado_por_id")})
 @Data
+@AllArgsConstructor
+@Builder
 @ToString(callSuper = true)
 public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<LancAux> { 
 
@@ -57,13 +61,13 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	
 	
 	@Column(length = 80)	
-	private String lancamentoInformacao;
+	private String informacao;
 	
-    private String lancamentoObservacao;	
+    private String observacao;	
     
 	@Column(columnDefinition = "DATE")	
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
-    private LocalDate lancamentoDataDoc;
+    private LocalDate dataDoc;
     
 //    private Long  id;
 	
@@ -73,12 +77,12 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
     
     @Column(length = 2, nullable =  false)
     @Enumerated(EnumType.STRING)
-	private TipoOperacao lancamentoTipoOperacao;
+	private TipoOperacao tipoOperacao;
     
    @JsonDeserialize(using = FavorecidoDeserializer.class)        
    @JsonBackReference
    @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER ,  optional = true)
-    private Favorecido lancamentoFavorecido;
+    private Favorecido favorecido;
         
   
     @JsonDeserialize(using = ContaDeserializer.class)      
@@ -94,7 +98,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
     
     @JsonDeserialize(using = SubCategoriaDeserializer.class)  
 	@ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER ,  optional = true)	
-    private SubCategoria lancamentoSubCategoria; 
+    private SubCategoria subCategoria; 
     
  //   @JsonIgnore
  //   @ReadOnlyProperty
@@ -105,14 +109,14 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
     private LocalDate dataVenc;
     
     @Column(nullable = true)
-    private int lancamentoNroPrestacao=1;
+    private int nroPrestacao=1;
     
     @Column(nullable = true)
-    private int lancamentoNroInicialPrestacao=1 ;
+    private int nroInicialPrestacao=1 ;
     
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
-	private BigDecimal lancamentoTotal;
+	private BigDecimal total;
 	
 	
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
@@ -141,38 +145,38 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	public LancAux() {
 		super();
 		this.valor = new BigDecimal(0); 
-		this.lancamentoTotal = new BigDecimal(0); 
+		this.total = new BigDecimal(0); 
 		this.credito = new BigDecimal(0);
 		this.debito = new BigDecimal(0);
 		this.saldo = new BigDecimal(0); 
 		
-		this.lancamentoNroInicialPrestacao = 1; 
-		this.lancamentoNroPrestacao = 1 ;
+		this.nroInicialPrestacao = 1; 
+		this.nroPrestacao = 1 ;
 		this.conciliado = true;
 	}
 	
 	public LancAux(Conta conta) {
 		super();
 		this.valor = new BigDecimal(0); 
-		this.lancamentoTotal = new BigDecimal(0); 
+		this.total = new BigDecimal(0); 
 		this.credito = new BigDecimal(0);
 		this.debito = new BigDecimal(0);
 		this.saldo = new BigDecimal(0); 
 		this.contaLanc = conta;
-		this.lancamentoNroInicialPrestacao = 1; 
-		this.lancamentoNroPrestacao = 1 ; 
+		this.nroInicialPrestacao = 1; 
+		this.nroPrestacao = 1 ; 
 		this.conciliado = true;
 	}
 	 public String prestacao() {
 		 String sPrestacao; 
-		 sPrestacao = String.format("%02d",lancamentoNroInicialPrestacao);
+		 sPrestacao = String.format("%02d",nroInicialPrestacao);
 		 sPrestacao = sPrestacao.concat("/");
-		 sPrestacao = sPrestacao.concat(String.format("%02d",lancamentoNroPrestacao));
+		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
 		 return sPrestacao; 
 	 }
 	 
 	 public boolean hasCriterio(String criterio) { 
-		 return lancamentoInformacao.toUpperCase().contains(criterio.toUpperCase());
+		 return informacao.toUpperCase().contains(criterio.toUpperCase());
 	 }
 /*	public void setVencSubCategoria( SubCategoria subCategoria ) {
 		this.lancamentoSubCategoria = subCategoria; 
@@ -181,8 +185,8 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 */	
 	
 	 public void setLancamentoValor( BigDecimal valor) { 
-	    	this.lancamentoTotal = acertaSinal(valor); 
-	    	this.valor = lancamentoTotal.divide(new BigDecimal(lancamentoNroPrestacao));    	
+	    	this.total = acertaSinal(valor); 
+	    	this.valor = total.divide(new BigDecimal(this.nroPrestacao));    	
 	 }
 	 /*
 	  * Acerta o sinal conforme se Credito e Debito 

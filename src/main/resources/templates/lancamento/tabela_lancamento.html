@@ -5,11 +5,10 @@
 		<div th:case="*">
 			<div class="table-responsive">				
 				<table class="table table-striped table-hover table-sm">		
-					<thead>
-						<th>
+					<th>
 							<th>Dt.Venc</th>							
 							<th>Conta</th>							
-							<th>Observacao</th>
+							<th>Informação</th>
 							<th>Categoria</th>
 							<th>D/C</th>
 							<th>Prestação</th>
@@ -20,15 +19,13 @@
 							<th><i class="icon_cogs"></i> Ação</th>
 						</tr>		
 			<tbody>
-				<tr th:each="l : ${lancamentoDTO}">
-						<td th:text="${l.lancamentoId}">ido</td>
-					<td th:text="${l.detalheLancamentoId}">detalhe</td> 		 		
+				<tr th:each="l : ${lancamentoDTO}">		 		
 					<td th:text="${#temporals.format(l.dataVenc, 'dd/MM/yyyy')}">2017/08/14</td>
 					<td th:text="${l?.contaLancamento?.getApelido()}">Conta lancamento</td>	
-					<td th:text="${l.observacao}">Observação</td> 					
+					<td th:text="${l?.informacao}">Informação</td> 					
 					<td th:text="${l?.SubCategoria?.getDescricao()}">Categorial</td>
 					<td th:text="${l?.tipoLancamento}">Tipo Lancamento</td>				
-					<td th:text="${l?.prestacao}">Prestação</td>					
+					<td th:text="${l?.prestacaoAtual}">Prestação</td>					
 					<td th:text="${l?.Favorecido?.getNome()}">Favorecido</td>
 					<td th:text="${#temporals.format(l.DataDoc, 'dd/MM/yyyy')}">2017/08/14</td>					 			
 					<td th:text="${l?.conciliado}" align="center">Concialiado lancamento</td>	
@@ -48,23 +45,5 @@
 		</div>
 	</div>
 </table>
-	<script>
-/* This script filters the table based on the input in the search box */	
-$(document).ready(function () {
-$("#Search").on("keyup", function () {
-var value = $(this).val().toLowerCase();
-$("table tbody tr").filter(function () {
-$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-});
- 
-// Show the 'No result' row if there are no matching rows
-var noResultRow = $("tr.warning.no-result");
-if ($("table tbody tr:visible").length === 0) {
-noResultRow.show();
-} else {
-noResultRow.hide();
-}
-});
-});
-</script>
+<script th:src="@{/js/search.js}"></script>
 </div>

@@ -1,3 +1,16 @@
+// ======================================================================
+// FUNÇÃO AUXILIAR PARA REMOVER ACENTOS
+// Esta função é a chave para a nova funcionalidade.
+// ======================================================================
+function removerAcentos(str) {
+    if (str === null || str === undefined) {
+        return "";
+    }
+    // O método normalize('NFD') decompõe os caracteres acentuados.
+    // Ex: "São" vira "S" + "a" + "̃" (acento til) + "o"
+    // O regex /[\u0300-\u036f]/g remove todos os diacríticos (acentos) combinados.
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
 function normalizeUrl(input) {
 		// Normalizar para remover acentos
         const normalized = input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");

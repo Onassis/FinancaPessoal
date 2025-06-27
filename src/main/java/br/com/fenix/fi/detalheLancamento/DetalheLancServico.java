@@ -137,7 +137,7 @@ return null;
     lancamentos  = DtlancamentoRP.
     		findbyContaAndByDataVencandByValor (
     					lancDTO.getContaDestino(), 
-    					lancDTO.getLancamentoDataDoc(), lancDTO.getValor());
+    					lancDTO.getDataDoc(), lancDTO.getValor());
     
 	for (DetalheLancamento lancDet  : lancamentos  ) {		
 			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 			
@@ -147,12 +147,12 @@ return null;
 		}
      lancamentos  = DtlancamentoRP.
     		 findbyDtVencBetweenAndByValor (
-    				    lancDTO.getLancamentoDataDoc().minusDays(30),
-    					lancDTO.getLancamentoDataDoc().plusDays(30), lancDTO.getValor());
+    				    lancDTO.getDataDoc().minusDays(30),
+    					lancDTO.getDataDoc().plusDays(30), lancDTO.getValor());
     
      
      lancOpt = lancamentos.stream()
-    		 		.filter(e -> e.getDataVenc().equals(lancDTO.getLancamentoDataDoc()))
+    		 		.filter(e -> e.getDataVenc().equals(lancDTO.getDataDoc()))
     		 			.findFirst();
      
      if (lancOpt.isPresent()) {

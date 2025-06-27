@@ -53,9 +53,9 @@
 						</tr>		
 					<tbody>
 						<tr th:each="l : ${lancamentosDTO}">
-							<td th:text="${#temporals.format(l?.lancamentoDataDoc, 'dd/MM/yyyy')}">2017/08/14</td>		
-							<td th:text="${l?.lancamentoInformacao}">Informação</td> 											
-							<td th:text="${l?.lancamentoSubCategoria?.getDescricao()}">Categorial</td>	
+							<td th:text="${#temporals.format(l?.dataDoc, 'dd/MM/yyyy')}">2017/08/14</td>		
+							<td th:text="${l?.informacao}">Informação</td> 											
+							<td th:text="${l?.subCategoria?.getDescricao()}">Categorial</td>	
 							<td th:text="${l?.TipoLancamento?.getDescricao()}">Lançamento</td>		
 							<td th:text="${l?.prestacao()}">01/03</td>		
 							<td th:text="${#temporals.format(l?.dataVenc, 'dd/MM/yyyy')}">>Lançamento</td>															
@@ -69,6 +69,8 @@
 				</table>
 			</div>
 		</div>
+	
 </div>
+	<script th:src="@{/js/search.js}"></script>
 </main>  
 </html>

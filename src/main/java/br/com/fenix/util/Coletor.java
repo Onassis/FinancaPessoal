@@ -75,7 +75,7 @@ public class Coletor {
            		System.out.println(tag);          		
                	LocalDate date = LocalDate.parse(tag, formatter);
            
-                lanc.setLancamentoDataDoc(date) ;
+                lanc.setDataDoc(date) ;
                 
                 lanc.setDataVenc(dataCartao) ; 
 
@@ -84,7 +84,7 @@ public class Coletor {
             	prestacaoFinal = 1;
             	
                 tag = scanner.next();     
-                lanc.setLancamentoInformacao(tag); 
+                lanc.setInformacao(tag); 
                 
                 int tamanho =  tag.length();
                 try {
@@ -99,8 +99,8 @@ public class Coletor {
                 		prestacaoIni   = 1;
                        	prestacaoFinal = 1;
                 	}             		               
-                lanc.setLancamentoNroInicialPrestacao(prestacaoIni);
-                lanc.setLancamentoNroPrestacao(prestacaoFinal);
+                lanc.setNroInicialPrestacao(prestacaoIni);
+                lanc.setNroPrestacao(prestacaoFinal);
                 
           		tag = scanner.next();
           		tag = tag.replace("R$", "");
@@ -110,23 +110,22 @@ public class Coletor {
               	     valor = new BigDecimal( decimalFormat.parse(tag).toString());           	 		
            	 	} catch (Exception e){    
            	 	    valor = BigDecimal.ZERO;                   	
-            	}             		    
+            	}    
+           	 	
           	    lanc.setLancamentoValor(valor.multiply( new BigDecimal(prestacaoFinal)));
-         	    
-          	    if (valor.compareTo(BigDecimal.ZERO) > 0) {
-          	    	lanc.setTipoLancamento(TipoLancamento.D); 
-          	    	if (prestacaoFinal > 1) {
-          	    		lanc.setLancamentoTipoOperacao(TipoOperacao.CP);
-          	    	} else {
-						lanc.setLancamentoTipoOperacao(TipoOperacao.DB);
-					}
-                  
-          	    } else {
-              	      lanc.setTipoLancamento(TipoLancamento.C);          	    	  
-                      lanc.setLancamentoTipoOperacao(TipoOperacao.CR); 
-          	    }
-     
 
+          	    lanc.setTipoOperacao(TipoOperacao.DB); 
+    			lanc.setTipoLancamento(TipoLancamento.D);      	    		
+          	    
+          	  	if (prestacaoFinal > 1) {
+      	    		lanc.setTipoOperacao(TipoOperacao.CP);
+      	    	} 
+          	  	
+          	  	if (valor.compareTo(BigDecimal.ZERO) < 0) {
+      	    		lanc.setTipoLancamento(TipoLancamento.C);          	    	  
+      	    		lanc.setTipoOperacao(TipoOperacao.CR);
+      	    	}
+          	    
                 lanc.setValor(valor); 
                 scanner.close();
                 lancamentos.add(lanc);              
@@ -139,7 +138,7 @@ public class Coletor {
 		   BigDecimal saldoAnterior; 
 		   
 			openTags.add(tag); 
-			
+			System.out.println(tag.getTagNome()+ " : " + tag.getTagValor() );
          	switch (tag.getTagNome()) {
 	        	case "STMTTRN"    : {   
 	        							lancamentos.add(new LancAux(conta));
@@ -150,17 +149,17 @@ public class Coletor {
 	        	case "TRNTYPE"    : System.out.println(tag.getTagValor() );
 	        						if (tag.getTagValor().equals("CREDIT")) { 
 	        							UltimoLancamento().setTipoLancamento(TipoLancamento.C); 
-	        							UltimoLancamento().setLancamentoTipoOperacao(TipoOperacao.CR);
+	        							UltimoLancamento().setTipoOperacao(TipoOperacao.CR);
 	        						}	
 	        						else {
 	        							
 	        							UltimoLancamento().setTipoLancamento(TipoLancamento.D);
-	        							UltimoLancamento().setLancamentoTipoOperacao(TipoOperacao.DB);
+	        							UltimoLancamento().setTipoOperacao(TipoOperacao.DB);
 	        						}
 	        						
 	        						break;
 	    		case "DTPOSTED"  : UltimoLancamento().setDataVenc(tag.getTagValorDate());
-	    						   UltimoLancamento().setLancamentoDataDoc(tag.getTagValorDate());
+	    						   UltimoLancamento().setDataDoc(tag.getTagValorDate());
 	    						   UltimoLancamento().setConciliado(true);
 	    						   break;
 
@@ -173,7 +172,7 @@ public class Coletor {
 	    			 			break;
 	    		// 	 ID da transação do banco			
 	    		case "FITID"     : UltimoLancamento().setChaveBanco(tag.getTagValor()); break;	    		
-	    		case "MEMO" 	 : UltimoLancamento().setLancamentoInformacao(tag.getTagValor()); break;
+	    		case "MEMO" 	 : UltimoLancamento().setInformacao(tag.getTagValor()); break;
 	    		// Saldo final
 	    		case "BALAMT"    : 
 	    						this.saldoFinal = tag.getTagValorBigDecimal();
@@ -201,7 +200,7 @@ public class Coletor {
 
 	public LancAux UltimoLancamento() {
         if (lancamentos.size() == 0) {
-            return null;
+            return new LancAux();
         } else {
             return lancamentos.get(lancamentos.size() - 1);
         }

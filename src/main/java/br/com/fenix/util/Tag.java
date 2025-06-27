@@ -11,22 +11,19 @@ public class Tag {
 	
 	private String tagNome=""; 
 	private String tagValor="";
-	public String getTagNome() {
-		return tagNome;
-	}
+
 	public Tag() {
 		super();
-		// TODO Auto-generated constructor stub
-	     tagNome=""; 
-		 tagValor="";
-		
+//	    tagNome=""; 
+//	    tagValor="";		
 	}
 	
 	public Tag(String textoLinha) {
 		super();
-        tagNome=""; 
-	   tagValor="";
-
+//         tagNome=""; 
+//    	   tagValor="";
+        textoLinha = TextProcessor.removeEspaco(textoLinha); 
+        
 		int close = textoLinha.indexOf(">", 0);
 		if (close > 0 ) {
 			this.tagNome = textoLinha.substring(1, close);
@@ -37,6 +34,9 @@ public class Tag {
 		this.tagNome = tagNome;
 	}
 
+	public String getTagNome() {
+		return tagNome;
+	}
 	
 	public void setTagValor(String tagValor) {
 		this.tagValor = tagValor.toUpperCase();

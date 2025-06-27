@@ -23,7 +23,7 @@ public class TextProcessor {
                      .collect(Collectors.joining(" "));
     }
     
-    private static String removeEspaco(String texto) {
+    public static String removeEspaco(String texto) {
     	return texto.trim().replaceAll("\\s+", " ");
     }
     /**

@@ -5,6 +5,7 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
+import br.com.fenix.fi.upload.LancAux;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -27,6 +28,13 @@ public class Credito extends Lancamento {
 		this.nroInicialPrestacao  = 1 ; 
 		this.nroPrestacao = 1;
 	}
+	public Credito(LancAux lancAux) {
+		super(lancAux);
+		this.tipoOperacao = TipoOperacao.CP;
+		this.nroInicialPrestacao  = 1 ; 
+		this.nroPrestacao = 1;
+	}
+
 	@Override
 	public void addDatalheLancamento(DetalheLancamento detalheLac) {
 		detalheLac.setTipoLancamento(TipoLancamento.C);	

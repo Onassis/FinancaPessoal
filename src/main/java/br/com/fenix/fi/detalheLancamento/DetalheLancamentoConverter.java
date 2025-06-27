@@ -38,7 +38,6 @@ public class DetalheLancamentoConverter  implements Converter<DetalheLancamento,
 	    lanc.setFavorecido(dto.getFavorecido()) ;
 	    lanc.setSubCategoria(dto.getSubCategoria()); 
 	    lanc.setInformacao(dto.getInformacao()); 
-	    lanc.setObservacao(dto.getObservacao());
 	    lanc.setDataDoc(dto.getDataDoc());	   
 	}
 	

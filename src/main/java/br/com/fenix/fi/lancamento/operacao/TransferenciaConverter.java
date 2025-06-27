@@ -68,7 +68,6 @@ public class TransferenciaConverter implements Converter<Transferencia,Lancament
 		      entity.setFavorecido(dto.getFavorecido()) ;
 		      entity.setSubCategoria(dto.getSubCategoria()); 
 		      entity.setInformacao(dto.getInformacao()); 
-		      entity.setObservacao(dto.getObservacao());
 		      entity.setDataDoc(dto.getDataDoc());
 		      entity.setTotal(dto.getTotal());
 		      

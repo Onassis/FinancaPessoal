@@ -49,7 +49,6 @@ public class CreditoConverter implements Converter<Credito,LancamentoDTO> {
 		      entity.setFavorecido(dto.getFavorecido()) ;
 		      entity.setSubCategoria(dto.getSubCategoria()); 
 		      entity.setInformacao(dto.getInformacao()); 
-		      entity.setObservacao(dto.getObservacao());
 		      entity.setDataDoc(dto.getDataDoc());
 		      entity.setTotal(dto.getTotal());
 		      DetalheLancamento detLanc = entity.getDetalheLancamento().get(0);

@@ -70,8 +70,8 @@
 					 	</tr>
 					 	<tr>  
 					    	<td colspan="8"> Total </td>
-							<td align ="right" colspan="1" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO.![credito]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
-							<td align ="right" colspan="1" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO.![debito]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        							    	 
+							<td align ="right" colspan="1" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO?.![credito]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
+							<td align ="right" colspan="1" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentosDTO?.![debito]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        							    	 
 					 	</tr>  					    								
 					</tbody>
 				</table>

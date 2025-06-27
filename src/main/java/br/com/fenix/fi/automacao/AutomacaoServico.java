@@ -72,17 +72,18 @@ public class AutomacaoServico  extends ServicoAbstrato<Automacao,Long> implement
 		}
 	}
 	private void setAutomacao (LancAux lancDTO,  Automacao auto) {
-		lancDTO.setLancamentoFavorecido(  auto.getFavorecido());
-		lancDTO.setLancamentoSubCategoria(auto.getSubCategoria());
-		lancDTO.setContaDestino(auto.getContaTransferencia());
-		if (lancDTO.isContaCorrente()) { 
-			lancDTO.setLancamentoTipoOperacao( auto.getTipoOperacao());
-		}
+		lancDTO.setFavorecido(auto.getFavorecido());
+		lancDTO.setSubCategoria(auto.getSubCategoria());
+		
+//		lancDTO.setContaDestino(auto.getContaTransferencia());
+//		if (lancDTO.isContaCorrente()) { 
+//			lancDTO.setTipoOperacao( auto.getTipoOperacao());
+//		}
 	}
 
 	public void automatizarHash ( LancAux lancDTO) {
 		
-		 String descricao = Singularizer.converterParaSingular(lancDTO.getLancamentoInformacao());
+		 String descricao = Singularizer.converterParaSingular(lancDTO.getInformacao());
 		 String normalize = TextProcessor.normalizaTexto(descricao);
 		 
 		 Automacao auto = automacaoMap.get(normalize.hashCode());

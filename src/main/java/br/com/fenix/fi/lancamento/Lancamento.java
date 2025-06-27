@@ -23,6 +23,7 @@ import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.upload.LancAux;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,7 +66,7 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     @Column(length = 80)
     protected String informacao;
 
-    protected String observacao;
+//    protected String observacao;
     
  //   @Fetch(FetchMode.JOIN)
     @OneToMany(mappedBy = "lancamento", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true )    
@@ -94,14 +95,43 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 //	    this.nroInicialPrestacao = 1;		
 	  //  detalheLancamento = new ArrayList<DetalheLancamento>() ;
 	}
-	
+    public Lancamento(LancAux lancAux) {
+    	super();
+    	LocalDate data = lancAux.getDataVenc();
+    	
+        this.nroPrestacao = lancAux.getNroPrestacao();
+        this.nroInicialPrestacao = lancAux.getNroInicialPrestacao();
+        this.dataDoc = lancAux.getDataDoc();
+        setSubCategoria( lancAux.getSubCategoria()); 
+      
+
+        this.informacao = lancAux.getInformacao(); 
+        this.setTotal(lancAux.getTotal());
+    	this.tipoOperacao = lancAux.getTipoOperacao();
+    	this.favorecido = lancAux.getFavorecido();
+    
+		for(int count=lancAux.getNroInicialPrestacao() ; count <= lancAux.getNroPrestacao(); count++){
+			DetalheLancamento detalheLancamento = new DetalheLancamento().builder() 
+					.prestacao(count)
+					.valor(lancAux.getValor()) 
+					.tipoLancamento(lancAux.getTipoLancamento())
+					.dataVenc(data)
+					.contaLancamento(lancAux.getContaLanc())
+					.ano(data.getYear()) 
+					.mes(data.getMonthValue())
+					.conciliado(true) 
+					.build();
+			this.addDatalheLancamento(detalheLancamento);
+			data = data.plusMonths(1);
+		}    	
+    }
 	protected Lancamento(LancamentoDTO dto  ) {
 		super(); 
 		this.dataDoc = dto.dataDoc;  	    		
 	    this.nroInicialPrestacao = dto.nroInicialPrestacao; 
 		this.nroPrestacao = dto.nroPrestacao;
 	    this.informacao = dto.getInformacao(); 
-	    this.observacao = dto.getObservacao();
+//	    this.observacao = dto.getObservacao();
     	this.subCategoria = dto.subCategoria;  
 	    this.favorecido = dto.favorecido;
 //        this.tipoOperacao(dto.tipoOperacao)
@@ -130,8 +160,8 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 		this.tipoOperacao = tipoOperacao;
 	}
 	public void setSubCategoria(SubCategoria subCateroria) {
-		this.subCategoria = subCateroria;
 		if (subCateroria != null) {
+			this.subCategoria = subCateroria;	
 			this.categoria = subCateroria.getCategoria();
 		}
 	}

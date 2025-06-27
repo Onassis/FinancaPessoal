@@ -28,6 +28,7 @@ import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.upload.LancAux;
 import br.com.fenix.seguranca.usuario.Usuario;
 import jakarta.persistence.Transient;
 import lombok.Data;
@@ -45,9 +46,9 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 	private Long  lancamentoId;
 	
 	 
-	private String Informacao;
+	private String informacao;
 	
-    private String Observacao;
+//    private String Observacao;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     protected LocalDate dataDoc;
@@ -83,10 +84,11 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
       
     protected int nroPrestacao;
     protected int nroInicialPrestacao ;
+    
     /**
      * Prestação atual do parcelamento
      */
-//    protected int prestacao;
+     protected int prestacao;
 
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal total;
@@ -111,6 +113,9 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 	@JsonDeserialize(using = UsuarioDeserializer.class)
     private Usuario criadoPor;
 	
+	@Transient
+	private String prestacaoAtual;
+	  
     public LancamentoDTO() {    	
     	super();
     	this.dataDoc = LocalDate.now();
@@ -123,16 +128,17 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 //        this.nroInicialPrestacao = 1;
     	
     }
+
     public LancamentoDTO(Lancamento lancamento) {    	
     	super();
-    	this.id = lancamento.getId(); 
+    	this.id 		  = lancamento.getId(); 
     	this.lancamentoId = lancamento.getId(); 
         this.nroPrestacao = lancamento.getNroPrestacao();
         this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
         this.dataDoc = lancamento.getDataDoc(); 
         this.subCategoria  = lancamento.getSubCategoria(); 
         
-        this.Observacao = lancamento.getObservacao();
+         this.informacao = lancamento.getInformacao();
         
         this.criadoPor = lancamento.getCriadoPor(); 
 
@@ -142,14 +148,9 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
  
     	this.favorecido = lancamento.getFavorecido(); 
     	  
-//        this.chaveBanco = 
-//        
-//    	this.refBanco; 
-
     	if  (lancamento.getDetalheLancamento().isEmpty() == false) {
     		DetalheLancamento delLanc = lancamento.getDetalheLancamento().get(0);
     		this.detalheLancamentoId = delLanc.getId();
-//    		this.detalheDestinoId = lancamento.getDetalheLancamento().get(0).getId();
     		this.tipoLancamento = delLanc.getTipoLancamento(); 
     		this.contaLancamento  = delLanc.getContaLancamento(); 
     		this.contaTransferencia = delLanc.getContaTransferencia(); 
@@ -172,7 +173,7 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
         this.dataDoc = lancamento.getDataDoc(); 
         this.subCategoria  = lancamento.getSubCategoria(); 
         
-        this.Observacao = lancamento.getObservacao();
+        this.informacao = lancamento.getInformacao();
         
         this.criadoPor = lancamento.getCriadoPor(); 
 
@@ -181,10 +182,9 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     	this.tipoOperacao = lancamento.getTipoOperacao();
  
     	this.favorecido = lancamento.getFavorecido(); 
-    	  
-//        this.chaveBanco = 
-//        
-//    	this.refBanco; 
+    	
+
+    	this.prestacao = detLanc.getPrestacao();
 
    		this.detalheLancamentoId = detLanc.getId();
 //    		this.detalheDestinoId = lancamento.getDetalheLancamento().get(0).getId();
@@ -201,9 +201,10 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     	this.valor = total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
     
-	 public String prestacao() {
+    
+	 public  String getPrestacaoAtual() {
 		 String sPrestacao; 
-		 sPrestacao = String.format("%02d",nroInicialPrestacao);
+		 sPrestacao = String.format("%02d",prestacao);
 		 sPrestacao = sPrestacao.concat("/");
 		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
 		 return sPrestacao; 

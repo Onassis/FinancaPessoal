@@ -57,6 +57,7 @@ import br.com.fenix.fi.lancamento.LancamentoServico;
 import br.com.fenix.fi.moeda.Moeda;
 import br.com.fenix.icontroller.IControleLancamentoRest;
 import br.com.fenix.util.Coletor;
+import net.sf.ofx4j.io.OFXParseException;
 
 @PreAuthorize("hasRole('USER')") 
 @Controller
@@ -76,9 +77,7 @@ public class UploadController {
 	LancamentoServico lancSC;
 	@Autowired
 	LancAuxServico lancAuxSC;
-	@Autowired
-	LancamentoRepositorio lancRP; 
-	
+
 	@Autowired
 	LancAuxRepositorio lancAuxRP; 
 	
@@ -161,14 +160,25 @@ public class UploadController {
  	
       @Transactional
 	  @PostMapping  	  
-	  public String FileUpload(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException {
+	  public String FileUpload(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException, OFXParseException 
+//			  throws IOException, OFXParseException 
+      {
     	   System.out.println("handleFileUpload");
 		    String fileName = file.getOriginalFilename();
-		    List<String> conteudo =  readAll(file.getInputStream()); 
 		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada")));;
 		    Conta conta = contaImp.get(); 
-		    Coletor lancamento  = lancAuxSC.processaOFX(conta,conteudo ) ;
-		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;		         
+		    
+		    List<LancAux> lancamentos = lancAuxSC.geraLancamento(conta,file.getInputStream() ); 
+		    lancAuxSC.excluiSalvaTodos(lancamentos)	;		         
+//		    
+		    
+//		    List<String> conteudo =  readAll(file.getInputStream()); 
+//		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada")));;
+//		    Conta conta = contaImp.get(); 
+//		    Coletor lancamento  = lancAuxSC.processaOFX(conta,conteudo ) ;
+//		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;		
+//		    
+		    
 		    return "redirect:/upload/confirmar";
 	  }
       
