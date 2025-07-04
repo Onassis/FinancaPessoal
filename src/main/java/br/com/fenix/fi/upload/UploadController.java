@@ -59,6 +59,7 @@ import br.com.fenix.icontroller.IControleLancamentoRest;
 import br.com.fenix.util.Coletor;
 import net.sf.ofx4j.io.OFXParseException;
 
+
 @PreAuthorize("hasRole('USER')") 
 @Controller
 @RequestMapping("/upload")
@@ -162,6 +163,7 @@ public class UploadController {
 	  @PostMapping  	  
 	  public String FileUpload(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException, OFXParseException 
 //			  throws IOException, OFXParseException 
+//			  throws IOException, OFXParseException 
       {
     	   System.out.println("handleFileUpload");
 		    String fileName = file.getOriginalFilename();
@@ -172,12 +174,11 @@ public class UploadController {
 		    lancAuxSC.excluiSalvaTodos(lancamentos)	;		         
 //		    
 		    
-//		    List<String> conteudo =  readAll(file.getInputStream()); 
-//		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada")));;
-//		    Conta conta = contaImp.get(); 
+//		    List<String> conteudo =  readAll(file.getInputStream());
+//		    
 //		    Coletor lancamento  = lancAuxSC.processaOFX(conta,conteudo ) ;
 //		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;		
-//		    
+		    
 		    
 		    return "redirect:/upload/confirmar";
 	  }

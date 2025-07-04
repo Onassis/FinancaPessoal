@@ -8,7 +8,7 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.5</version>
+		<version>3.5.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.fenix</groupId>
@@ -50,20 +50,20 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 		</dependency>
 		<!-- A biblioteca principal para ler arquivos OFX -->
 		<!-- https://mvnrepository.com/artifact/net.sf.ofx4j/ofx4j -->
-		<dependency>
-			<groupId>net.sf.ofx4j</groupId>
-			<artifactId>ofx4j</artifactId>
-			<version>1.6</version>
-		</dependency>
-    <dependency>
-      <groupId>freemarker</groupId>
-      <artifactId>freemarker</artifactId>
-      <version>2.3.6</version>
+<dependency>
+    <groupId>net.sf.ofx4j</groupId>
+    <artifactId>ofx4j</artifactId>
+    <version>1.6</version>
+</dependency>
 
-      <!--compile-scope.  used only for listing
-      the aggregate classes.-->
-      <scope>compile</scope>
-    </dependency>		
+<!--              Fim ofx4j                            -->
+<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-freemarker -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.ofx4j/ofx4j -->
+
 		<!--~~(org.springframework.boot:spring-boot-starter-data-jpa failed. Unable to download metadata. Tried repositories:
 https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake)~~>-->
 		<dependency>

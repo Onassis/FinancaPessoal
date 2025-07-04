@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import br.com.fenix.api.exceptionhandle.RegistroJaExisteException;
 import br.com.fenix.api.exceptionhandle.TokenNaoExisteException;
 
-public interface UsuarioDetalheServico extends UserDetailsService {
+public interface UsuarioDetalheServico  {
 	
 	Usuario increver(Usuario usuario) throws RegistroJaExisteException;
 	void SeExisteEmail(String username) throws RegistroJaExisteException;

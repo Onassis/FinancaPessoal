@@ -41,8 +41,8 @@ public interface ContaRepositorio extends JpaRepositoryAuditavel<Conta,Long> {
 	@Query("select COALESCE(sum(o.saldo),0) from Conta o where o.tipoConta = ?1 and o.criadoPor.id = ?#{ principal.id}")
 	double TotalConta(TipoConta tipoConta);
 	
-	@Query("select count(distinct c.id) = 1 from Conta c inner join DetalheLancamento d on d.contaLancamento = c.id where c.id = ?1")
-	boolean existsByContaLancamento (Long id);
+//	@Query("select  case when count(c)> 0 then true else false from Conta c inner join DetalheLancamento d on d.contaLancamento = c.id where c.id = ?1")
+//	boolean existsByContaLancamento (Long id);
 	
 	@Query("select new br.com.fenix.dominio.modelo.Option(o.id, o.apelido) from Conta o where o.tipoConta = ?1 and o.criadoPor.id = ?#{ principal.id} order by o.apelido")
 	List<Option> findOptionByTipoConta(TipoConta tipoConta);

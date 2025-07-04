@@ -23,7 +23,7 @@ import br.com.fenix.fi.subCategoria.SubCategoria;
 
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS )
+//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS )
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper=true)

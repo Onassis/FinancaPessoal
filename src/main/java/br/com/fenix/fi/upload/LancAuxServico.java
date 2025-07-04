@@ -33,10 +33,17 @@ import net.sf.ofx4j.domain.data.MessageSetType;
 import net.sf.ofx4j.domain.data.ResponseEnvelope;
 import net.sf.ofx4j.domain.data.ResponseMessageSet;
 import net.sf.ofx4j.domain.data.banking.BankStatementResponseTransaction;
+import net.sf.ofx4j.domain.data.signon.SignonResponse;
+import net.sf.ofx4j.io.AggregateUnmarshaller;
+import net.sf.ofx4j.domain.data.MessageSetType;
+import net.sf.ofx4j.domain.data.ResponseEnvelope;
+import net.sf.ofx4j.domain.data.ResponseMessageSet;
+import net.sf.ofx4j.domain.data.banking.BankStatementResponseTransaction;
 import net.sf.ofx4j.domain.data.banking.BankingResponseMessageSet;
 import net.sf.ofx4j.domain.data.common.Transaction;
 import net.sf.ofx4j.domain.data.signon.SignonResponse;
 import net.sf.ofx4j.io.AggregateUnmarshaller;
+import net.sf.ofx4j.io.OFXParseException;
 import net.sf.ofx4j.io.OFXParseException;
 
 @Service
@@ -62,8 +69,8 @@ public class LancAuxServico {
 	@Autowired
 	DetalheLancamentoRepositorio  detLancRP;
 	
-	@Autowired
-	private ModelMapper modelMapper;
+//	@Autowired
+//	private ModelMapper modelMapper;
 	
 
 	@Transactional
@@ -243,6 +250,7 @@ public class LancAuxServico {
 	                       .dataDoc(trx.getDatePosted().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())	                       
 	                        .total(valor) 
 		                    .valor(valor)
+		                    .saldo(BigDecimal.ZERO)
 		                    .informacao(trx.getMemo())
 		                    .chaveBanco(trx.getId())
 		                    .refBanco(trx.getReferenceNumber())

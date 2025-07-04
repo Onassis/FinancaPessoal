@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,36 +19,29 @@ import br.com.fenix.seguranca.usuario.Usuario.Role;
 
 
 @Service
-public class UsuarioServicoImp implements UsuarioDetalheServico {
+public class UsuarioServicoImp implements UserDetailsService  {
 
-	    private final UsuarioRepositorio UsuarioRp ;
+	    @Autowired
+		UsuarioRepositorio UsuarioRp ;
 	   
 		@Autowired 
 		PasswordEncoder passwordEncode; 
-		@Autowired 
-		EmailService emailService;
+//		@Autowired 
+//		EmailService emailService;
 		
-
-	    public UsuarioServicoImp(UsuarioRepositorio usuarioRp) {
-			UsuarioRp = usuarioRp;
-
-		}
+         
+//	    public UsuarioServicoImp(UsuarioRepositorio usuarioRp) {
+//			UsuarioRp = usuarioRp;
+//
+//		}
 
 		@Override
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-			
 		   System.out.println("login : " + username);  
-			Optional<Usuario> usuario =  UsuarioRp.findByEmail(username);
-			
-			if (usuario.isEmpty()) {
-				          System.out.println("não encontro" + username);  
-				         // throw UsernameNotFoundException
-				          throw new RegistroNaoExisteException("{usuario.existe}" + username) ;
-			}		
-		    System.out.println(usuario.get());  
-			return usuario.get();
-
-					 
+			Usuario usuario =  UsuarioRp.findByEmail(username)
+						.orElseThrow(() -> new RegistroNaoExisteException("{usuario.existe}" + username) );
+		    System.out.println(usuario);
+			return usuario;
 	    }
 		
 /*		public Usuario save(UsuarioDto usuarioDto) {
@@ -57,7 +49,7 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 		return UsuarioRp.save(user);
 		}
 */		
-		@Override
+//		@Override
 		public Usuario increver(Usuario usuario) throws RegistroJaExisteException {
 			SeExisteEmail(usuario.getEmail()); 
 			SeExisteCpf(usuario.getCpf());
@@ -78,13 +70,13 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 	        
 	        usuario = UsuarioRp.save(usuario) ; 
 	        
-	        EmailModel emailModel = new EmailModel( 
-	        		"Usuario", 
-	        		"onassis.tavares@gmail.com",
-	        		usuario.getEmail(), 
-	        		"Email Verification", 
-	        		"Click the link to verify your email: " +  confirmationUrl
-	        		);
+//	        EmailModel emailModel = new EmailModel( 
+//	        		"Usuario", 
+//	        		"onassis.tavares@gmail.com",
+//	        		usuario.getEmail(), 
+//	        		"Email Verification", 
+//	        		"Click the link to verify your email: " +  confirmationUrl
+//	        		);
 	        
 	     
 		//	emailService.sendEmail(emailModel);
@@ -104,7 +96,7 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 	        UsuarioRp.save(usuario);
 	        return "valid";
 	    }
-		@Override
+//		@Override
 		public void SeExisteEmail(String username) throws RegistroJaExisteException {
 			// TODO Auto-generated method stub
 			if (UsuarioRp.findByEmail(username).isPresent()) {
@@ -113,7 +105,7 @@ public class UsuarioServicoImp implements UsuarioDetalheServico {
 			}
 		}
 
-		@Override
+//		@Override
 		public void SeExisteCpf(String cpf) throws RegistroJaExisteException {
 			if (UsuarioRp.findByCpf(cpf).isPresent()) {
 				System.out.println("SeExiste " + cpf);

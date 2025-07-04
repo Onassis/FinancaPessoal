@@ -59,7 +59,7 @@ public class HomeController {
 */	
 	@GetMapping("/")
 	public ModelAndView padrao() {
-		System.out.println("passou padrao");
+		System.out.println("HomeController -> padrao");
 		return new ModelAndView("index","localDate",LocalDate.now()) ;				
 	}
 //	@GetMapping("/error")

@@ -7,6 +7,7 @@ import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +34,10 @@ import java.util.EnumSet;
 @ComponentScan("br.com.fenix.controller")
 @ComponentScan("br.com.fenix.dominio.converter")
 @ComponentScan("br.com.fenix.seguranca.email")
-@EnableAutoConfiguration
+@ComponentScan("br.com.fenix.configuracao")
+@ComponentScan("br.com.fenix.seguranca.seguranca.usuario")
+@ComponentScan("br.com.fenix.fi")
+@EnableAutoConfiguration(exclude = { FreeMarkerAutoConfiguration.class })
 @EnableCaching
 public class FinanceiroApplication {
 
