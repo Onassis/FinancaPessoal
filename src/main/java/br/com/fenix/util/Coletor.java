@@ -77,7 +77,7 @@ public class Coletor {
            
                 lanc.setDataDoc(date) ;
                 
-                lanc.setDataVenc(dataCartao) ; 
+                lanc.setDataLanc(dataCartao) ; 
 
                 
                 prestacaoIni   = 1;
@@ -158,7 +158,7 @@ public class Coletor {
 	        						}
 	        						
 	        						break;
-	    		case "DTPOSTED"  : UltimoLancamento().setDataVenc(tag.getTagValorDate());
+	    		case "DTPOSTED"  : UltimoLancamento().setDataLanc(tag.getTagValorDate());
 	    						   UltimoLancamento().setDataDoc(tag.getTagValorDate());
 	    						   UltimoLancamento().setConciliado(true);
 	    						   break;

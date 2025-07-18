@@ -102,7 +102,15 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 	}
 	@Override
 	public  List<DTO> listarDto () throws RegistroNaoExisteException {
-	    List<DTO> dtos = listar()
+//	    List<DTO> dtos = listar()
+//	    		.stream()
+//                .map(dado -> getConverter().ToDto(dado))
+//                .collect(Collectors.toList());
+        return listarDto(listar()); 
+	}
+	@Override
+	public  List<DTO> listarDto (List<T> dados) throws RegistroNaoExisteException {
+	    List<DTO> dtos = dados 
 	    		.stream()
                 .map(dado -> getConverter().ToDto(dado))
                 .collect(Collectors.toList());

@@ -2,16 +2,22 @@ package br.com.fenix.fi.upload;
 
 
 import java.io.BufferedReader;
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+
+import java.io.Reader;
+import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.webcohesion.ofx4j.io.OFXParseException;
 
 import br.com.fenix.abstrato.controle.ControleAbstratoRest;
 import br.com.fenix.abstrato.controle.IControleRest;
@@ -51,13 +58,15 @@ import br.com.fenix.fi.favorecido.FavorecidoRepositorio;
 import br.com.fenix.fi.formaPgto.FormaPgto;
 import br.com.fenix.fi.formaPgto.FormaPgtoRepositorio;
 import br.com.fenix.fi.lancamento.Lancamento;
+import br.com.fenix.fi.lancamento.LancamentoConverter;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
+import br.com.fenix.fi.lancamento.LancamentoFactory;
 import br.com.fenix.fi.lancamento.LancamentoRepositorio;
 import br.com.fenix.fi.lancamento.LancamentoServico;
 import br.com.fenix.fi.moeda.Moeda;
 import br.com.fenix.icontroller.IControleLancamentoRest;
 import br.com.fenix.util.Coletor;
-import net.sf.ofx4j.io.OFXParseException;
+
 
 
 @PreAuthorize("hasRole('USER')") 
@@ -153,28 +162,58 @@ public class UploadController {
     
     @GetMapping("/gerar")
     @Transactional
-	public ModelAndView salvarUpload() {	    	
+	public void  salvarUpload() {	    	
     	ArrayList<LancAux> dados = lancAuxRP.findAll();
-    	lancAuxSC.gerarLancamento(dados);
-		return new ModelAndView("upload/listar_lancamento","LancAux",dados) ;
-	}	
- 	
+    	List<Lancamento> lancamentos = lancAuxSC.gerarLancamento(dados);
+    	lancAuxRP.deleteAll();
+    	listaLancamento(lancamentos);
+	}
+    @GetMapping("/confirmaLanc")
+    public ModelAndView  listaLancamento (List<Lancamento> lancamentos) {
+    	List<LancamentoDTO> lancDtos = lancamentos.stream() 
+    			.map(dado -> new LancamentoDTO(dado))
+    			 .collect(Collectors.toList());
+    	return new ModelAndView("upload/listar_lancamento","lancamentosDTO",lancDtos) ;
+    }
+//    public byte[] convertToUtf8(MultipartFile inputFile) throws Exception {
+//        if (inputFile.isEmpty()) {
+//            throw new Exception("O arquivo de entrada não pode ser vazio.");
+//        }
+//
+//        // Usa try-with-resources para garantir que os streams sejam fechados automaticamente
+//        try (
+//        	Reader reader = new InputStreamReader(inputFile.getInputStream(), StandardCharsets.ISO_8859_1);
+//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        	Writer writer = new OutputStreamWriter(byteArrayOutputStream, StandardCharsets.UTF_8)
+//        ) {
+//            // Lê do reader (decodificado de ISO-8859-1) e escreve no writer (codificado para UTF-8)
+//            char[] buffer = new char[4096];
+//            int bytesRead;
+//            while ((bytesRead = reader.read(buffer)) != -1) {
+//                writer.write(buffer, 0, bytesRead);
+//            }
+//            writer.flush(); // Garante que todos os dados sejam escritos no ByteArrayOutputStream
+//
+//            return byteArrayOutputStream.toByteArray();
+//
+//        } catch (IOException e) {
+//            // Lança uma exceção personalizada para ser tratada globalmente
+//            throw new Exception("Falha ao converter o arquivo: " + e.getMessage(), e);
+//        }
+//    }
       @Transactional
 	  @PostMapping  	  
-	  public String FileUpload(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException, OFXParseException 
+	  public String FileUpload(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException, OFXParseException
 //			  throws IOException, OFXParseException 
 //			  throws IOException, OFXParseException 
       {
-    	   System.out.println("handleFileUpload");
-		    String fileName = file.getOriginalFilename();
-		    Optional<Conta> contaImp  = Optional.ofNullable(contaRP.findById(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada")));;
-		    Conta conta = contaImp.get(); 
-		    
-		    List<LancAux> lancamentos = lancAuxSC.geraLancamento(conta,file.getInputStream() ); 
-		    lancAuxSC.excluiSalvaTodos(lancamentos)	;		         
+   	   System.out.println("handleFileUpload");
+	    List<LancAux> lancamentos = lancAuxSC.geraLancamentoAux(contaId,file.getInputStream() ); 
+//		    lancAuxSC.excluiSalvaTodos(lancamentos)	;		         
 //		    
 		    
 //		    List<String> conteudo =  readAll(file.getInputStream());
+
 //		    
 //		    Coletor lancamento  = lancAuxSC.processaOFX(conta,conteudo ) ;
 //		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;		

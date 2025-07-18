@@ -44,29 +44,30 @@
 						<tr>					
 							<th>Data</th>			
 							<th>Descrição</th>
+							<th>Chave Banco</th>	
 							<th>Destino</th>	
-							<th>Categoria</th>
-							<th>D/C</th>
+							<th>Categoria</th>					
 							<th>Favorecido</th>
 							<th>Concialiado</th>	
-							<th align ="center" >Credito</th>					
-							<th align ="center" >Debito</th>							
+							<th align ="center" >Valor</th>	
+							<th>D/C</th>						
 							<th align ="center" >Saldo</th>							
 							<th><i class="icon_cogs"></i> Ação</th>
 						</tr>		
 					<tbody>
 						<tr th:each="l : ${lancamentosDTO}">
-							<td th:text="${#temporals.format(l?.dataVenc, 'dd/MM/yyyy')}">2017/08/14</td>		
-							<td th:text="${l?.lancamentoInformacao}">Informação</td> 		
-							<td th:text="${l?.contaDestino?.getApelido()}">Conta destino</td>				
-							<td th:text="${l?.lancamentoSubCategoria?.getDescricao()}">Categorial</td>	
-							<td th:text="${l?.TipoLancamento?.getDescricao()}">Lançamento</td>												
-							<td th:text="${l?.lancamentoFavorecido?.getNome()}">Favorecido</td>
-							<td th:text="${l?.conciliado}">Conciliado</td>
-							<td th:text="|R$ ${#numbers.formatDecimal(l?.credito ?: 0 , 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	
-					    	<td th:text="|R$ ${#numbers.formatDecimal(l?.debito , 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>	
-			
-					    	<td th:text="|R$ ${#numbers.formatDecimal(l?.saldo, 1, 'DEFAULT', 2, 'DEFAULT')}|"></td>											 			
+							<td th:text="${#temporals.format(l?.dataLanc, 'dd/MM/yyyy')}">2017/08/14</td>		
+							<td th:text="${l?.informacao}">Informação</td> 		
+							<td th:text="${l?.chaveBanco}">Informação</td> 		
+							<td th:text="${l?.contaLancamento?.getApelido()}">Conta destino</td>				
+							<td th:text="${l?.subCategoria?.getDescricao()}">Categorial</td>	
+								
+							<td th:text="${l?.favorecido?.getNome()}">Favorecido</td>
+							<td th:text="${l?.conciliado}" align="center">Conciliado</td>
+							
+							<td th:text="${#numbers.formatDecimal(l?.valor ?: 0 , 1, 'DEFAULT', 2, 'DEFAULT')}" align="right"  ></td>	
+							<td th:text="${l?.TipoLancamento}">Lançamento</td>					
+					    	<td th:text="${#numbers.formatDecimal(l?.saldo, 1, 'DEFAULT', 2, 'DEFAULT')}" align="right" ></td>											 			
 					 	</tr>
 					 	<tr>  
 					    	<td colspan="8"> Total </td>

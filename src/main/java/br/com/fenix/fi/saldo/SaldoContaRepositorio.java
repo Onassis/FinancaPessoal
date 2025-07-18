@@ -98,8 +98,17 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
   int atualizaContaGeDataSaldo(
           @Param("contaId") Long contaId,
           @Param("dataReferencia") LocalDate dataReferencia,
-          @Param("valorAdicional") BigDecimal valorAdicional
-          );
+          @Param("valorAdicional") BigDecimal valorAdicional);
+
+  @Query("UPDATE SaldoConta sc " +
+	         "SET sc.saldoInicial = sc.saldoInicial + :valorAdicional, "
+	         + "  sc.flag_compensacao = true " +
+	         "WHERE sc.conta.id = :contaId AND sc.data = :dataReferencia and flag_compensacao = false" )
+	  int atualizaSaldoData(
+	          @Param("contaId") Long contaId,
+	          @Param("dataReferencia") LocalDate dataReferencia,
+	          @Param("valorAdicional") BigDecimal valorAdicional);
+  
 }
     
 //	@Query(value= "SELECT  max(data) as data FROM saldo_conta where criado_por_id = :usuario and conta_id = :conta  and data < :data")   

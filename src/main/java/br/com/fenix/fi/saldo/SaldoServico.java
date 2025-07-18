@@ -2,9 +2,14 @@ package br.com.fenix.fi.saldo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 
 import org.apache.poi.hpsf.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.view.ITotalMesDetalhe;
 import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.detalheLancamento.DetalheLancServico;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamentoRepositorio;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
+import br.com.fenix.fi.upload.LancAux;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
+import java.util.Comparator;
+import java.util.Map;
+import java.util.stream.Collectors;
 @Service
 public class SaldoServico {
 	
@@ -52,8 +62,100 @@ public class SaldoServico {
 		SaldoConta  saldo = new SaldoConta(conta,dataSaldo,saldoAnterior) ;
 		saldoRP.save(saldo);
 		saldoRP.atualizaContaGeDataSaldo(conta.getId(), dataSaldo, valor);       
-	}	
+	}
 	
+	
+	public BigDecimal totalPeriodo(Conta conta, LocalDate dataIni, LocalDate dataFim) {
+		Double valor = detRP.TotalByStartDataBetween(conta, dataIni, dataFim);
+		return BigDecimal.valueOf(valor);  
+	}
+	private SaldoConta atualizaSaldoIni (LancAux lancAux) {
+		BigDecimal total = BigDecimal.ZERO; 
+	
+		Conta conta   = lancAux.getContaLancamento() ; 
+		LocalDate  data = lancAux.getDataLanc();
+
+		SaldoConta saldo = buscarSaldoMes(conta,data) ; 
+		if (data.getDayOfMonth() != 1 ) { 
+				LocalDate  dataIni = data.with(TemporalAdjusters.firstDayOfMonth());
+				LocalDate  dataFim = data.minusDays(1);
+		
+				total = totalPeriodo(conta,dataIni,dataFim);
+		}
+		
+		BigDecimal saldoIni = lancAux.getSaldoAnterior().add(total); 
+        saldo.setSaldoInicial(saldoIni);  
+		return saldo;
+	}
+	@Transactional(propagation = Propagation.MANDATORY)
+	public void atualizaSaldoLancAux(List<LancAux> dados) {
+		
+	
+         SaldoConta saldoIni = atualizaSaldoIni(dados.get(0));
+         
+//         saldoRP.save(saldoIni); 
+         
+         int mes = saldoIni.getMes();
+         int ano = saldoIni.getAno(); 
+         
+      // 1. O início da pipeline é o mesmo: pegamos o primeiro lançamento de cada mês.
+//       Garantimos a ordenação para que o "primeiro" seja o correto.
+         List<SaldoConta> saldos = dados.stream()
+        		 .filter(l -> (l.getMes() != mes && l.getAno() != ano ))
+        		 .sorted(Comparator.comparing(LancAux::getDataLanc))
+        		 .collect(Collectors.toMap(
+        				 LancAux::getMes,
+        				 Function.identity(),
+        				 (primeiro, segundo) -> primeiro
+        				 ))
+        		 .values() // Temos uma Collection<LancAux> com os lançamentos únicos de cada mês
+        		 .stream() // Convertemos de volta para um Stream para continuar o processamento
+
+       // 2. Transformamos (map) cada LancAux em um objeto SaldoConta configurado.
+       //    Isso substitui o forEach.
+        		 .map(lancAux -> {
+        			 SaldoConta saldoMes = buscarSaldoMes(lancAux.getContaLancamento(), lancAux.getDataLanc());
+        			 saldoMes.setSaldoInicial(lancAux.getSaldoAnterior());
+        			 return saldoMes; // O map deve retornar o novo objeto transformado
+        		 })
+
+       // 3. Coletamos todos os objetos SaldoConta gerados em uma nova lista.
+       .collect(Collectors.toList());
+
+    saldos.add(saldoIni);     
+   // 4. Se a lista não estiver vazia, chamamos o saveAll UMA ÚNICA VEZ.
+   if (!saldos.isEmpty()) {
+       saldoRP.saveAll(saldos);
+   }
+         
+//     	for (LancAux lancAux : dados  ) {
+//			if (mes != lancAux.getMes()) { 
+//				SaldoConta saldoMes = buscarSaldoMes(lancAux.getContaLanc(),lancAux.getDataVenc()); 
+//				saldoMes.setSaldoInicial( lancAux.getSaldoAnterior()) ;
+//		        saldoRP.save(saldoMes); 				
+//				mes =  lancAux.getMes();
+//			}
+//		}	
+	}
+	
+	/**
+	 * Busca o Saldo atual do mes , caso não encontre cria uma nova instancia do saldo
+	 * @param conta
+	 * @param data
+	 * @return SaldoConta
+	 */
+	  public SaldoConta  buscarSaldoMes(Conta conta, LocalDate data) {
+//		  LocalDate dataSaldo = LocalDate.of(data.getYear(),data.getMonth(), 1); 
+		  LocalDate dataSaldo =  data.with(TemporalAdjusters.firstDayOfMonth()); 
+		  
+		  Optional<SaldoConta> saldoOp = saldoRP.findByContaAndData(conta,dataSaldo); 
+		  if (saldoOp.isEmpty()) {
+			  BigDecimal saldoAnterior =  buscarSaldoFinalDiaAnterior(conta,dataSaldo);
+			  SaldoConta saldo = new SaldoConta(conta,dataSaldo,saldoAnterior); 
+			  return saldo;
+		  }
+		  return saldoOp.get();
+	  }
     /**
      * Encontra o valor do saldo final do dia anterior à data fornecida.
      */
@@ -104,6 +206,8 @@ public class SaldoServico {
 //		    							data ) ;
 //       return null; 
 //	}
+
+
     
 //	  /**
 //     * Recalcula o saldo para uma data específica e propaga a atualização para os dias subsequentes.

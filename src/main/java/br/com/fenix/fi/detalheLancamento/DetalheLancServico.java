@@ -74,6 +74,16 @@ public class DetalheLancServico  extends ServicoAbstratoDTO<DetalheLancamento,La
 	public DetalheLancamentoConverter getConverter() {
 		return converter;
 	}
+	
+	/**
+	 * Retorna o total de lancamentos em um periodo  
+	 * @param conta
+	 * @param dataIni
+	 * @param dataFim
+	 * @return
+	 */
+
+	
 //   public List<LancamentoDTO> findAll () {
 //		
 //		Iterable<DetalheLancamento> detalheLancamentos = DtlancamentoRP.findAll();

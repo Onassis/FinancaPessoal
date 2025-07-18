@@ -144,53 +144,77 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		return lancamentoDTO; 
 
 	}
-	public LancAux conciliar( LancAux  lancDTO) {
+	public LancAux conciliar( LancAux  lancAux) {
 		List<DetalheLancamento> lancamentos ;
 		Optional<DetalheLancamento>  lancOpt;
-
+		
+		/**
+		 * Busca pela chave do banco se o arquivo já foi importado
+		 */
+		
+		lancOpt = DtlancamentoRP.findByContaAndChaveBancoData(lancAux.getContaLancamento() , 									
+				lancAux.getDataLanc(),
+				lancAux.getChaveBanco() ); 
+		if (lancOpt.isPresent()) {
+			DetalheLancamento detLanc = lancOpt.get(); 
+			lancAux.setLancamentoId(detLanc.getLancamento().getId());
+			lancAux.setDetalheLancId(detLanc.getId()); 
+			lancAux.setConciliado(true);
+			return lancAux; 
+		}
+		/**
+		 * Busca pelo banco e data documento e valor 
+		 */
+		
 		lancamentos  = DtlancamentoRP.
 				findbyContaAndByDataVencandByValor (
-						lancDTO.getContaDestino(), 
-						lancDTO.getDataDoc(), lancDTO.getValor());
-
-		for (DetalheLancamento lancDet  : lancamentos  ) {		
-			lancDTO.setLancamentoId(lancDet.getLancamento().getId()); 			
-			lancDTO.setDetalheDestinoId( lancDet.getId());
-			lancDTO.setConciliado(true);
-			return lancDTO;    			    			
+						lancAux.getContaDestino(), 
+						lancAux.getDataDoc(), lancAux.getValor());
+		lancOpt = lancamentos.stream()
+				.filter(e -> e.getDataVenc().equals(lancAux.getDataDoc()))
+				.findFirst();
+		
+		if (lancOpt.isPresent()) {
+			DetalheLancamento detLanc = lancOpt.get(); 
+			lancAux.setLancamentoId(detLanc.getLancamento().getId());
+			lancAux.setDetalheLancId( detLanc.getId());
+			
+			lancAux.setConciliado(true);
+			return lancAux;    			    			
 		}
+		
 		lancamentos  = DtlancamentoRP.
 				findbyDtVencBetweenAndByValor (
-						lancDTO.getDataDoc().minusDays(30),
-						lancDTO.getDataDoc().plusDays(30), lancDTO.getValor());
+						lancAux.getDataDoc().minusDays(30),
+						lancAux.getDataDoc().plusDays(30), lancAux.getValor());
 
 
 		lancOpt = lancamentos.stream()
-				.filter(e -> e.getDataVenc().equals(lancDTO.getDataDoc()))
+				.filter(e -> e.getDataVenc().equals(lancAux.getDataLanc()))
 				.findFirst();
 
 		if (lancOpt.isPresent()) {
 			DetalheLancamento detLanc = lancOpt.get(); 
-			lancDTO.setLancamentoId(detLanc.getLancamento().getId()); 			
-			lancDTO.setDetalheDestinoId( detLanc.getId());
-			lancDTO.setConciliado(true);
-			return lancDTO; 
+			lancAux.setLancamentoId(detLanc.getLancamento().getId());
+			lancAux.setDetalheLancId(detLanc.getId()); 
+			lancAux.setConciliado(true);
+			return lancAux; 
 		}
 
 		lancOpt = lancamentos.stream()
-				.filter(e -> e.getValor().equals(lancDTO.getValor()))
+				.filter(e -> e.getValor().equals(lancAux.getValor()))
 				.findFirst();
 
 		if (lancOpt.isPresent()) {
 			DetalheLancamento detLanc = lancOpt.get(); 
-			lancDTO.setLancamentoId(detLanc.getLancamento().getId()); 			
-			lancDTO.setDetalheDestinoId( detLanc.getId());
-			lancDTO.setConciliado(true);
-			return lancDTO; 
+			lancAux.setLancamentoId(detLanc.getLancamento().getId()); 			
+			lancAux.setDetalheLancId(detLanc.getId());
+			lancAux.setConciliado(true);
+			return lancAux; 
 		}
 
 
-		return lancDTO;
+		return lancAux;
 	}
 }
 

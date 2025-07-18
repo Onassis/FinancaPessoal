@@ -50,10 +50,11 @@ https://repo.maven.apache.org/maven2: javax.net.ssl.SSLHandshakeException: Remot
 		</dependency>
 		<!-- A biblioteca principal para ler arquivos OFX -->
 		<!-- https://mvnrepository.com/artifact/net.sf.ofx4j/ofx4j -->
+<!-- https://mvnrepository.com/artifact/com.webcohesion.ofx4j/ofx4j -->
 <dependency>
-    <groupId>net.sf.ofx4j</groupId>
+    <groupId>com.webcohesion.ofx4j</groupId>
     <artifactId>ofx4j</artifactId>
-    <version>1.6</version>
+ <version>1.38</version>
 </dependency>
 
 <!--              Fim ofx4j                            -->

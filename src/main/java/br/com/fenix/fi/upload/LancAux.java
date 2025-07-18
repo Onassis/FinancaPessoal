@@ -31,6 +31,8 @@ import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
@@ -47,8 +49,10 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Long  detalheVencId;
+	/* detalhe do lancamento */ 
+	private Long  detalheLancId;
 	
+	/* detalhe do lancamento da conta destino - Transferencia */ 
 	private Long  detalheDestinoId;
 	
 	private Long  lancamentoId;
@@ -87,7 +91,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
   
     @JsonDeserialize(using = ContaDeserializer.class)      
     @ManyToOne(cascade = CascadeType.DETACH,fetch = FetchType.EAGER ,  optional = false)
-    private Conta contaLanc ;
+    private Conta contaLancamento ;
     
 
     @JsonDeserialize(using = ContaDeserializer.class)      
@@ -104,10 +108,17 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
  //   @ReadOnlyProperty
 //    private Categoria lancamentoCategoria; 
 
+//	@Column(columnDefinition = "DATE")	
+//    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
+//    private LocalDate dataVenc;
+    
+	/**
+	 * Data da lançamento no banco 
+	 */
 	@Column(columnDefinition = "DATE")	
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
-    private LocalDate dataVenc;
-    
+    private LocalDate dataLanc;
+	
     @Column(nullable = true)
     private int nroPrestacao=1;
     
@@ -127,6 +138,9 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
 	private BigDecimal saldo;
 
+    @JsonDeserialize(using = NumericBooleanDeserializer.class)
+	protected boolean conciliado ;
+	
 	@Transient
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
 	private BigDecimal credito;
@@ -134,13 +148,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	@Transient
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
 	private BigDecimal debito;
-	
 
-    @JsonDeserialize(using = NumericBooleanDeserializer.class)
-	protected boolean conciliado ;
-	
-	
-	
  
 	public LancAux() {
 		super();
@@ -162,7 +170,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		this.credito = new BigDecimal(0);
 		this.debito = new BigDecimal(0);
 		this.saldo = new BigDecimal(0); 
-		this.contaLanc = conta;
+		this.contaLancamento = conta;
 		this.nroInicialPrestacao = 1; 
 		this.nroPrestacao = 1 ; 
 		this.conciliado = true;
@@ -174,7 +182,12 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
 		 return sPrestacao; 
 	 }
-	 
+	 public int getMes() {
+		 return dataLanc.getMonthValue();
+	 }
+	 public int getAno() {
+		 return dataLanc.getYear();
+	 }
 	 public boolean hasCriterio(String criterio) { 
 		 return informacao.toUpperCase().contains(criterio.toUpperCase());
 	 }
@@ -208,10 +221,10 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	}
 	
 	public boolean isContaCorrente() {
-		if (contaLanc == null) {
+		if (contaLancamento == null) {
 			return false; 
 		}
-		return contaLanc.isContaCorrente();
+		return contaLancamento.isContaCorrente();
 	}
 	public void setValor (BigDecimal valor) {
 	    	this.valor = valor.abs();
@@ -224,20 +237,20 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	public BigDecimal getCredito() { 
 		
 		if (isCredito())
-			return credito = this.valor;
+			return credito = this.valor.abs();
 		
 		return BigDecimal.ZERO; 		
 	}
 	public BigDecimal getDebito() { 
 		
 		if (isDebito()) 
-			return debito = this.valor.multiply( new BigDecimal(-1)); 
+			return debito = this.valor.abs();
 		
 		return BigDecimal.ZERO; 		
 	}    
 	 
 	public BigDecimal getSaldoAnterior() { 
-		return this.saldo.subtract(getValor() );
+		return this.saldo.subtract(this.getCredito()).add(this.getDebito());
 	}
 	
 	public BigDecimal acertaSaldo(BigDecimal saldoAnterior) {
@@ -254,7 +267,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((detalheVencId == null) ? 0 : detalheVencId.hashCode());
+		result = prime * result + ((detalheLancId == null) ? 0 : detalheLancId.hashCode());
 		return result;
 	}
 	@Override
@@ -266,10 +279,10 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		if (getClass() != obj.getClass())
 			return false;
 		LancAux other = (LancAux) obj;
-		if (detalheVencId == null) {
-			if (other.detalheVencId != null)
+		if (detalheLancId == null) {
+			if (other.detalheLancId != null)
 				return false;
-		} else if (!detalheVencId.equals(other.detalheVencId))
+		} else if (!detalheLancId.equals(other.detalheLancId))
 			return false;
 		return true;
 	}
@@ -282,16 +295,27 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
     
 	
 	public boolean getConciliado() {
-		if (this.detalheVencId == null) { 
+		if (this.detalheLancId == null) { 
 			return false; 
 		}
-		return ( this.detalheVencId != 0)  ;	
+		return ( this.detalheLancId != 0)  ;	
 	}
+
 	
-/*	@Transient 
-	public boolean isConciliado() {
-		System.out.println("Conciliado " + this.detalheVencId ) ; 
-		return ( this.detalheVencId != 0)  ;
+	public boolean isNovoLanc() { 
+		if (this.detalheLancId == null)  
+			return true; 
+		
+		return ( this.detalheLancId == 0)  ;
+	}
+
+	public boolean isTransfLanc() { 
+		if (this.detalheDestinoId == null)  
+			return true; 
+		
+		return ( this.detalheDestinoId == 0)  ;
 	} 
-*/
+
+	
+
 }

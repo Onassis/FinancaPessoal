@@ -97,7 +97,7 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 	}
     public Lancamento(LancAux lancAux) {
     	super();
-    	LocalDate data = lancAux.getDataVenc();
+    	LocalDate data = lancAux.getDataLanc();
     	
         this.nroPrestacao = lancAux.getNroPrestacao();
         this.nroInicialPrestacao = lancAux.getNroInicialPrestacao();
@@ -116,7 +116,10 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 					.valor(lancAux.getValor()) 
 					.tipoLancamento(lancAux.getTipoLancamento())
 					.dataVenc(data)
-					.contaLancamento(lancAux.getContaLanc())
+					.dataPgto(data) 
+					.chaveBanco(lancAux.getChaveBanco()) 
+					.refBanco(lancAux.getRefBanco()) 
+					.contaLancamento(lancAux.getContaLancamento())
 					.ano(data.getYear()) 
 					.mes(data.getMonthValue())
 					.conciliado(true) 
@@ -172,65 +175,5 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
     public BigDecimal getValorPrestacao() {   
         return total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
 }
-
-/*	 public void setSubCategoria(SubCategoria subCategoria) {
-	    	this.subCategoria = subCategoria; 
-	    	this.categoria = subCategoria.getCategoria();
-	    }
-/*	
-	public void sacar (LocalDate dataDoc, Conta conta, Favorecido favorecido,MasterCategoria categoria, BigDecimal valor ) {
-		this.dataDoc = dataDoc; 
-		this.diaVecto   = dataDoc.getDayOfMonth();
-	    this.nroPrestacao = 1;
-	    this.nroInicialPrestacao = 1;		
-//		this.tipoOperacao = tipoOperacao.D;
-//		this.tipoLancamento = TipoLancamento.D;
-//		this.categoria = categoria;
-		this.valor = valor; 
-//        DetalheLancamento detalheLancamento = new DetalheLancamento(//this, dataDoc,conta, favorecido, valor);
-//		this.addDatalheLancamento(detalheLancamento);		
-	}
-
-	
-	public void depositar (LocalDate dataDoc,TipoOperacao tipoOperacao,  BigDecimal valor ) {
-		this.dataDoc = dataDoc; 
-		this.diaVecto   = dataDoc.getDayOfMonth();
-	    this.nroPrestacao = 1;
-	    this.nroInicialPrestacao = 1;
-//		this.tipoOperacao = tipoOperacao;
-//		this.tipoLancamento = TipoLancamento.C;
-		this.valor = valor; 
-//		this.saldo.add(valor);	
-//		DetalheLancamento detalheLancamento = new DetalheLancamento(dataCompra,this.conta,this.tipoLancamento,valor);
-//		this.addDatalheLancamento(detalheLancamento);
-	}
-
-	public void comprarCartao (LocalDate dataDoc,  BigDecimal valor ) {
-		this.dataDoc = dataDoc; 
-//		this.diaVecto   = this.conta.getDiaVencimento();
-		this.nroPrestacao = 1;
-		this.nroInicialPrestacao = 1;
-//		this.tipoOperacao = TipoOperacao.D;
-//		this.tipoLancamento = TipoLancamento.D;
-		this.valor = valor; 
-//		this.saldo.add(valor);		
-	}	
-	public void comprarCartaoParcelado (LocalDate dataDoc,  int nroPrestacao,
-										int nroInicialPrestacao, BigDecimal valor ) {
-		this.dataDoc = dataDoc; 
-//		this.diaVecto   = this.conta.getDiaVencimento();
-		this.nroPrestacao = nroInicialPrestacao;
-		this.nroInicialPrestacao = nroPrestacao;
-//		this.tipoOperacao = TipoOperacao.D;
-//		this.tipoLancamento = TipoLancamento.D;
-		this.valor = valor.divide( new BigDecimal(nroPrestacao)); 
-//		this.saldo.add(this.valor);		
-	}
-//	public void addDatalheLancamento(DetalheLancamento datalheLancamento) {
-//		this.datalheLancamento.add(datalheLancamento); 
-//	}	
-*/	
-
-	
 
 }

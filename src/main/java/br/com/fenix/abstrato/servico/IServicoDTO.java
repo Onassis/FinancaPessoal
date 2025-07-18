@@ -20,6 +20,7 @@ import jakarta.persistence.EntityTransaction;
 public interface IServicoDTO<T, DTO, ID> extends IServico<T,ID> {
 	
 	List<DTO> listarDto() ;
+	List<DTO> listarDto(List<T> dados);
 //	DTO EntidadeToDTO(T entidade);
 //	T   DTOtoEntidade(DTO dto);
 //	T DTOtoEntidade(DTO dto, T entidade) throws NegocioException;

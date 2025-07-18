@@ -1,7 +1,9 @@
 package br.com.fenix.fi.automacao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -65,9 +67,9 @@ public class AutomacaoServico  extends ServicoAbstrato<Automacao,Long> implement
 		}		
 	}
 	
-	public void automatizaLactoHash( Coletor coletorLanc) {
+	public void automatizaLactoHash( List<LancAux> lancamentos) {
 		iniciar();		
-		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
+		for (LancAux lancDTO  : lancamentos  ) {
 			automatizarHash(lancDTO);
 		}
 	}

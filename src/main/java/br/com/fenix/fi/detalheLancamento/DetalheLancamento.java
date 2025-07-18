@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -30,7 +31,7 @@ import lombok.experimental.SuperBuilder;
 @Entity 
 @Table(name="detalheLancamento", 
 		indexes = { 
-		@Index(name = "idx_dataPesquisa", columnList = "criado_por_id,dataVenc", unique = false) ,
+		@Index(name = "idx_dataPesquisa", columnList = "criado_por_id,dataRef", unique = false) ,
 		@Index(name = "idx_ContaAnoMes", columnList = "conta_lancamento_id,Ano,Mes", unique = false) })
 
 @Data
@@ -79,22 +80,34 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
     @ManyToOne(cascade = CascadeType.REFRESH,fetch = FetchType.EAGER ,optional = true )
  	private Conta contaTransferencia ;
     /**
-     * Valor da prestaçãoo, usado para calcular o total do lançamento
+     * Valor da prestação, usado para calcular o total do lançamento
      **/
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
 	private BigDecimal valor;
 	
+    /**
+     * Valor efetivamento pago , usado para calcular o total do lançamento
+     **/
+	@Column(nullable = true, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
+	private BigDecimal valorPgto;
 	
     @Column(nullable = false,columnDefinition = "DATE")	
     private LocalDate dataVenc;
     
-    /** 
-     * Data usada com referencia do mes e ano e também nos Select de pesquisas  
-     * É usada a data venc. quando a data de compensação estiver vazia 
-     */
+	/**
+	 * Data da lançamento no banco 
+	 */
+	@Column(columnDefinition = "DATE")	
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
+    private LocalDate dataPgto;
+	
+	/**
+	 * Data usada para pesquisa e Indice no banco de dados
+	 */
+	@Column(columnDefinition = "DATE")	
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
+    private LocalDate dataRef;
 
-    
-    
     private boolean conciliado; 
 
     
@@ -122,9 +135,10 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		this.contaLancamento = conta;
 		this.valor = valor; 
 		ajustaValor();
+		this.conciliado = false;
 	}
-
-	public boolean isDebito() {
+	
+    public boolean isDebito() {
 		return this.tipoLancamento == TipoLancamento.D;
 	}
 	public boolean isCredito() {
@@ -140,7 +154,21 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 			return debito = this.valor.abs().negate(); 		
 		return BigDecimal.ZERO; 		
 	}
+    public void setConciliado ( boolean conciliado) {
+    	this.conciliado = conciliado; 
+    	ajustaData(); 
+    }
 
+	private void ajustaData() {
+		dataRef = dataVenc; 
+		if (conciliado) 
+			dataRef = dataPgto;		
+
+		
+		this.ano =  dataRef.getYear();
+		this.mes =  dataRef.getMonthValue() ;	
+	}
+	
 
 	/**Método para atualizar a data o ano e o mes 
 	 * @author Onassis tavares de souza
@@ -148,13 +176,20 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	 * @return void  - 
 	 */	
 	public void setDataVenc(LocalDate dataVenc) {
-		if (dataVenc != null) {	
-			this.ano =  dataVenc.getYear();
-			this.mes =  dataVenc.getMonthValue() ;			
+		if (dataVenc != null) {
+			return;
 		}
 		this.dataVenc = dataVenc;
+		ajustaData();
 	}
-
+	public void setdataPgto(LocalDate dataPgto) {
+		if (dataPgto != null) {	
+			return;
+		}						
+		this.dataPgto = dataPgto;
+		ajustaData();
+		
+	}
    public void setTipoLancamento ( TipoLancamento tipo) {
 	   this.tipoLancamento = tipo; 
 	   ajustaValor();
@@ -167,8 +202,18 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		this.valor = valor;
 		ajustaValor();
 	}
-	
-	
+	/*
+	 * Grava valor negativo par lançamento Debito	
+	 */
+	public void setValorPgto(BigDecimal valor ) {
+			this.valorPgto = valor;
+			ajustaValorPgto();
+	}
+	public void ajustaValorPgto() {
+			this.valorPgto = valorPgto.abs();
+			if (isDebito())  			
+				this.valorPgto = this.valorPgto.negate() ; 
+		}
 	public void ajustaValor() {
 		this.valor = valor.abs();
 		if ( isDebito())  			

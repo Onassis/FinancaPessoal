@@ -56,6 +56,10 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     protected LocalDate dataVenc;
     
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    protected LocalDate dataPgto;
+    
+    
     protected TipoLancamento tipoLancamento;
     
 	protected TipoOperacao tipoOperacao;
@@ -95,6 +99,9 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal valor;
+    @JsonDeserialize(using = MoneyDeserializer.class) 
+	protected BigDecimal valorPgto;
+    
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal saldo;
     @Transient
