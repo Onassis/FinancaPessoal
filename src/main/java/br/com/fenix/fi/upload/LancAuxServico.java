@@ -111,18 +111,16 @@ public class LancAuxServico {
 		
 	    
 	       Conta conta = contaSC.buscarPorId(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada"));
-	       List<LancAux> lancamentos = processaOFX4(conta, ofxStream);     
+	       
+	       List<LancAux> lst_lancAux = processaOFX4(conta, ofxStream);     
 //---------------- Ajusta os Lançamentos -------------------------------------------------- 
 
-		   autoSC.automatizaLactoHash(lancamentos);
+		   autoSC.automatizaLactoHash(lst_lancAux);
 			
-			lancamentos.stream()
-			  .map(lancAux -> lancSC.conciliar(lancAux) ) ; 
-			
-//			for (LancAux lancAux : lancamentos  ) {
-//				lancSC.conciliar(lancAux);
-//			}		
-			return excluiSalvaTodos(lancamentos);   
+
+		   lancSC.conciliar(lst_lancAux); 
+ 
+		   return excluiSalvaTodos(lst_lancAux);   
 		  
 	}
 	public List<LancAux> atualizaSaldo (List<LancAux> lancamentos, BigDecimal saldoFinal ) {
@@ -258,7 +256,7 @@ public class LancAuxServico {
 //---------------- Atualiza Lançamento existentes -----------------------------------------------// 		
 		
 		 dados.stream() 
-		    .filter( l -> !l.isNovoLanc())
+		    .filter( l -> l.isUpdateLanc())
 		    .map( l -> 		
 		      detLancRP.atualizaConciliadacao(l.getDetalheDestinoId(),
 		    		  			l.getChaveBanco(),
@@ -339,9 +337,9 @@ public class LancAuxServico {
 		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
 			autoSC.automatizarHash(lancDTO);
 		}
-		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
-			lancSC.conciliar(lancDTO);
-		}
+//		for (LancAux lancDTO  : coletorLanc.getLancamentosAux()  ) {
+//			lancSC.conciliar(lancDTO);
+//		}
 //---------------- Acerta Saldo do LançamentoDTO --------------------------------------------------// 
 		BigDecimal saldo = coletorLanc.UltimoLancamento().acertaSaldo();
 		for (int i = coletorLanc.getLancamentosAux().size() -2 ; i  >= 0 ; i--)  {

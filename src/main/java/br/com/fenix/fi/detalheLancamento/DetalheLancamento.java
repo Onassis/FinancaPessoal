@@ -18,6 +18,8 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.lancamento.Lancamento;
+import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.fi.upload.LancAux;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -231,4 +233,24 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		}
 		return null;
 	}
+	public boolean conciliarLancAux(LancAux lancAux) {
+		
+	   if (contaLancamento != null) {	
+		   if  (!contaLancamento.equals(lancAux.getContaLancamento()))
+			   return false; 
+	   }
+	   
+	   if ( dataPgto.equals(lancAux.getDataLanc()) || chaveBanco.equals(lancAux.getChaveBanco())) 
+	   		return true;		
+
+	   if ( dataVenc.equals(lancAux.getDataLanc()) || valor.equals(lancAux.getValor()))  
+	   		return true;	
+	   
+	   SubCategoria subCategoria = lancamento.getSubCategoria(); 
+	   if ( subCategoria != null) {
+		   if ( dataVenc.equals(lancAux.getDataLanc()) || subCategoria.equals(lancAux.getSubCategoria()))  
+			   return true;
+	   	}
+	   return false; 
+  }
 }

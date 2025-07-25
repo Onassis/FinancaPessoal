@@ -19,6 +19,7 @@ import br.com.fenix.api.exceptionhandle.NegocioException;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.dominio.enumerado.OperacaoDB;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamentoRepositorio;
 import br.com.fenix.fi.saldo.SaldoContaRepositorio;
@@ -144,78 +145,109 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 		return lancamentoDTO; 
 
 	}
-	public LancAux conciliar( LancAux  lancAux) {
-		List<DetalheLancamento> lancamentos ;
-		Optional<DetalheLancamento>  lancOpt;
+	public void conciliar( List<LancAux>  lancs  ) {
+       Optional<DetalheLancamento> lancOpt ; 
+		LocalDate dataIni, dataFim; 
 		
-		/**
-		 * Busca pela chave do banco se o arquivo já foi importado
-		 */
+		Conta conta = lancs.get(0).getContaLancamento() ; 
 		
-		lancOpt = DtlancamentoRP.findByContaAndChaveBancoData(lancAux.getContaLancamento() , 									
-				lancAux.getDataLanc(),
-				lancAux.getChaveBanco() ); 
-		if (lancOpt.isPresent()) {
-			DetalheLancamento detLanc = lancOpt.get(); 
-			lancAux.setLancamentoId(detLanc.getLancamento().getId());
-			lancAux.setDetalheLancId(detLanc.getId()); 
-			lancAux.setConciliado(true);
-			return lancAux; 
-		}
-		/**
-		 * Busca pelo banco e data documento e valor 
-		 */
+		dataIni = lancs.get(0).getDataLanc().minusDays(30);
+		dataFim  = lancs.get(0).getDataLanc().plusDays(30);
 		
-		lancamentos  = DtlancamentoRP.
-				findbyContaAndByDataVencandByValor (
-						lancAux.getContaDestino(), 
-						lancAux.getDataDoc(), lancAux.getValor());
-		lancOpt = lancamentos.stream()
-				.filter(e -> e.getDataVenc().equals(lancAux.getDataDoc()))
-				.findFirst();
-		
-		if (lancOpt.isPresent()) {
-			DetalheLancamento detLanc = lancOpt.get(); 
-			lancAux.setLancamentoId(detLanc.getLancamento().getId());
-			lancAux.setDetalheLancId( detLanc.getId());
+		List<DetalheLancamento> lancamentos = DtlancamentoRP.findByContaAndDataRefBetween(conta,dataIni,dataFim); 
+		 
+		for (LancAux lancAux : lancs) { 
+			/**
+			 * Conciliamento automatico 
+			 */
+			lancOpt = lancamentos.stream()
+					 .filter(lanc ->  lanc.conciliarLancAux(lancAux))
+					 .findFirst();
+	
+			if (lancOpt.isPresent()) {
+				DetalheLancamento detLanc = lancOpt.get(); 
+				lancAux.setLancamentoId(detLanc.getLancamento().getId());
+				lancAux.setDetalheLancId( detLanc.getId());		
+				lancAux.setSubCategoria(detLanc.getLancamento().getSubCategoria()) ;
+				lancAux.setConciliado(detLanc.getChaveBanco().equals(lancAux.getChaveBanco()));	
+				continue; 
+			}
 			
-			lancAux.setConciliado(true);
-			return lancAux;    			    			
-		}
-		
-		lancamentos  = DtlancamentoRP.
-				findbyDtVencBetweenAndByValor (
-						lancAux.getDataDoc().minusDays(30),
-						lancAux.getDataDoc().plusDays(30), lancAux.getValor());
-
-
-		lancOpt = lancamentos.stream()
-				.filter(e -> e.getDataVenc().equals(lancAux.getDataLanc()))
-				.findFirst();
-
-		if (lancOpt.isPresent()) {
-			DetalheLancamento detLanc = lancOpt.get(); 
-			lancAux.setLancamentoId(detLanc.getLancamento().getId());
-			lancAux.setDetalheLancId(detLanc.getId()); 
-			lancAux.setConciliado(true);
-			return lancAux; 
-		}
-
-		lancOpt = lancamentos.stream()
-				.filter(e -> e.getValor().equals(lancAux.getValor()))
-				.findFirst();
-
-		if (lancOpt.isPresent()) {
-			DetalheLancamento detLanc = lancOpt.get(); 
-			lancAux.setLancamentoId(detLanc.getLancamento().getId()); 			
-			lancAux.setDetalheLancId(detLanc.getId());
-			lancAux.setConciliado(true);
-			return lancAux; 
-		}
-
-
-		return lancAux;
+		}	
 	}
+		
+		
+//		List<DetalheLancamento> lancamentos ;
+//		Optional<DetalheLancamento>  lancOpt;
+//		
+//		/**
+//		 * Busca pela chave do banco se o arquivo já foi importado
+//		 */
+//		
+//		lancOpt = DtlancamentoRP.findByContaAndChaveBancoData(lancAux.getContaLancamento() , 									
+//				lancAux.getDataLanc(),
+//				lancAux.getChaveBanco() ); 
+//		if (lancOpt.isPresent()) {
+//			DetalheLancamento detLanc = lancOpt.get(); 
+//			lancAux.setLancamentoId(detLanc.getLancamento().getId());
+//			lancAux.setDetalheLancId(detLanc.getId()); 
+//			lancAux.setConciliado(true);
+//			return lancAux; 
+//		}
+//		/**
+//		 * Busca pelo banco e data documento e valor 
+//		 */
+//		
+//		lancamentos  = DtlancamentoRP.
+//				findbyContaAndByDataVencandByValor (
+//						lancAux.getContaDestino(), 
+//						lancAux.getDataDoc(), lancAux.getValor());
+//		lancOpt = lancamentos.stream()
+//				.filter(e -> e.getDataVenc().equals(lancAux.getDataDoc()))
+//				.findFirst();
+//		
+//		if (lancOpt.isPresent()) {
+//			DetalheLancamento detLanc = lancOpt.get(); 
+//			lancAux.setLancamentoId(detLanc.getLancamento().getId());
+//			lancAux.setDetalheLancId( detLanc.getId());
+//			
+//			lancAux.setConciliado(true);
+//			return lancAux;    			    			
+//		}
+//		
+//		lancamentos  = DtlancamentoRP.
+//				findbyDtVencBetweenAndByValor (
+//						lancAux.getDataDoc().minusDays(30),
+//						lancAux.getDataDoc().plusDays(30), lancAux.getValor());
+//
+//
+//		lancOpt = lancamentos.stream()
+//				.filter(e -> e.getDataVenc().equals(lancAux.getDataLanc()))
+//				.findFirst();
+//
+//		if (lancOpt.isPresent()) {
+//			DetalheLancamento detLanc = lancOpt.get(); 
+//			lancAux.setLancamentoId(detLanc.getLancamento().getId());
+//			lancAux.setDetalheLancId(detLanc.getId()); 
+//			lancAux.setConciliado(true);
+//			return lancAux; 
+//		}
+//
+//		lancOpt = lancamentos.stream()
+//				.filter(e -> e.getValor().equals(lancAux.getValor()))
+//				.findFirst();
+//
+//		if (lancOpt.isPresent()) {
+//			DetalheLancamento detLanc = lancOpt.get(); 
+//			lancAux.setLancamentoId(detLanc.getLancamento().getId()); 			
+//			lancAux.setDetalheLancId(detLanc.getId());
+//			lancAux.setConciliado(true);
+//			return lancAux; 
+//		}
+//
+//
+//		return lancAux;
+//	}
 }
 
 //public List<LancamentoDTO> findAll () {

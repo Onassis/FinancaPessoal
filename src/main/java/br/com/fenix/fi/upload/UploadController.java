@@ -170,6 +170,7 @@ public class UploadController {
 	}
     @GetMapping("/confirmaLanc")
     public ModelAndView  listaLancamento (List<Lancamento> lancamentos) {
+    	System.out.println("upload-> confirmaLanc");
     	List<LancamentoDTO> lancDtos = lancamentos.stream() 
     			.map(dado -> new LancamentoDTO(dado))
     			 .collect(Collectors.toList());

@@ -27,13 +27,32 @@ public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<Det
 	@Query("from DetalheLancamento d JOIN FETCH d.lancamento where d.id = ?1 and d.criadoPor.id = ?#{ principal.id}")
 	Optional<DetalheLancamento> findById (Long id);
 
-// 	@Query("select d, l , s from DetalheLancamento d JOIN FETCH d.lancamento l JOIN FETCH l.subCategoria s where d.dataVenc between :dataInicio and :dataFim   and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
-	@Query("from DetalheLancamento d JOIN FETCH d.lancamento where d.dataVenc between :dataInicio and :dataFim   and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
+	@Query("from DetalheLancamento d JOIN FETCH d.lancamento where  "
+			+ " d.criadoPor.id = ?#{ principal.id} "
+			+ " and d.contaLancamento = :conta "
+			+ " and d.dataRef between :dataInicio and :dataFim ")		
+	public List<DetalheLancamento> findByContaAndDataRefBetween (@Param("conta") Conta conta, @Param("dataInicio")  LocalDate dataInicio, @Param("dataFim") LocalDate dataFim); 
+
+	
+/**
+ * Consulta lancamentos em periodo   
+ * @param dataInicio
+ * @param dataFim
+ * @return
+ */
+	@Query("from DetalheLancamento d JOIN FETCH d.lancamento where d.dataRef between :dataInicio and :dataFim   and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
 	List <DetalheLancamento> findAllBydataVenctoBetween( @Param("dataInicio")  LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
 //	@Query("from DetalheLancamento l where l.dataCompensacao is null and l.criadoPor.id = ?#{ principal.id} order by l.dataLancamento ")
 //	List <DetalheLancamento> findAllBydataCompensacaoIsNull();
 	
+/**
+ * 	
+ * @param conta
+ * @param dataIni
+ * @param chaveBanco
+ * @return
+ */
 	@Query("from DetalheLancamento d JOIN FETCH d.lancamento where  "
 			+ " d.criadoPor.id = ?#{ principal.id} "
 			+ " and d.contaLancamento = :conta "

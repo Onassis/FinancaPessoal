@@ -309,6 +309,16 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		return ( this.detalheLancId == 0)  ;
 	}
 
+	public boolean isUpdateLanc() {
+// Lancamento doJá tratado anteriomente 		
+		if(conciliado)
+			return false;
+		
+		if (this.detalheLancId == null)  
+			return false; 
+		
+		return ( this.detalheLancId != 0)  ;
+	}
 	public boolean isTransfLanc() { 
 		if (this.detalheDestinoId == null)  
 			return true; 
