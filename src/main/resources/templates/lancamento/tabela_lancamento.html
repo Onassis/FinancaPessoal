@@ -20,7 +20,7 @@
 						</tr>		
 			<tbody>
 				<tr th:each="l : ${lancamentoDTO}">		 		
-					<td th:text="${#temporals.format(l.dataVenc, 'dd/MM/yyyy')}">2017/08/14</td>
+					<td th:text="${#temporals.format(l.dataRef, 'dd/MM/yyyy')}">2017/08/14</td>
 					<td th:text="${l?.contaLancamento?.getApelido()}">Conta lancamento</td>	
 					<td th:text="${l?.informacao}">Informação</td> 					
 					<td th:text="${l?.SubCategoria?.getDescricao()}">Categorial</td>
@@ -29,7 +29,7 @@
 					<td th:text="${l?.Favorecido?.getNome()}">Favorecido</td>
 					<td th:text="${#temporals.format(l.DataDoc, 'dd/MM/yyyy')}">2017/08/14</td>					 			
 					<td th:text="${l?.conciliado}" align="center">Concialiado lancamento</td>	
-				    <td th:text="|R$ ${#numbers.formatDecimal(l?.Valor, 1, 'DEFAULT', 2, 'DEFAULT')}|" align="right"></td>	
+				    <td th:text="|R$ ${#numbers.formatDecimal(l?.ValorLanc, 1, 'DEFAULT', 2, 'DEFAULT')}|" align="right"></td>	
 				    <td colspan="2" align="center">
 						 <a id="btn_editar" th:href="@{/lancamento/editar/{id} (id=${l.detalheLancamentoId}) }" title="Editar"	 
 							    class="fa-regular fa-pen-to-square icon-dark"></a>           
@@ -39,7 +39,7 @@
 				 </tr>
 				 <tr>  
 				    <td colspan="6"> </td> 
-					<td colspan="6" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentoDTO.![valor]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
+					<td colspan="6" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentoDTO.![ValorLanc]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
 				 </tr>  					    								
 			</tbody>
 		</div>

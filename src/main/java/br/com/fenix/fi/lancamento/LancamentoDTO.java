@@ -60,6 +60,9 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     protected LocalDate dataPgto;
     
     
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    protected LocalDate dataRef;
+    
     protected TipoLancamento tipoLancamento;
     
 	protected TipoOperacao tipoOperacao;
@@ -95,33 +98,37 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
      protected int prestacao;
 
     @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal total;
+	protected BigDecimal total = BigDecimal.ZERO;
     
     @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal valor;
+	protected BigDecimal valor = BigDecimal.ZERO;
     @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal valorPgto;
+	protected BigDecimal valorPgto  = BigDecimal.ZERO;
+    
+    
+    protected BigDecimal valorLanc  = BigDecimal.ZERO; 
     
     @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal saldo;
+	protected BigDecimal saldo  = BigDecimal.ZERO;
     @Transient
     @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal credito;
+	protected BigDecimal credito  = BigDecimal.ZERO;
     @JsonDeserialize(using = MoneyDeserializer.class) 
     @Transient
-	protected BigDecimal debito;
+	protected BigDecimal debito  = BigDecimal.ZERO;
     
    
     @JsonDeserialize(using = NumericBooleanDeserializer.class)
 	protected boolean conciliado ;
+    
+    /* Entrada em emprestimo */ 
     @JsonDeserialize(using = NumericBooleanDeserializer.class)
    	protected boolean entrada ;
     
 	@JsonDeserialize(using = UsuarioDeserializer.class)
     private Usuario criadoPor;
-	
-	@Transient
-	private String prestacaoAtual;
+    
+//	private String prestacaoAtual;
 	  
     public LancamentoDTO() {    	
     	super();
@@ -156,15 +163,18 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     	this.favorecido = lancamento.getFavorecido(); 
     	  
     	if  (lancamento.getDetalheLancamento().isEmpty() == false) {
-    		DetalheLancamento delLanc = lancamento.getDetalheLancamento().get(0);
-    		this.detalheLancamentoId = delLanc.getId();
-    		this.tipoLancamento = delLanc.getTipoLancamento(); 
-    		this.contaLancamento  = delLanc.getContaLancamento(); 
-    		this.contaTransferencia = delLanc.getContaTransferencia(); 
-    		this.valor	 = delLanc.getValor();
-            this.dataVenc = delLanc.getDataVenc(); 
-            this.conciliado = delLanc.isConciliado();
-    		
+    		DetalheLancamento detLanc = lancamento.getDetalheLancamento().get(0);
+    		this.detalheLancamentoId = detLanc.getId();
+    		this.tipoLancamento = detLanc.getTipoLancamento(); 
+    		this.contaLancamento  = detLanc.getContaLancamento(); 
+    		this.contaTransferencia = detLanc.getContaTransferencia(); 
+    		this.valor	 = detLanc.getValor().abs();
+            this.dataVenc = detLanc.getDataVenc(); 
+            this.dataPgto = detLanc.getDataPgto();
+            this.valorPgto = detLanc.getValorPgto().abs();
+            this.dataRef  = detLanc.getDataRef();
+            this.conciliado = detLanc.isConciliado();
+            ajustaDataRef();
     	}      
    }
     public LancamentoDTO(DetalheLancamento detLanc) {    	
@@ -198,13 +208,42 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
     	this.tipoLancamento = detLanc.getTipoLancamento(); 
     	this.contaLancamento  = detLanc.getContaLancamento(); 
     	this.contaTransferencia = detLanc.getContaTransferencia(); 
-    	this.valor	 = detLanc.getValor();
+    	this.valor	 = detLanc.getValor().abs();
         this.dataVenc = detLanc.getDataVenc(); 
-        this.conciliado = detLanc.isConciliado();    		
+        this.dataPgto = detLanc.getDataPgto();
+        this.valorPgto = detLanc.getValorPgto().abs();
+        this.dataRef  = detLanc.getDataRef();
+
+        this.conciliado = detLanc.isConciliado();
+        ajustaDataRef();
     } 
    
-    public void setLancamentoTotal( BigDecimal total) { 
-    	this.total = acertaSinal(total); 
+    /*
+     * Ao atualizar Data Doc atualiza data Vencimento
+     */
+    
+    public void setDataDoc(LocalDate data) {
+    	this.dataDoc = data;
+    	if (tipoOperacao != TipoOperacao.CP) {
+        	this.dataVenc = data;     		
+        	ajustaDataRef();    		
+    	}
+    }
+    public void setDataPgto(LocalDate dataPgto) {
+    	this.dataPgto = dataPgto; 
+    	ajustaDataRef();
+    }
+    private void ajustaDataRef() {
+		if (conciliado) {
+	    	this.dataRef = dataPgto;
+		}
+		else 
+			this.dataRef = this.dataVenc;
+		
+	}
+
+	public void setLancamentoTotal( BigDecimal total) { 
+    	this.total = acertarSinal(total); 
     	this.valor = total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
     
@@ -216,13 +255,18 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
 		 return sPrestacao; 
 	 }
+	 public BigDecimal getValorLanc() { 
+		 if (conciliado)
+			 return valorPgto.abs(); 
+		 return valor.abs();
+	 }
 	 /*
 	  * Acerta o sinal conforme se Credito e Debito 
 	  * 
 	  * Debito =>  Negativo
 	  * Credito => Positivo 
 	  */
-	 public BigDecimal acertaSinal( BigDecimal valor) { 
+	 public BigDecimal acertarSinal( BigDecimal valor) { 
 		 if (isDebito()) { 
 			 return valor.abs().multiply(new BigDecimal(-1)); 
 		 }
@@ -257,12 +301,12 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 		return debito ; 		
 	}    
 	 
-	public BigDecimal calculaSaldo(BigDecimal saldoAnterior) {
+	public BigDecimal calcularSaldo(BigDecimal saldoAnterior) {
 		
 		this.saldo = saldoAnterior.add(this.getCredito()).subtract(this.getDebito()); 
 		return this.saldo; 		
 	}
-	public BigDecimal acertaSaldo(BigDecimal saldo) {
+	public BigDecimal acertarSaldo(BigDecimal saldo) {
 		this.saldo = saldo;
 		return  saldo.add(this.valor); 				
 	}
@@ -328,5 +372,6 @@ public class LancamentoDTO extends EntidadeAbstrata<Long> implements Comparable<
 		mesAno = mesAno + dataDoc.getYear(); 
 		return mesAno;
 	}
+	
 	
 }

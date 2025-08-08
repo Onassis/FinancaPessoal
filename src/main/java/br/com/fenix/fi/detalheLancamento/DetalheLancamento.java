@@ -33,8 +33,8 @@ import lombok.experimental.SuperBuilder;
 @Entity 
 @Table(name="detalheLancamento", 
 		indexes = { 
-		@Index(name = "idx_dataPesquisa", columnList = "criado_por_id,dataRef", unique = false) ,
-		@Index(name = "idx_ContaAnoMes", columnList = "conta_lancamento_id,Ano,Mes", unique = false) })
+		@Index(name = "idx_dataPesquisa", columnList = "criado_por_id,dataRef", unique = false) }
+)
 
 @Data
 @EqualsAndHashCode(callSuper =true)
@@ -136,10 +136,16 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		this.tipoLancamento =  tipoLancamento; 
 		this.contaLancamento = conta;
 		this.valor = valor; 
-		ajustaValor();
+		ajustarAntesSalvar();
 		this.conciliado = false;
 	}
-	
+	@PrePersist
+	@PreUpdate
+	public void ajustarAntesSalvar() {
+		ajustarDataRef();
+		ajustarValor();
+		ajustarValorPgto();
+	}
     public boolean isDebito() {
 		return this.tipoLancamento == TipoLancamento.D;
 	}
@@ -158,10 +164,10 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	}
     public void setConciliado ( boolean conciliado) {
     	this.conciliado = conciliado; 
-    	ajustaData(); 
+    	ajustarDataRef(); 
     }
 
-	private void ajustaData() {
+	public void ajustarDataRef() {
 		dataRef = dataVenc; 
 		if (conciliado) 
 			dataRef = dataPgto;		
@@ -182,19 +188,19 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 			return;
 		}
 		this.dataVenc = dataVenc;
-		ajustaData();
+		ajustarDataRef();
 	}
-	public void setdataPgto(LocalDate dataPgto) {
+	public void setDataPgto(LocalDate dataPgto) {
 		if (dataPgto != null) {	
 			return;
 		}						
 		this.dataPgto = dataPgto;
-		ajustaData();
+		ajustarDataRef();
 		
 	}
    public void setTipoLancamento ( TipoLancamento tipo) {
 	   this.tipoLancamento = tipo; 
-	   ajustaValor();
+	   ajustarValor();
    }
 
 /*
@@ -202,21 +208,21 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
  */
 	public void setValor(BigDecimal valor ) {
 		this.valor = valor;
-		ajustaValor();
+		ajustarValor();
 	}
 	/*
 	 * Grava valor negativo par lançamento Debito	
 	 */
 	public void setValorPgto(BigDecimal valor ) {
 			this.valorPgto = valor;
-			ajustaValorPgto();
+			ajustarValorPgto();
 	}
-	public void ajustaValorPgto() {
+	public void ajustarValorPgto() {
 			this.valorPgto = valorPgto.abs();
 			if (isDebito())  			
 				this.valorPgto = this.valorPgto.negate() ; 
 		}
-	public void ajustaValor() {
+	public void ajustarValor() {
 		this.valor = valor.abs();
 		if ( isDebito())  			
 			this.valor = this.valor.negate() ; 

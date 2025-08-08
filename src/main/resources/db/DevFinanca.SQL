@@ -11,6 +11,47 @@
 /*                                                      View                                                                                   */
 /************************************************************************************************************************************************/
 
+CREATE or REPLACE  view view_TotalAnoMes   as             
+SELECT a.conta_lancamento_id,
+    a.ano,
+    a.mes,
+    to_date( concat(a.ano, to_char(a.mes, '00') , '01'),'YYYYMMDD') as dataSaldo,
+    sum(
+        CASE
+            WHEN a.tipo_lancamento::text = 'D'::text THEN a.valor
+            ELSE 0::numeric
+        END) AS debito,
+    sum(
+        CASE
+            WHEN a.tipo_lancamento::text = 'C'::text THEN a.valor
+            ELSE 0::numeric
+        END) AS credito,
+    sum(a.valor) AS total
+   FROM detalhe_lancamento as a 
+  WHERE a.conta_lancamento_id IS NOT NULL AND a.conciliado = true
+  GROUP BY  a.conta_lancamento_id,
+            a.ano,
+            a.mes,
+            dataSaldo;
+            
+/*
+    View mostar o saldo Inicial , total realizado mes e saldo atual 
+*/     
+DROP VIEW view_SaldoMes; 
+           
+CREATE  view view_SaldoMes   as 
+select  a.id as id, 
+		a.conta_id as contaId, a.ano,a.mes, 
+		a.data,
+		a.flag_compensacao as flagCompensacao,
+		a.saldo_inicial as saldoInicial,
+		COALESCE(b.total,0) as total,
+        (a.saldo_inicial + COALESCE(b.total,0) ) as saldoAtual   
+from saldo_conta as a  
+left join view_TotalAnoMes as b on a.conta_id = b.conta_lancamento_id and a.ano = b.ano and a.mes = b.mes;             
+
+
+
 SELECT  a.lancamento_id,l.data_doc, l.informacao, l.Nro_prestacao,l.total,min(prestacao), abs(sum(a.valor)) as vr_devido 
 fROM detalhe_lancamento as a
 inner join lancamento as l on l.id = a.lancamento_id
@@ -57,46 +98,9 @@ CREATE or REPLACE  view view_SaldoAtual  as
 
 //Date trunc para trabalhar com data 
 
-CREATE or REPLACE  view view_TotalAnoMes   as             
-SELECT a.conta_lancamento_id,
-    a.ano,
-    a.mes,
-    to_date(a.ano || a.mes || '01','YYYYMMDD') as dataSaldo
-    sum(
-        CASE
-            WHEN a.tipo_lancamento::text = 'D'::text THEN a.valor
-            ELSE 0::numeric
-        END) AS debito,
-    sum(
-        CASE
-            WHEN a.tipo_lancamento::text = 'C'::text THEN a.valor
-            ELSE 0::numeric
-        END) AS credito,
-    sum(a.valor) AS total
-   FROM detalhe_lancamento as a 
-  WHERE a.conta_lancamento_id IS NOT NULL AND a.conciliado = true
-  GROUP BY  a.conta_lancamento_id,
-            a.ano,
-            a.mes,
-            dataSaldo;
-/*
-    View mostar o saldo Inicial , total realizado mes e saldo atual 
-*/     
-DROP VIEW view_SaldoMes; 
-           
-CREATE  view view_SaldoMes   as 
-select  a.id as id, 
-		a.conta_id as contaId, a.ano,a.mes, 
-		a.data,
-		a.flag_compensacao as flagCompensacao,
-		a.saldo_inicial as saldoInicial,
-		COALESCE(b.total,0) as total,
-        (a.saldo_inicial + COALESCE(b.total,0) ) as saldoAtual   
-from saldo_conta as a  
-left join view_TotalAnoMes as b on a.conta_id = b.conta_lancamento_id and a.ano = b.ano and a.mes = b.mes; 
-  
 
-                
+
+               
 /************************************************************************************************************************************************/
 /*                                                      Funcao                                                                                  */
 /************************************************************************************************************************************************/

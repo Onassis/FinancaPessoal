@@ -65,6 +65,9 @@ public class CompraParceladaConverter implements Converter<CompraParcelada,Lanca
 		      detLanc.setConciliado(dto.isConciliado()); 
 		      detLanc.setDataVenc(dto.getDataVenc());
 		      
+		      detLanc.setDataPgto(dto.getDataPgto()); 
+		      detLanc.setValorPgto(dto.getValorPgto());
+
 		      
 	}
 

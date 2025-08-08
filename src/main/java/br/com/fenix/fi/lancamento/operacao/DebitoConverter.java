@@ -29,7 +29,7 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 
 		DetalheLancamento detalheLancamento = new DetalheLancamento().builder() 
 	 			.prestacao(1)
-	 			.valor(lancamento.getValorPrestacao()) 
+	 			.valor(dto.getValor()) 
 	 			.tipoLancamento(dto.getTipoLancamento())
 	 			.dataVenc(data)
 	 			.contaLancamento(dto.getContaLancamento())
@@ -37,8 +37,11 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 	 			.ano(data.getYear()) 
 	 			.mes(data.getMonthValue())
 	 			.conciliado(dto.isConciliado())
+	 			.dataPgto(dto.getDataPgto())
+	 			.valorPgto(dto.getValorPgto())
 	 			.tipoLancamento(TipoLancamento.D)
 	 			.build();
+		detalheLancamento.ajustarDataRef();
 		lancamento.addDatalheLancamento(detalheLancamento);
 		
 		return lancamento; 	
@@ -57,7 +60,10 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 
 		      detLanc.setValor(dto.getTotal());
 		      detLanc.setConciliado(dto.isConciliado()); 
-		      detLanc.setDataVenc(dto.getDataVenc());		      
+		      detLanc.setDataVenc(dto.getDataDoc());		
+		      detLanc.setDataPgto(dto.getDataPgto());
+		      detLanc.setValorPgto(dto.getValor());
+
 		      
 	}
 

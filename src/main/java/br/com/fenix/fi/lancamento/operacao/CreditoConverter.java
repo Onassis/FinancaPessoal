@@ -37,6 +37,8 @@ public class CreditoConverter implements Converter<Credito,LancamentoDTO> {
 	 			.ano(data.getYear()) 
 	 			.mes(data.getMonthValue())
 	 			.conciliado(dto.isConciliado())
+	 			.dataPgto(dto.getDataPgto())
+	 			.valorPgto(lancamento.getValorPrestacao())
 	 			.tipoLancamento(TipoLancamento.D)
 	 			.build();
 		lancamento.addDatalheLancamento(detalheLancamento);
@@ -56,7 +58,8 @@ public class CreditoConverter implements Converter<Credito,LancamentoDTO> {
 		      detLanc.setValor(dto.getTotal());
 		      detLanc.setConciliado(dto.isConciliado()); 
 		      detLanc.setDataVenc(dto.getDataVenc());
-		      
+		      detLanc.setDataPgto(dto.getDataPgto());
+		      detLanc.setValorPgto(dto.getValor());
 		      
 	}
 

@@ -38,9 +38,11 @@ public class TransferenciaConverter implements Converter<Transferencia,Lancament
 	 			.ano(data.getYear()) 
 	 			.mes(data.getMonthValue())
 	 			.conciliado(dto.isConciliado())
+	 			.dataPgto(dto.getDataPgto())
+	 			.valorPgto(dto.getValorPgto())	 	
 	 			.tipoLancamento(TipoLancamento.D)
 	 			.build();
-		detalheLancamento.ajustaValor();
+		detalheLancamento.ajustarAntesSalvar();
 		lancamento.addDatalheLancamento(detalheLancamento);
 		
 
@@ -56,8 +58,10 @@ public class TransferenciaConverter implements Converter<Transferencia,Lancament
 	 			.ano(data.getYear()) 
 	 			.mes(data.getMonthValue())
 	 			.conciliado(dto.isConciliado())
+	 			.dataPgto(dto.getDataPgto())
+	 			.valorPgto(dto.getValorPgto())	 			
 	 			.build();
-	 	detalheLancTransf.ajustaValor();	 	
+		detalheLancamento.ajustarAntesSalvar();
 		lancamento.addDatalheLancamento(detalheLancTransf);
 		}
    return lancamento; 
@@ -75,7 +79,8 @@ public class TransferenciaConverter implements Converter<Transferencia,Lancament
 		      detLanc.setValor(dto.getValor());
 		      detLanc.setConciliado(dto.isConciliado()); 
 		      detLanc.setDataVenc(dto.getDataVenc());	      
-		      
+		      detLanc.setDataPgto(dto.getDataPgto());
+		      detLanc.setValorPgto(dto.getValor());
 	}
 
 	

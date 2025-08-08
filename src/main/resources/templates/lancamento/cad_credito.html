@@ -31,9 +31,8 @@
 		
 	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST" class="row g-3 needs-validation">	
 				
-					<input type="input"  id="filterInput" placeholder="Filter options">			
-
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-6')}" />
+	 			 <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-6')}" />
+	  
 			  
   			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='total', type='moeda', rowClass='col-md-6')}" />   
 			    
@@ -47,11 +46,16 @@
 			  
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='informacao',  rowClass='col-md-12')}" />    
 			 
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='observacao',  rowClass='col-md-12')}" />  
 
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataVenc', type='date', rowClass='col-md-6')}" />
+
+		
 			  
+		   
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input',rowClass='col-md-6')}" />
+
+			 <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataPgto', type='date', readOnly='readOnly', rowClass='col-md-6')}" />
+			 <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='valorPgto', type='moeda', inputClassappend='col-form-label', rowClass='col-md-6')}" />
+    
 
 			<input type="hidden" id="tipoOperacao" th:field="*{tipoOperacao}" th:value='CR'/>
 		  		                       

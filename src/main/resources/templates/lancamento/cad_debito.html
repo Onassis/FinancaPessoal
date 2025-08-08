@@ -32,10 +32,11 @@
 		
 	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST" class="row g-3 needs-validation">				
 
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-6')}" />     
+
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='contaLancamento', type='select',required='required',options= ${contas},readOnly='readOnly',rowClass='col-md-6')}" /> 
 
 
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-6')}" />     
 			       					  		   	
 
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='favorecido', type='select',options= ${favorecidos},rowClass='col-md-12')}" /> 
@@ -49,9 +50,10 @@
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='informacao',  rowClass='col-md-12')}" />  
 			  
        
-             <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input col-form-label',rowClass='col-md-6 ')}" />
+             <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input',rowClass='col-md-6 ')}" />
    
-   		  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataVenc', type='date', inputClassappend='col-form-label', rowClass='col-md-6')}" />
+   		  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataPgto', type='date', inputClassappend='col-form-label', rowClass='col-md-6')}" />
+   		  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='valorPgto', type='moeda', inputClassappend='col-form-label', rowClass='col-md-6')}" />
              
 		        
 		        <input type="hidden" id="tipoOperacao" th:field="*{tipoOperacao}" th:value='DB'/>               
@@ -73,45 +75,61 @@
 <!-- SEU CÓDIGO JAVASCRIPT COMEÇA AQUI -->
 <script>
 // Garante que o código só será executado depois que o documento HTML estiver completamente carregado.
-$(document).ready(function() {
+/*$(document).ready(function() {
 
     // Função para verificar o estado do checkbox e mostrar/esconder o campo de data
-    function toggleDataVencimento() {
-        // Verifica se o checkbox 'conciliado' está marcado
-        if ($('#input_conciliado').is(':checked')) {
-            // Se estiver marcado, mostra a div da data de vencimento com uma animação
-            $('#div_datavenc').hide();
-        } else {
-            // Se não estiver marcado, esconde a div da data de vencimento com uma animação
-            $('#div_datavenc').slideUp();
-        }
+    function toggleDataPgto() {
+        // Verifica se o checkbox 'conciliado' está marcado    
+    	if ($('#input_conciliado').is(':checked')) {		
+	        $('#input_datapgto').prop("readonly", false) // Mostra com animação	        
+			$('#input_datapgto').attr('required', true);
+			$('#input_valorpgto').prop("readonly", false) // Mostra com animação	        
+			$('#input_valorpgto').attr('required', true);
+    	} else {
+        	$('#input_datapgto').prop("readonly", true); // Esconde com animação        	
+			$('#input_datapgto').attr('required', false);
+			$('#input_valorpgto').prop("readonly", true) // Mostra com animação	        
+			$('#input_valorpgto').attr('required', false);
+
+    	}
     }
 
     // 1. Executa a função assim que a página carrega para definir o estado inicial correto
-    toggleDataVencimento();
+    toggleDataPgto();
 
     // 2. Adiciona um "ouvinte" para o evento 'change' no checkbox
     //    Isso vai disparar a função toda vez que o checkbox for marcado ou desmarcado
     $('#input_conciliado').on('change', function() {
+		toggleDataPgto();
 		if ($(this).is(':checked')) {
             // FOI MARCADO: agora sim, alteramos a data e mostramos o campo.
             
             // Cria a data de hoje no formato AAAA-MM-DD
-            const hoje = new Date();
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-            const dataFormatada = `${ano}-${mes}-${dia}`;
+//            const hoje = new Date();
+//            const ano = hoje.getFullYear();
+//            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+//            const dia = String(hoje.getDate()).padStart(2, '0');
+//            const dataFormatada = `${ano}-${mes}-${dia}`;
 
             // Atualiza o valor do campo de data
-            $('#input_datavenc').val(dataFormatada);
-        };   
-        toggleDataVencimento();
+            var data = $('#input_datadoc').val();
+            var total = $('#input_total').val();
+
+            $('#input_datapgto').val(data);
+            $('#input_valorpgto').val(total);
+        }
+        else {
+            $('#input_datapgto').val('');
+            $('#input_valorpgto').val(0);			
+		};   
+ 
     });
 
 });
+**/
 </script>
   <script th:src="@{/js/cadastro.js}"></script>
+  <script th:src="@{/js/conciliacao.js}"></script>
  <script th:src="@{/js/filtro-select.js}"></script>
  </section>
 	</main>

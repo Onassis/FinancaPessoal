@@ -35,6 +35,10 @@ public class DetalheLancamentoConverter  implements Converter<DetalheLancamento,
 			entity.setValor(dto.getTotal());
 			lanc.setTotal(dto.getTotal());
 		}
+		
+		entity.setDataPgto(dto.getDataPgto()); 
+		entity.setValorPgto(dto.getValorPgto());
+		
 	    lanc.setFavorecido(dto.getFavorecido()) ;
 	    lanc.setSubCategoria(dto.getSubCategoria()); 
 	    lanc.setInformacao(dto.getInformacao()); 
