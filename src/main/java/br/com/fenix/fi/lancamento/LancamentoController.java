@@ -83,6 +83,11 @@ public class LancamentoController extends 	ControleAbstratoDTO<Lancamento,Lancam
 	public List<Option> listaDeContasCorrente() {	
 		return contaRP.findOptionByTipoConta(TipoConta.CC);
 	}
+	@Cacheable("cartaoCredito")
+	@ModelAttribute("cartaoCredito")
+	public List<Option> listaDeCartaoCredito() {	
+		return contaRP.findOptionByTipoConta(TipoConta.CR);
+	}
    
 	@ModelAttribute("tipoOperacaoOp")
 	public List<Option> listaTipoOperacao() { 

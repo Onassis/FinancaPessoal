@@ -27,7 +27,7 @@ $(document).ready(function() {
 		if ($(this).is(':checked')) {
 
             // Atualiza o valor do campo de data
-            var data = $('#input_datadoc').val();
+            var data = $('#input_datavenc').val();
             var total = $('#input_total').val();
 
             $('#input_datapgto').val(data);

@@ -10,34 +10,31 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("CD")
-public class Credito extends Lancamento {
+@DiscriminatorValue("CR")
+public class CartaoCredito extends Lancamento {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public Credito() {
+	public CartaoCredito() {
 		super(TipoOperacao.CR);
 	}
 	
-	public Credito(LancamentoDTO dto) {
+	public CartaoCredito(LancamentoDTO dto  ) {
 		super(dto);
-		this.tipoOperacao = TipoOperacao.CP;
-		this.nroInicialPrestacao  = 1 ; 
-		this.nroPrestacao = 1;
+		this.tipoOperacao = TipoOperacao.CR;
 	}
-	public Credito(LancAux lancAux) {
+	public CartaoCredito(LancAux lancAux) {
 		super(lancAux);
-		this.tipoOperacao = TipoOperacao.CP;
-		this.nroInicialPrestacao  = 1 ; 
-		this.nroPrestacao = 1;
+		this.tipoOperacao = TipoOperacao.CR;		
 	}
 
 	@Override
 	public void addDatalheLancamento(DetalheLancamento detalheLac) {
-		detalheLac.setTipoLancamento(TipoLancamento.C);	
+		detalheLac.setTipoLancamento(TipoLancamento.D);
+	    detalheLac.setConciliado(true);
 		detalheLac.setLancamento(this); 
 		detalheLancamento.add(detalheLac);  		
 	}

@@ -25,6 +25,7 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 	public Debito ToEntity(LancamentoDTO dto) {
 		Debito lancamento = new Debito(dto); 
 		Conta conta = dto.getContaLancamento(); 
+		lancamento.setDataDoc(dto.getDataVenc());
 		LocalDate data = conta.getDataFatura(dto.getDataDoc()); 
 
 		DetalheLancamento detalheLancamento = new DetalheLancamento().builder() 
@@ -41,7 +42,7 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 	 			.valorPgto(dto.getValorPgto())
 	 			.tipoLancamento(TipoLancamento.D)
 	 			.build();
-		detalheLancamento.ajustarDataRef();
+		detalheLancamento.ajustarAntesSalvar();
 		lancamento.addDatalheLancamento(detalheLancamento);
 		
 		return lancamento; 	

@@ -3,6 +3,7 @@ package br.com.fenix.fi.lancamento;
 import java.util.Objects;
 
 import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.fi.lancamento.operacao.CartaoCredito;
 import br.com.fenix.fi.lancamento.operacao.CompraParcelada;
 import br.com.fenix.fi.lancamento.operacao.Credito;
 import br.com.fenix.fi.lancamento.operacao.Debito;
@@ -32,8 +33,10 @@ public class LancamentoFactory {
         switch (tipo) {
             case CP:
                 return new CompraParcelada(lancAux);
+            case CD:
+                return new CartaoCredito(lancAux);
             case CR:
-                return new Credito(lancAux);
+                return new Credito(lancAux);                
             case DB:
                 return new Debito(lancAux);
             case TR:

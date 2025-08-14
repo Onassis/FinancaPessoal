@@ -1,6 +1,8 @@
 package br.com.fenix.fi.lancamento;
 
 import br.com.fenix.abstrato.dto.Converter;
+import br.com.fenix.fi.lancamento.operacao.CartaoCredito;
+import br.com.fenix.fi.lancamento.operacao.CartaoCreditoConverter;
 import br.com.fenix.fi.lancamento.operacao.CompraParceladaConverter;
 import br.com.fenix.fi.lancamento.operacao.CreditoConverter;
 import br.com.fenix.fi.lancamento.operacao.DebitoConverter;
@@ -20,12 +22,14 @@ public class ConverterLancamentoFactory {
     
     public ConverterLancamentoFactory() {
         converters.put("CP", new CompraParceladaConverter());
-        converters.put("CR", new CreditoConverter());
+        converters.put("CR", new CartaoCreditoConverter());
+        converters.put("CD", new CreditoConverter());
         converters.put("DB", new DebitoConverter());
         converters.put("TR", new TransferenciaConverter());
         
         cadastro.put("CP", "lancamento/cad_parcelado");
-        cadastro.put("CR", "lancamento/cad_credito");
+        cadastro.put("CD", "lancamento/cad_credito");
+        cadastro.put("CR", "lancamento/cad_cartaoCredito");
         cadastro.put("DB", "lancamento/cad_debito");
         cadastro.put("TR", "lancamento/cad_Transferencia");
 

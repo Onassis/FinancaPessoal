@@ -9,8 +9,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import br.com.fenix.dominio.modelo.Option;
 
 public enum TipoOperacao {
+	CR("CR","Cartão de credito"),
 	CP("CP","Compra parcelada"),
-	CR("CR","Credito"),
+	CD("CR","Credito"),	
 	DB("DB","Débito"),
 	EP("EP","Emprestimo"),
 	ES("ES","Estorno"),

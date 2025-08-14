@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -121,6 +122,11 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
 	private BigDecimal debito;
 	
+	@Transient
+	@Getter
+	@JsonDeserialize(using = MoneyDeserializer.class) 	
+	private BigDecimal valorLanc;
+	
 	public DetalheLancamento() {
 		super();		
 		valor = BigDecimal.ZERO;
@@ -152,14 +158,22 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	public boolean isCredito() {
 		return this.tipoLancamento == TipoLancamento.C;
 	}
+	/*
+	 * Retorna o valor do lancamento 
+	 */
+	public BigDecimal getValorLanc() {
+		if(isConciliado()) 
+			return valorPgto;
+		return valor;
+	}
 	public BigDecimal getCredito() { 		
 		if (isCredito())
-			return credito = this.valor;		
+			return credito = this.valorLanc;		
 		return BigDecimal.ZERO; 		
 	}
 	public BigDecimal getDebito() { 		
 		if (isDebito()) 
-			return debito = this.valor.abs().negate(); 		
+			return debito = this.valorLanc.abs().negate(); 		
 		return BigDecimal.ZERO; 		
 	}
     public void setConciliado ( boolean conciliado) {
@@ -171,8 +185,6 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 		dataRef = dataVenc; 
 		if (conciliado) 
 			dataRef = dataPgto;		
-
-		
 		this.ano =  dataRef.getYear();
 		this.mes =  dataRef.getMonthValue() ;	
 	}

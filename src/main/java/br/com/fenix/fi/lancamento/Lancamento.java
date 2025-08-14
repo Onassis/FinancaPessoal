@@ -116,6 +116,7 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 					.valor(lancAux.getValor()) 
 					.tipoLancamento(lancAux.getTipoLancamento())
 					.dataVenc(data)
+					.dataRef(data)
 					.dataPgto(data) 
 					.chaveBanco(lancAux.getChaveBanco()) 
 					.refBanco(lancAux.getRefBanco()) 
@@ -174,6 +175,6 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 	}
     public BigDecimal getValorPrestacao() {   
         return total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
-}
+    }
 
 }
