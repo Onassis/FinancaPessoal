@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -28,7 +29,7 @@ import br.com.fenix.fi.upload.LancAux;
 import jakarta.persistence.EntityManagerFactory;
 
 @Service
-public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,LancamentoDTO,Long> implements IServicoDTO<Lancamento,LancamentoDTO,Long> { 
+public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,LancamentoDTO,UUID> implements IServicoDTO<Lancamento,LancamentoDTO,UUID> { 
 
 
 
@@ -84,12 +85,12 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void excluirPorId(Long id)throws Exception {
+	public void excluirPorId(UUID id)throws Exception {
 		try {
 			antesDeExcluir(id);
 
 			DetalheLancamento detLanc = DtlancamentoRP.findById(id).orElseThrow(); 
-			Long idLanc = detLanc.getLancamento().getId(); 
+			UUID idLanc = detLanc.getLancamento().getId(); 
 			if ( detLanc.getLancamento().tipoOperacao == TipoOperacao.CP) {
 				DtlancamentoRP.deleteById(id);				
 			}
@@ -108,7 +109,7 @@ public class LancamentoServico  extends ServicoAbstratoDTO<Lancamento,Lancamento
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public LancamentoDTO buscaDTOPorId (Long id) throws RegistroNaoExisteException {
+	public LancamentoDTO buscaDTOPorId (UUID id) throws RegistroNaoExisteException {
 //		Lancamento  entidade = getRp().findDetalheLancamentoById(id).orElseThrow(() -> new RegistroNaoExisteException("Registro  não encontrato:" + id) );
 //		LancamentoDTO dto =  getConverter().ToDto(entidade);
 		DetalheLancamento detLanc = DtlancamentoRP.findById(id).orElseThrow();

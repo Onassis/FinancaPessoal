@@ -2,6 +2,7 @@ package br.com.fenix.fi.conta;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -28,7 +29,7 @@ import jakarta.persistence.EntityManagerFactory;
 import lombok.AllArgsConstructor;
 
 @Service
-public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> implements IServicoDTO<Conta,ContaDTO,Long> {
+public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, UUID> implements IServicoDTO<Conta,ContaDTO,UUID> {
 
    @Autowired
    private ContaRepositorio contaRp;
@@ -48,7 +49,7 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
 	}	
 	public List<Option>  listaDeContas(TipoConta tipoConta) {
 		   List<Option> options = contaRp.findByTipoContaOrderByApelidoAsc(tipoConta).stream()    
-				.map(conta -> new Option(conta.getId(), conta.getAjuda()))
+				.map(conta -> new Option(conta.getId().toString(), conta.getAjuda()))
 	            .collect(Collectors.toList());
 			return options;
 			
@@ -68,7 +69,7 @@ public class ContaServico extends ServicoAbstratoDTO<Conta,ContaDTO, Long> imple
  	  throw e ;		
 	}
 	@Override
-	public JpaRepository<Conta, Long> getRp() {
+	public JpaRepository<Conta, UUID> getRp() {
 		return contaRp;
 	}
 

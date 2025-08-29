@@ -33,8 +33,6 @@ public class CompraParcelada extends Lancamento {
 
 	@Override
 	public void addDatalheLancamento(DetalheLancamento detalheLac) {
-		detalheLac.setTipoLancamento(TipoLancamento.D);
-	
 		detalheLac.setLancamento(this); 
 		detalheLancamento.add(detalheLac);  		
 	}

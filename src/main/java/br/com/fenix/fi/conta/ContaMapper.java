@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
+import java.util.UUID;
 
 import br.com.fenix.abstrato.dto.GenericMapper;
 import br.com.fenix.abstrato.dto.ToEntity;

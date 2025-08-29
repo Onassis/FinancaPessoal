@@ -2,6 +2,7 @@ package br.com.fenix.fi.detalheLancamento;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAuditavelAuto;
 import br.com.fenix.dominio.converter.rest.ContaDeserializer;
 import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
@@ -20,6 +22,7 @@ import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.fi.subCategoria.SubCategoria;
 import br.com.fenix.fi.upload.LancAux;
+import br.com.fenix.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,7 +45,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString(callSuper =true)
 @SuperBuilder
-public class DetalheLancamento extends EntidadeAuditavel<Long> {
+public class DetalheLancamento extends EntidadeAuditavelAuto<UUID> {
 
 	
 	/**
@@ -86,13 +89,13 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
      * Valor da prestação, usado para calcular o total do lançamento
      **/
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-	private BigDecimal valor;
+	private BigDecimal valor = BigDecimal.ZERO;
 	
     /**
      * Valor efetivamento pago , usado para calcular o total do lançamento
      **/
 	@Column(nullable = true, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-	private BigDecimal valorPgto;
+	private BigDecimal valorPgto ;
 	
     @Column(nullable = false,columnDefinition = "DATE")	
     private LocalDate dataVenc;
@@ -116,16 +119,16 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
     
 	@Transient
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
-	private BigDecimal credito;
+	private BigDecimal credito = BigDecimal.ZERO;;
 
 	@Transient
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
-	private BigDecimal debito;
+	private BigDecimal debito = BigDecimal.ZERO;;
 	
 	@Transient
 	@Getter
 	@JsonDeserialize(using = MoneyDeserializer.class) 	
-	private BigDecimal valorLanc;
+	private BigDecimal valorLanc = BigDecimal.ZERO;
 	
 	public DetalheLancamento() {
 		super();		
@@ -162,19 +165,14 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 	 * Retorna o valor do lancamento 
 	 */
 	public BigDecimal getValorLanc() {
-		if(isConciliado()) 
-			return valorPgto;
-		return valor;
+		valorLanc = (conciliado) ? valorPgto : valor; 
+		return Util.iniciaValor(valorLanc);
 	}
-	public BigDecimal getCredito() { 		
-		if (isCredito())
-			return credito = this.valorLanc;		
-		return BigDecimal.ZERO; 		
+	public BigDecimal getCredito() {
+		return credito = (isCredito()) ? getValorLanc() : BigDecimal.ZERO; 		
 	}
-	public BigDecimal getDebito() { 		
-		if (isDebito()) 
-			return debito = this.valorLanc.abs().negate(); 		
-		return BigDecimal.ZERO; 		
+	public BigDecimal getDebito() {
+		return debito = (isDebito()) ? getValorLanc().negate() : BigDecimal.ZERO; 		
 	}
     public void setConciliado ( boolean conciliado) {
     	this.conciliado = conciliado; 
@@ -182,9 +180,8 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
     }
 
 	public void ajustarDataRef() {
-		dataRef = dataVenc; 
-		if (conciliado) 
-			dataRef = dataPgto;		
+		
+		dataRef = (conciliado) ? dataPgto : dataVenc; 
 		this.ano =  dataRef.getYear();
 		this.mes =  dataRef.getMonthValue() ;	
 	}
@@ -230,6 +227,9 @@ public class DetalheLancamento extends EntidadeAuditavel<Long> {
 			ajustarValorPgto();
 	}
 	public void ajustarValorPgto() {
+		    if (valorPgto == null) 
+		    	valorPgto = BigDecimal.ZERO; 
+		    
 			this.valorPgto = valorPgto.abs();
 			if (isDebito())  			
 				this.valorPgto = this.valorPgto.negate() ; 

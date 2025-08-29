@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.base.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAbstrataAuto;
 import br.com.fenix.dominio.converter.rest.ContaDeserializer;
 import br.com.fenix.dominio.converter.rest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
@@ -25,6 +26,7 @@ import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.util.Util;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,7 +43,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 
-public abstract class AbstracLancamento<ID> extends EntidadeAbstrata<ID> {
+public abstract class AbstracLancamento<ID> extends EntidadeAbstrataAuto<ID> {
 	  
     /**
 	 * 
@@ -129,14 +131,7 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrata<ID> {
     public AbstracLancamento() {    	
     	
     	this.dataDoc = LocalDate.now();
-    	this.dataVenc = LocalDate.now();
-//    	this.valor = BigDecimal.ZERO; 
-//    	this.total = BigDecimal.ZERO;
-//    	this.credito = BigDecimal.ZERO; 
-//    	this.debito = BigDecimal.ZERO; 
-//        this.nroPrestacao = 1;
-//        this.nroInicialPrestacao = 1;
-    	
+    	this.dataVenc = LocalDate.now();   	
     }
 
 
@@ -145,24 +140,12 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrata<ID> {
      * Ao atualizar Data Doc atualiza data Vencimento
      */
     
-//    public void setDataDoc(LocalDate data) {
-//    	this.dataDoc = data;
-//    	if (tipoOperacao != TipoOperacao.CP) {
-//        	this.dataVenc = data;     		
-//        	ajustaDataRef();    		
-//    	}
-//    }
     public void setDataPgto(LocalDate dataPgto) {
     	this.dataPgto = dataPgto; 
     	ajustaDataRef();
     }
     protected void ajustaDataRef() {
-		if (conciliado) {
-	    	this.dataRef = dataPgto;
-		}
-		else 
-			this.dataRef = this.dataVenc;
-		
+    	dataRef = (conciliado) ? dataPgto :  dataVenc; 
 	}
 
 	public void setLancamentoTotal( BigDecimal total) { 
@@ -178,25 +161,43 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrata<ID> {
 		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
 		 return sPrestacao; 
 	 }
-	 public BigDecimal getValorLanc() { 
-		 if (conciliado)
-			 return acertarSinal(valorPgto); 
-		 return acertarSinal(valor);
-	 }
-		public BigDecimal getCredito() { 
-			credito = BigDecimal.ZERO; 
-			if (isCredito())
-				credito =  this.valor.abs();
-			
-			return credito; 		
+	 
+		/*
+		 * Retorna o valor do lancamento 
+		 */
+		public BigDecimal getValorLanc() {
+			valorLanc = (conciliado) ? acertarSinal(valorPgto) : acertarSinal(valor); 
+			return valorLanc;
 		}
-		public BigDecimal getDebito() { 
-			debito = BigDecimal.ZERO;
-			if (isDebito()) 
-				debito =  this.valor;
-			
-			return debito ; 		
-		} 
+		public BigDecimal getCredito() {
+			return credito = (isCredito()) ? getValorLanc() : BigDecimal.ZERO; 		
+		}
+		public BigDecimal getDebito() {
+			return debito = (isDebito()) ? getValorLanc().negate() : BigDecimal.ZERO; 		
+		}
+//	    public void setConciliado ( boolean conciliado) {
+//	    	this.conciliado = conciliado; 
+//	    	ajustarDataRef(); 
+//	    }
+//	 public BigDecimal getValorLanc() { 
+//		 if (conciliado)
+//			 return acertarSinal(valorPgto); 
+//		 return acertarSinal(valor);
+//	 }
+//		public BigDecimal getCredito() { 
+//			credito = BigDecimal.ZERO; 
+//			if (isCredito())
+//				credito =  this.valor.abs();
+//			
+//			return credito; 		
+//		}
+//		public BigDecimal getDebito() { 
+//			debito = BigDecimal.ZERO;
+//			if (isDebito()) 
+//				debito =  this.valor;
+//			
+//			return debito ; 		
+//		} 
 	 /*
 	  * Acerta o sinal conforme se Credito e Debito 
 	  * 
@@ -204,10 +205,7 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrata<ID> {
 	  * Credito => Positivo 
 	  */
 	 public BigDecimal acertarSinal( BigDecimal valor) { 
-		 if (isDebito()) { 
-			 return valor.abs().negate(); 
-		 }
-		 return valor.abs();
+		 return  (isDebito()) ? valor.abs().negate() : valor.abs(); 	
 	 }
 	public boolean isDebito() {
 		return this.tipoLancamento == TipoLancamento.D;

@@ -2,6 +2,7 @@ package br.com.fenix.fi.conta;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.NumberFormat;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.base.EntidadeAbstrata;
+import br.com.fenix.abstrato.base.EntidadeAbstrataAuto;
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
 import br.com.fenix.dominio.converter.rest.ContaDeserializer;
 import br.com.fenix.dominio.converter.rest.MoedaDeserializer;
@@ -32,7 +34,7 @@ import lombok.ToString;
 @Data
 @ToString
 @NoArgsConstructor
-public class ContaDTO extends EntidadeAbstrata<Long> {
+public class ContaDTO extends EntidadeAbstrataAuto<UUID> {
    /**
 	 * 
 	 */

@@ -29,7 +29,7 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 		LocalDate data = conta.getDataFatura(dto.getDataDoc()); 
 
 		DetalheLancamento detalheLancamento = new DetalheLancamento().builder() 
-	 			.prestacao(1)
+	 			.prestacao(1)	 		 
 	 			.valor(dto.getValor()) 
 	 			.tipoLancamento(dto.getTipoLancamento())
 	 			.dataVenc(data)

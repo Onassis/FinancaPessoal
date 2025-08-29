@@ -7,9 +7,10 @@
                  inputClassappend=${#fields.hasErrors(field) ? 'is-invalid ' : ''} + ${inputClass ?: ''}"
                 th:object="${__${object}__}"   
                 th:classappend="${rowClass}" 
+                class="div-container"
                 th:id="|div_${#strings.toLowerCase(field)}|"      	             
              >
-            <div  class="form-check" th:if="${type == 'checkbox'}">             
+            <div  class="div-input" th:if="${type == 'checkbox'}">             
                     <input th:type="${type}" th:field="*{__${field}__}"  
                     class="form-check-input" th:classappend="${inputClassappend}" 
                       	   th:required="${__${required}__} ? 'required' : null"

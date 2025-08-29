@@ -3,6 +3,7 @@ package br.com.fenix.abstrato.repositorio;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
 
 @NoRepositoryBean
-public interface JpaRepositoryAuditavel<T extends EntidadeAuditavel<ID>, ID>  extends JpaRepository<T, ID> {
+public interface JpaRepositoryAuditavel<T extends Persistable<ID>, ID>  extends JpaRepository<T, ID> {
 	
 
 	@Override

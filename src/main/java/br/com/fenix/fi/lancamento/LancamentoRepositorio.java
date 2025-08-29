@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +16,7 @@ import br.com.fenix.fi.conta.Conta;
 
 
 @Repository
-public interface LancamentoRepositorio extends JpaRepositoryAuditavel<Lancamento,Long> {
+public interface LancamentoRepositorio extends JpaRepositoryAuditavel<Lancamento,UUID> {
 	
 	
 	@Query("select l, d from Lancamento l join fetch l.detalheLancamento d where d.id = :detalheId and d.criadoPor.id = ?#{ principal.id}")

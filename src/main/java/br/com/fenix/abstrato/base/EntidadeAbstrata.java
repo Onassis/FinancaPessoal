@@ -35,6 +35,12 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>,  Serializ
 	 */
 	private static final long serialVersionUID = 1L;
 
+
+	@Id @Nullable
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(updatable = false)
+	protected ID  id;
+
 //	@Transient
 //	private boolean isNew ;
 	  
@@ -42,10 +48,6 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>,  Serializ
 		super();	
 	}
 
-	@Id @Nullable
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(updatable = false)
-	protected ID  id;
 
    
    @Transient
@@ -77,7 +79,7 @@ public abstract class EntidadeAbstrata<ID> implements Persistable<ID>,  Serializ
 		return id.toString(); 
 		
 	}
-   
+
 //   @PrePersist 
 //   @PostLoad
 //   void markNotNew() {

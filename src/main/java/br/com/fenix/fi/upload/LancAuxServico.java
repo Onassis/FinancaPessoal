@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -107,7 +108,7 @@ public class LancAuxServico {
 	 * @throws IOException
 	 * @throws OFXParseException
 	 */
-	public List<LancAux> geraLancamentoAux(Long contaId, InputStream ofxStream) throws RegistroNaoExisteException,IOException, OFXParseException {
+	public List<LancAux> geraLancamentoAux(UUID contaId, InputStream ofxStream) throws RegistroNaoExisteException,IOException, OFXParseException {
 		
 	    
 	       Conta conta = contaSC.buscarPorId(contaId).orElseThrow(() -> new RegistroNaoExisteException("Conta não cadastrada"));

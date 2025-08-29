@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,7 +205,7 @@ public class UploadController {
 //    }
       @Transactional
 	  @PostMapping  	  
-	  public String FileUpload(@RequestParam("conta") long  contaId, @RequestParam("file") MultipartFile file ) throws IOException, OFXParseException
+	  public String FileUpload(@RequestParam("conta") UUID  contaId, @RequestParam("file") MultipartFile file ) throws IOException, OFXParseException
 //			  throws IOException, OFXParseException 
 //			  throws IOException, OFXParseException 
       {
@@ -225,7 +226,7 @@ public class UploadController {
       
       @Transactional
 	  @PostMapping("/cartao")  	  
-	  public String FileUploadCSV(@RequestParam("conta") long  contaId,
+	  public String FileUploadCSV(@RequestParam("conta") UUID  contaId,
 			  					 @RequestParam("mesCarga") String  mesCarga,
 			  					 @RequestParam("saldoIni") BigDecimal  saldoIni,
 			  					 @RequestParam("file") MultipartFile file ) throws IOException {

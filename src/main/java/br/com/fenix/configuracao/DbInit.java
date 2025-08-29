@@ -10,6 +10,7 @@ import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
 import br.com.fenix.seguranca.usuario.*;
 import br.com.fenix.seguranca.usuario.Usuario.Role;
 
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class DbInit implements CommandLineRunner {
 //    private UsuarioControleRest userRepository;
 //	@Autowired
 //    private ModeloCategoriaRepositorio ModCadRepository;
+ 
         
 	@Autowired
     private PasswordEncoder passwordEncoder;
@@ -33,8 +35,7 @@ public class DbInit implements CommandLineRunner {
     @Override
     public void run(String... args) {
         
-    	
-//    	  Usuario onassis  = new Usuario("onassis.tavares@gmail.com", "Onassis", "Tavares" ,passwordEncoder.encode("senha") ); 
+ //    	  Usuario onassis  = new Usuario("onassis.tavares@gmail.com", "Onassis", "Tavares" ,passwordEncoder.encode("senha") ); 
     	
 //    	System.out.println("Inicio");
     	

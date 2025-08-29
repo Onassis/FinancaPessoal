@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.*;
@@ -49,7 +50,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class DetalheLancServico  extends ServicoAbstratoDTO<DetalheLancamento,LancamentoDTO,Long> implements IServicoDTO<DetalheLancamento,LancamentoDTO ,Long> { 
+public class DetalheLancServico  extends ServicoAbstratoDTO<DetalheLancamento,LancamentoDTO,UUID> implements IServicoDTO<DetalheLancamento,LancamentoDTO ,UUID> { 
 	
 	@Autowired
 	DetalheLancamentoRepositorio DtlancamentoRP;

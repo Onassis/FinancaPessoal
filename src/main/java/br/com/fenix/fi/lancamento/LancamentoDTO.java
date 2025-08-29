@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -36,7 +37,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
-public class LancamentoDTO extends AbstracLancamento<Long> implements Comparable<LancamentoDTO> {
+public class LancamentoDTO extends AbstracLancamento<UUID> implements Comparable<LancamentoDTO> {
 	
  
 	
@@ -45,11 +46,11 @@ public class LancamentoDTO extends AbstracLancamento<Long> implements Comparable
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Long  idLancAux;
-	private Long  detalheLancamentoId;
+	private UUID  idLancAux;
+	private UUID  detalheLancamentoId;
 	
 //	private Long  detalheDestinoId;
-	private Long  lancamentoId;
+	private UUID  lancamentoId;
 	
 	 
 	private String informacao;

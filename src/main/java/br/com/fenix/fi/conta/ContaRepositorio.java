@@ -3,6 +3,7 @@ package br.com.fenix.fi.conta;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.hibernate.type.TrueFalseConverter;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,7 +19,7 @@ import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.Option;
 
 @Repository
-public interface ContaRepositorio extends JpaRepositoryAuditavel<Conta,Long> {
+public interface ContaRepositorio extends JpaRepositoryAuditavel<Conta,UUID> {
 	
 //	@Query("from Conta o where o.id = ?1 and o.criadoPor.id = ?#{ principal.id}")
 //	Optional<Conta> findById (Long id);

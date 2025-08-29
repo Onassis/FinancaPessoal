@@ -52,7 +52,7 @@
 			  
 		   
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input',rowClass='col-md-6')}" />
-
+   		  
 			 <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataPgto', type='date', readOnly='readOnly', rowClass='col-md-6')}" />
 			 <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='valorPgto', type='moeda', inputClassappend='col-form-label', rowClass='col-md-6')}" />
     
@@ -74,23 +74,9 @@
 </div>
 </div>
 </div>
-  <script th:src="@{/js/cadastro.js}"></script>
- <script>
-	$("#input_subcategoria").on("keyup", function() {
-	  var filterText = $(this).val().toLowerCase();
- 	   console.log(filterText)
-	  $("#filterInput").val = $("#filterInput").val +   filterText;
-	  filterText = $("#filterInput").val ;
-	  $("#input_subcategoria option").each(function() {
-	    var optionText = $(this).text().toLowerCase();
-	    if (optionText.indexOf(filterText) > -1) {
-	      $(this).show();
-	    } else {
-	      $(this).hide();
-	    }
-	  });
-	});
-</script>
+ <script th:src="@{/js/cadastro.js}"></script>
+  <script th:src="@{/js/conciliacao.js}"></script>
+ <script th:src="@{/js/filtro-select.js}"></script>
 	 
  </script>
  </section>

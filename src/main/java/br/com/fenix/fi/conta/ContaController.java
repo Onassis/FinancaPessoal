@@ -3,6 +3,7 @@ package br.com.fenix.fi.conta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,7 +36,7 @@ import br.com.fenix.fi.moeda.MoedaRepositorio;
 
 @Controller
 @RequestMapping("/conta")
-public class ContaController  extends ControleAbstratoDTO<Conta,ContaDTO,Long> implements IControleDTO<Conta,ContaDTO,Long>   {
+public class ContaController  extends ControleAbstratoDTO<Conta,ContaDTO,UUID> implements IControleDTO<Conta,ContaDTO,UUID>   {
 
   @Autowired
   MoedaRepositorio moedaRP;

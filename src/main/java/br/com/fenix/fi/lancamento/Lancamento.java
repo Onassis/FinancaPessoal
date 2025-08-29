@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,7 +41,7 @@ import lombok.experimental.SuperBuilder;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipoOperacao", discriminatorType = DiscriminatorType.STRING)
 @Table(name="lancamento", indexes = {@Index(name = "idx_usuario", columnList = "criado_por_id")})
-public  class Lancamento extends EntidadeAuditavel<Long> {
+public  class Lancamento extends EntidadeAuditavel<UUID> {
 
 	/**
 	 * 
@@ -155,7 +156,7 @@ public  class Lancamento extends EntidadeAuditavel<Long> {
 		return tipoOperacao == TipoOperacao.TR;
 		
 	}
-	public Optional<DetalheLancamento> filtroPorDetalheId (Long id) { 
+	public Optional<DetalheLancamento> filtroPorDetalheId (UUID id) { 
 	  return    detalheLancamento.stream()	
 						.filter(d -> d.getId() == id)
 						.findFirst();

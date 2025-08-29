@@ -2,12 +2,14 @@ package br.com.fenix.fi.upload;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAuditavelAuto;
 import br.com.fenix.dominio.converter.rest.ContaDeserializer;
 import br.com.fenix.dominio.converter.rest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
@@ -42,7 +44,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString(callSuper = true)
-public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<LancAux> { 
+public class LancAux  extends EntidadeAuditavelAuto<UUID>  implements Comparable<LancAux> { 
 
 	/**
 	 * 
@@ -50,12 +52,12 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	private static final long serialVersionUID = 1L;
 
 	/* detalhe do lancamento */ 
-	private Long  detalheLancId;
+	private UUID  detalheLancId;
 	
 	/* detalhe do lancamento da conta destino - Transferencia */ 
-	private Long  detalheDestinoId;
+	private UUID  detalheDestinoId;
 	
-	private Long  lancamentoId;
+	private UUID  lancamentoId;
 	
 	// ID do banco campo FITID do arquivo OFX
 	private String chaveBanco; 	
@@ -290,7 +292,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 	@Override 
 	public int compareTo(LancAux lancamentoDto) {
 
-		return (int) (this.getId() -  lancamentoDto.getId()); 		 
+		return this.getId().compareTo(lancamentoDto.getId()); 		 
 	}
     
 	
@@ -298,7 +300,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		if (this.detalheLancId == null) { 
 			return false; 
 		}
-		return ( this.detalheLancId != 0)  ;	
+		return true ;	
 	}
 
 	
@@ -306,7 +308,7 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		if (this.detalheLancId == null)  
 			return true; 
 		
-		return ( this.detalheLancId == 0)  ;
+		return true  ;
 	}
 
 	public boolean isUpdateLanc() {
@@ -317,13 +319,13 @@ public class LancAux  extends EntidadeAuditavel<Long>  implements Comparable<Lan
 		if (this.detalheLancId == null)  
 			return false; 
 		
-		return ( this.detalheLancId != 0)  ;
+		return true  ;
 	}
 	public boolean isTransfLanc() { 
 		if (this.detalheDestinoId == null)  
-			return true; 
+			return false; 
 		
-		return ( this.detalheDestinoId == 0)  ;
+		return true ;
 	} 
 
 	

@@ -3,9 +3,11 @@ package br.com.fenix.fi.conta;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.hibernate.type.TrueFalseConverter;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,7 @@ import br.com.fenix.abstrato.repositorio.GenericRepositoryAutenticado;
 import br.com.fenix.dominio.enumerado.TipoConta;
 
 @Repository
-public interface ContaRepositorioRest extends GenericRepository<Conta>{
+public interface ContaRepositorioRest extends JpaRepository<Conta,UUID> {
 	
 	@Query("from Conta o where o.id = ?1 and o.criadoPor.id = ?#{ principal.id}")
 	Optional<Conta> findById (Long id);

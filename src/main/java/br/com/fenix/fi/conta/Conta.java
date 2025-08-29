@@ -3,6 +3,7 @@ package br.com.fenix.fi.conta;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.hibernate.annotations.SQLUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAuditavelAuto;
 import br.com.fenix.dominio.converter.rest.ContaDeserializer;
 import br.com.fenix.dominio.converter.rest.MoedaDeserializer;
 import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
@@ -41,7 +43,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @ToString
 @SuperBuilder
-public class Conta extends EntidadeAuditavel<Long> {
+public class Conta extends EntidadeAuditavelAuto<UUID> {
 	/**
 	 * 
 	 */

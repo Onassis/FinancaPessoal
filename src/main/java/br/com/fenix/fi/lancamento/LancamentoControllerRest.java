@@ -4,6 +4,8 @@ package br.com.fenix.fi.lancamento;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +104,7 @@ public class LancamentoControllerRest {
 		return new ModelAndView("lancamento/cad_lancamento","lancamentoDTO", new LancamentoDTO()) ;		
     }
     @GetMapping("/editar/{id}")  
-	public ModelAndView atualizarView(@PathVariable long id) {    
+	public ModelAndView atualizarView(@PathVariable UUID id) {    
     	System.out.println("Editar " + id  );
 //		LancamentoDTO lancamentoDTO = lancSC.findDetLanc(id);
 		LancamentoDTO lancamentoDTO = lancSC.buscaDTOPorId(id); 		
@@ -126,7 +128,7 @@ public class LancamentoControllerRest {
     	return null;
     } 
     @GetMapping("/{id}")	    
-    public Lancamento buscarPorId (@PathVariable long id){	 
+    public Lancamento buscarPorId (@PathVariable UUID id){	 
     	   return lancRP.findById(id)
     			   .orElseThrow( () -> new RegistroNaoExisteException("Registro não encontrado Id:" + id));	
     }	   
@@ -152,7 +154,7 @@ public class LancamentoControllerRest {
     @DeleteMapping("/{id}")
     @Transactional
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void excluirPorId(@PathVariable long id){
+    public void excluirPorId(@PathVariable UUID id){
     	
     	DetlancRP.deleteById(id);
     }

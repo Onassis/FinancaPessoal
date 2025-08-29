@@ -54,7 +54,7 @@ public class FavorecidoControllerRest  extends ControleAbstratoRest<Favorecido> 
 	@Cacheable(value="conta", sync = true)
 	public List<Option>  listaDeContas() {
 		   List<Option> options = contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC).stream()    
-				.map(conta -> new Option(conta.getId(), conta.getAjuda()))
+				.map(conta -> new Option(conta.getId().toString(), conta.getAjuda()))
 	            .collect(Collectors.toList());
 			return options;
 			

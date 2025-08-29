@@ -1,9 +1,16 @@
 package br.com.fenix.dominio.modelo;
 
+
+import java.util.UUID;
+
 public  class Option {
     private String id;
     private String ajuda;
 
+    public Option(UUID id, String ajuda) {
+        this.id = id.toString();
+        this.ajuda = ajuda;
+    }
     public Option(String id, String ajuda) {
         this.id = id;
         this.ajuda = ajuda;

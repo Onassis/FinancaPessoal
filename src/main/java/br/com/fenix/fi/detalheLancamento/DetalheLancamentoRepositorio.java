@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +22,7 @@ import br.com.fenix.fi.conta.Conta;
 
 
 @Repository
-public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<DetalheLancamento,Long> {
+public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<DetalheLancamento,UUID> {
 	
 	
 	@Query("from DetalheLancamento d JOIN FETCH d.lancamento where d.id = ?1 and d.criadoPor.id = ?#{ principal.id}")
@@ -109,7 +110,7 @@ public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<Det
 			 " d.dtAlteracao  = :dataAtual , " + 
 			 " d.conciliado = true " + 	         
 	         "WHERE d.id = :detalheId" )
-	  int atualizaConciliadacao( @Param("detalheId") Long detalheId, 
+	  int atualizaConciliadacao( @Param("detalheId") UUID detalheId, 
 			  					 @Param("chaveBanco") String chaveBanco,
 	          					 @Param("data") LocalDate data, 
 	          					 @Param("dataAtual") LocalDateTime dataAtual, 

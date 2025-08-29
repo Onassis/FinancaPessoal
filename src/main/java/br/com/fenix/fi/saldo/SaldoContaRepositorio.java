@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -79,7 +80,7 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
             "where a.contaid = :conta and a.data = :data "
             , nativeQuery = true
             )
-    Optional<ISaldoMes> findSaldoMesByContaByData(@Param("conta")  Long conta, @Param("data") LocalDate data);
+    Optional<ISaldoMes> findSaldoMesByContaByData(@Param("conta")  UUID conta, @Param("data") LocalDate data);
 //	List< ISaldoMes> findSaldoMesByContaByData(Conta conta, LocalDate data);
     
 
@@ -96,7 +97,7 @@ public interface SaldoContaRepositorio extends GenericRepository<SaldoConta> {
          "SET sc.saldoInicial = sc.saldoInicial + :valorAdicional " +
          "WHERE sc.conta.id = :contaId AND sc.data > :dataReferencia and flag_compensacao = false" )
   int atualizaContaGeDataSaldo(
-          @Param("contaId") Long contaId,
+          @Param("contaId") UUID contaId,
           @Param("dataReferencia") LocalDate dataReferencia,
           @Param("valorAdicional") BigDecimal valorAdicional);
 

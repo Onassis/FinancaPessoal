@@ -2,6 +2,7 @@ package br.com.fenix.dominio.converter.rest;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,7 +43,8 @@ public class ContaDeserializer extends StdDeserializer<Conta> {
         if (texto_id.isEmpty()) {
 			return null;
 		}
-		Long id = Long.valueOf(texto_id);
+		
+		UUID id = UUID.fromString(texto_id);
 		System.out.println(id);
 		Optional<Conta> contaOp = contaRP.findById(id);
 		return contaOp.get();    

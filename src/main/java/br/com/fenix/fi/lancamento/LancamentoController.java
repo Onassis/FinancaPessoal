@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.exolab.castor.types.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ import br.com.fenix.fi.subCategoria.SubCategoriaServico;
 
 @Controller
 @RequestMapping("/lancamento")
-public class LancamentoController extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,Long>  implements IControleDTO<Lancamento,LancamentoDTO,Long> {
+public class LancamentoController extends 	ControleAbstratoDTO<Lancamento,LancamentoDTO,UUID>  implements IControleDTO<Lancamento,LancamentoDTO,UUID> {
 
 
 	@Autowired	
@@ -157,7 +158,7 @@ public class LancamentoController extends 	ControleAbstratoDTO<Lancamento,Lancam
 	} 
 	@Override
 	@GetMapping("/editar/{id}")
-	public String atualizarView(Long id, ModelMap model, RedirectAttributes attr) {
+	public String atualizarView(UUID id, ModelMap model, RedirectAttributes attr) {
 		
 		 TipoOperacao tipoOperacao =null;
 		 if (model.containsAttribute("Erro")) {
@@ -202,7 +203,7 @@ public class LancamentoController extends 	ControleAbstratoDTO<Lancamento,Lancam
 	}
 	@Override
 	@GetMapping("/excluir/{id}")   
-	public String excluirPorId(@PathVariable Long id, RedirectAttributes attr) {
+	public String excluirPorId(@PathVariable UUID id, RedirectAttributes attr) {
 		LocalDate dataAtual = LocalDate.now() ;
 		String mesAno = String.format("%02d",dataAtual.getMonthValue())   
 				.concat("/")

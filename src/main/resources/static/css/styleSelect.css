@@ -5,15 +5,17 @@
 }
 
 /* O campo que mostra o valor selecionado e o input de filtro */
-.filtro-select-input {
+ .filtro-select-input {
     width: 100%;
-    padding: 10px;
+    padding: 6px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+    box-sizing: border-box; /* Garante que o padding não aumente a largura total */ 
     cursor: pointer;
     background-color: #fff;
 }
+
+
 
 /* A lista de opções que aparecerá abaixo */
 .filtro-select-opcoes {
@@ -49,4 +51,7 @@
 .filtro-select-opcoes li.highlight {
     background-color: #007bff;
     color: white;
+}
+.div-input-check, .form-check-input , .form-check-label {
+	margin-top: 15%;
 }

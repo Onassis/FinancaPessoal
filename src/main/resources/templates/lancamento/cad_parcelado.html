@@ -23,20 +23,20 @@
 	
 	        <div class="container" id="cadastro">
 		
-    <div class="col-lg-6 bg-light">
+    <div class="col-lg-6	 bg-light">
 	 <div class="card">
 		 <div class="card-body">
 			 <h5 class="card-title">Cadastro de Lançamento</h5>
 			<div th:replace="~{fragments/alert}"></div>	 
 		
 	    	<form id="editForm"  th:object="${lancamentoDTO}"  th:action="@{/lancamento}"  method="POST" class="row g-3 needs-validation">			
-	    	 <input type="hidden" id="tipoOperacao" th:field="*{tipoOperacao}" th:value='DB'/>  	
+	    		
    			
    			<div th:if="${lancamentoDTO.new}"> 
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-12')}" />     
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataDoc', type='date', rowClass='col-md-6')}" />     
 			</div>
    			<div th:unless="${lancamentoDTO.new}">
-			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataVenc', type='date', rowClass='col-md-12')}" />     
+			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='dataVenc', type='date', rowClass='col-md-6')}" />     
 			</div>
 			       					  		   	
 			  <div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='contaLancamento', type='select',,options= ${contas},readOnly='readOnly',rowClass='col-md-6')}" /> 
@@ -60,6 +60,7 @@
 			       	<div th:replace="~{fragments/forms::inputRow(object='lancamentoDTO', field='conciliado', type='checkbox',inputClass='form-check-input')}" />
 		                       
             	      <div class="form-group">
+						   <input type="hidden" id="tipoOperacao" th:field="*{tipoOperacao}" th:value='DB'/>  
    						<input type="hidden" id="lancamentoId" th:field="*{lancamentoId}"/>   		
    						<input type="hidden" id="detalheLancamentoId" th:field="*{detalheLancamentoId}"/>   				
 	        	        <input type="hidden" id="lancAuxId" th:field="*{idLancAux}"/>

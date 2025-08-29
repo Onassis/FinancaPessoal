@@ -87,7 +87,7 @@ public class LancDTO extends EntidadeAbstrata<Long> implements Comparable<LancDT
     private boolean transferencia=false; 
     
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
-	private BigDecimal total;	
+	private BigDecimal total = BigDecimal.ZERO;	
 
 //	@JsonDeserialize(using = NumericBooleanDeserializer.class)
 //	protected boolean conciliado ;
@@ -99,8 +99,6 @@ public class LancDTO extends EntidadeAbstrata<Long> implements Comparable<LancDT
 	
     public LancDTO() {    	
     	super();    
-    	this.total = BigDecimal.ZERO;
-    	this.total = BigDecimal.ZERO; 
         this.nroPrestacao = 1;
         this.nroInicialPrestacao = 1;
     }
