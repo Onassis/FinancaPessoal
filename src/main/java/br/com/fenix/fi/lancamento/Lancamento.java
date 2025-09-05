@@ -18,6 +18,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import br.com.fenix.abstrato.base.EntidadeAuditavel;
+import br.com.fenix.abstrato.base.EntidadeAuditavelAuto;
 import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.categoria.Categoria;
@@ -41,7 +42,7 @@ import lombok.experimental.SuperBuilder;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipoOperacao", discriminatorType = DiscriminatorType.STRING)
 @Table(name="lancamento", indexes = {@Index(name = "idx_usuario", columnList = "criado_por_id")})
-public  class Lancamento extends EntidadeAuditavel<UUID> {
+public  class Lancamento extends EntidadeAuditavelAuto<UUID> {
 
 	/**
 	 * 

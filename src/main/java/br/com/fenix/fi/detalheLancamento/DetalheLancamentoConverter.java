@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.fenix.abstrato.dto.Converter;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.fi.lancamento.AbstracDetLanc;
 import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
 
@@ -24,6 +25,8 @@ public class DetalheLancamentoConverter  implements Converter<DetalheLancamento,
 	@Override
 	public void updateEntity(LancamentoDTO dto, DetalheLancamento entity) {
 	    Lancamento lanc = entity.getLancamento();
+	 
+	    
 		entity.setConciliado(dto.isConciliado()); 
 		entity.setDataVenc(dto.getDataVenc());		
 	    

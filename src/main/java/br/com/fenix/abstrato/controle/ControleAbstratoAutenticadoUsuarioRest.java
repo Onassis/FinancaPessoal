@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import br.com.fenix.abstrato.repositorio.GenericRepositoryAutenticado;
+import br.com.fenix.abstrato.repositorio.GenericRepository;
 import br.com.fenix.api.exceptionhandle.RegistroNaoExisteException;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
 
 public abstract class ControleAbstratoAutenticadoUsuarioRest<T> implements IControleRest<T>{
 	
-	 private final GenericRepositoryAutenticado<T> repositorio;
+	 private final GenericRepository<T> repositorio;
 	 private final Optional<Usuario> usuario= UtilSerguranca.currentUser();
 
-	    public ControleAbstratoAutenticadoUsuarioRest(GenericRepositoryAutenticado<T> repositorio) {
+	    public ControleAbstratoAutenticadoUsuarioRest(GenericRepository<T> repositorio) {
  	        this.repositorio = repositorio;
  	 //       if ( UtilSerguranca.currentUser().isPresent() )
 // 	        	this.usuario = UtilSerguranca.currentUser().get();
@@ -64,7 +64,7 @@ public abstract class ControleAbstratoAutenticadoUsuarioRest<T> implements ICont
 		public ModelAndView listarView(T entidade) {	
 	    	System.out.println("listarView");
 	    	System.out.println(this.usuario.get());
-			Iterable<T> dados = repositorio.findByCriadoPor(this.usuario.get());		
+			Iterable<T> dados = repositorio.findAll();		
 			return new ModelAndView(nomeListar(entidade),nomeEntidade(entidade),dados) ;		  			  
 		}	
 	    @Override
@@ -79,7 +79,7 @@ public abstract class ControleAbstratoAutenticadoUsuarioRest<T> implements ICont
 	    @GetMapping 
     	public Iterable<T> listar () {
 			//return repositorio.findAll();
-			return repositorio.findByCriadoPor(this.usuario.get());
+			return repositorio.findAll();
 		}
 	    @Override
 	    @PostMapping

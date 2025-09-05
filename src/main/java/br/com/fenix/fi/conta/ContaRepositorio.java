@@ -13,7 +13,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.fenix.abstrato.repositorio.GenericRepository;
-import br.com.fenix.abstrato.repositorio.GenericRepositoryAutenticado;
 import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.dominio.modelo.Option;

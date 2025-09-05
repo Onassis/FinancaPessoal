@@ -110,16 +110,7 @@ public class UploadController {
 
 	    return todosMeses;
 	}
-	/*
-	 * 	@ModelAttribute("formaPgtos")
-	public List<FormaPgto> listarFormaPgto() {
-		return formaRP.findByOrderByNomeAsc();
-	}  
-	@ModelAttribute("favorecidos")
-	public Iterable<Favorecido> listarFavorecido() {		
-	 return favorecidoRP.findAll();  
-	}
-*/	
+
 	@ModelAttribute("contas")
 	public List<Conta> listarConta() {		
 		return contaRP.findByTipoContaOrderByApelidoAsc(TipoConta.CC);
@@ -132,39 +123,31 @@ public class UploadController {
   
     @GetMapping
 	public ModelAndView listarUploadView() {
-		// TODO Auto-generated method stub    	
     	UploadDTO dado = new UploadDTO();		
 		return new ModelAndView("upload/upload","upload",dado) ;		  			  
 	}	
     @GetMapping("/cartao")
 	public ModelAndView listarUploadCSVView() {
-		// TODO Auto-generated method stub    	
     	UploadDTO dado = new UploadDTO();		
 		return new ModelAndView("upload/uploadCSV","upload",dado) ;		  			  
 	}	
     @GetMapping("/confirmar")
 	public ModelAndView listarUploadViewConf(LancamentoDTO entidade) {
-		// TODO Auto-generated method stub
-    	
-		Iterable<LancAux> dados = lancAuxRP.findAll();
-		
+		List<LancAux> dados = lancAuxRP.findAll();
 		return new ModelAndView("upload/listar_lancamento","lancamentosDTO",dados) ;
-//		return null; 
 	}	
     @GetMapping("/confirmarCartao")
 	public ModelAndView listarUploadViewConfCartao(LancamentoDTO entidade) {
-		// TODO Auto-generated method stub
-    	
+ 	
 		Iterable<LancAux> dados = lancAuxRP.findAll();
 		
 		return new ModelAndView("upload/listar_lancamentoCartao","lancamentosDTO",dados) ;
-//		return null; 
 	}
     
     @GetMapping("/gerar")
     @Transactional
 	public void  salvarUpload() {	    	
-    	ArrayList<LancAux> dados = lancAuxRP.findAll();
+    	List<LancAux> dados = lancAuxRP.findAll();
     	List<Lancamento> lancamentos = lancAuxSC.gerarLancamento(dados);
     	lancAuxRP.deleteAll();
     	listaLancamento(lancamentos);
@@ -174,54 +157,18 @@ public class UploadController {
     	System.out.println("upload-> confirmaLanc");
     	List<LancamentoDTO> lancDtos = lancamentos.stream() 
     			.map(dado -> new LancamentoDTO(dado))
-    			 .collect(Collectors.toList());
+    			.toList();
+//    			 .collect(Collectors.toList());
     	return new ModelAndView("upload/listar_lancamento","lancamentosDTO",lancDtos) ;
     }
-//    public byte[] convertToUtf8(MultipartFile inputFile) throws Exception {
-//        if (inputFile.isEmpty()) {
-//            throw new Exception("O arquivo de entrada não pode ser vazio.");
-//        }
-//
-//        // Usa try-with-resources para garantir que os streams sejam fechados automaticamente
-//        try (
-//        	Reader reader = new InputStreamReader(inputFile.getInputStream(), StandardCharsets.ISO_8859_1);
-//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        	Writer writer = new OutputStreamWriter(byteArrayOutputStream, StandardCharsets.UTF_8)
-//        ) {
-//            // Lê do reader (decodificado de ISO-8859-1) e escreve no writer (codificado para UTF-8)
-//            char[] buffer = new char[4096];
-//            int bytesRead;
-//            while ((bytesRead = reader.read(buffer)) != -1) {
-//                writer.write(buffer, 0, bytesRead);
-//            }
-//            writer.flush(); // Garante que todos os dados sejam escritos no ByteArrayOutputStream
-//
-//            return byteArrayOutputStream.toByteArray();
-//
-//        } catch (IOException e) {
-//            // Lança uma exceção personalizada para ser tratada globalmente
-//            throw new Exception("Falha ao converter o arquivo: " + e.getMessage(), e);
-//        }
-//    }
+
       @Transactional
 	  @PostMapping  	  
 	  public String FileUpload(@RequestParam("conta") UUID  contaId, @RequestParam("file") MultipartFile file ) throws IOException, OFXParseException
-//			  throws IOException, OFXParseException 
-//			  throws IOException, OFXParseException 
       {
-   	   System.out.println("handleFileUpload");
-	    List<LancAux> lancamentos = lancAuxSC.geraLancamentoAux(contaId,file.getInputStream() ); 
-//		    lancAuxSC.excluiSalvaTodos(lancamentos)	;		         
-//		    
-		    
-//		    List<String> conteudo =  readAll(file.getInputStream());
-
-//		    
-//		    Coletor lancamento  = lancAuxSC.processaOFX(conta,conteudo ) ;
-//		    lancAuxSC.excluiSalvaTodos(lancamento.getLancamentosAux())	;		
-		    
-		    
-		    return "redirect:/upload/confirmar";
+    	  System.out.println("handleFileUpload");
+    	  List<LancAux> lancamentos = lancAuxSC.geraLancamentoAux(contaId,file.getInputStream() ); 
+		  return "redirect:/upload/confirmar";
 	  }
       
       @Transactional

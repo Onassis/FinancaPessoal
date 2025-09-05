@@ -37,7 +37,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
-public class LancamentoDTO extends AbstracLancamento<UUID> implements Comparable<LancamentoDTO> {
+public class LancamentoDTO extends AbstracLancamento<UUID>  implements Comparable<LancamentoDTO> {
 	
  
 	
@@ -55,7 +55,7 @@ public class LancamentoDTO extends AbstracLancamento<UUID> implements Comparable
 	 
 	private String informacao;
 
-    
+   
 	protected TipoOperacao tipoOperacao;
 	    
 	@JsonDeserialize(using = UsuarioDeserializer.class)
@@ -66,12 +66,6 @@ public class LancamentoDTO extends AbstracLancamento<UUID> implements Comparable
     	super();
     	this.dataDoc = LocalDate.now();
     	this.dataVenc = LocalDate.now();
-//    	this.valor = BigDecimal.ZERO; 
-//    	this.total = BigDecimal.ZERO;
-//    	this.credito = BigDecimal.ZERO; 
-//    	this.debito = BigDecimal.ZERO; 
-//        this.nroPrestacao = 1;
-//        this.nroInicialPrestacao = 1;
     	
     }
 
@@ -106,11 +100,11 @@ public class LancamentoDTO extends AbstracLancamento<UUID> implements Comparable
             this.valorPgto = detLanc.getValorPgto();
             this.dataRef  = detLanc.getDataRef();
             this.conciliado = detLanc.isConciliado();
-            ajustaDataRef();
+            this.ajustaDataRef();
     	}      
    }
     public LancamentoDTO(DetalheLancamento detLanc) {    	
-    	super();
+    	super(detLanc);
     	
     	Lancamento lancamento = detLanc.getLancamento();
     	
@@ -132,22 +126,11 @@ public class LancamentoDTO extends AbstracLancamento<UUID> implements Comparable
  
     	this.favorecido = lancamento.getFavorecido(); 
     	
-
-    	this.prestacao = detLanc.getPrestacao();
+        //this.detalhe = new AbstracDetLanc(detLanc);
 
    		this.detalheLancamentoId = detLanc.getId();
 //    		this.detalheDestinoId = lancamento.getDetalheLancamento().get(0).getId();
-    	this.tipoLancamento = detLanc.getTipoLancamento(); 
-    	this.contaLancamento  = detLanc.getContaLancamento(); 
-    	this.contaTransferencia = detLanc.getContaTransferencia(); 
-    	this.valor	 = detLanc.getValor().abs();
-        this.dataVenc = detLanc.getDataVenc(); 
-        this.dataPgto = detLanc.getDataPgto();
-        this.valorPgto = detLanc.getValorPgto().abs();
-        this.dataRef  = detLanc.getDataRef();
-
-        this.conciliado = detLanc.isConciliado();
-        ajustaDataRef();
+ 
     }
 
 	@Override
@@ -158,7 +141,26 @@ public class LancamentoDTO extends AbstracLancamento<UUID> implements Comparable
 		 } 
 		
 		return  0;
-	} 
+	}
+
    
+	public String getMesAnoLancamento() { 
+		String mesAno; 
+		if( dataVenc != null ) {
+			mesAno = String.format("%02d",dataVenc.getMonthValue()); 
+			mesAno = mesAno + dataVenc.getYear(); 
+			return mesAno;					
+		}
+		mesAno = String.valueOf(dataDoc.getMonthValue());
+		mesAno = mesAno + dataDoc.getYear(); 
+		return mesAno;
+	}
+	public  String getPrestacaoAtual() {
+		 String sPrestacao; 
+		 sPrestacao = String.format("%02d",prestacao);
+		 sPrestacao = sPrestacao.concat("/");
+		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
+		 return sPrestacao; 
+	 }
 	
 }

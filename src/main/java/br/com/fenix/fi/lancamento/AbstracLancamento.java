@@ -24,6 +24,7 @@ import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
 import br.com.fenix.util.Util;
@@ -43,7 +44,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY)
 
-public abstract class AbstracLancamento<ID> extends EntidadeAbstrataAuto<ID> {
+public abstract class AbstracLancamento<ID> extends AbstracDetLanc<ID> {
 	  
     /**
 	 * 
@@ -52,36 +53,12 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrataAuto<ID> {
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     protected LocalDate dataDoc;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    protected LocalDate dataVenc;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    protected LocalDate dataPgto;
-    
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    protected LocalDate dataRef;
-    
     protected TipoLancamento tipoLancamento;
 	
 	@JsonDeserialize(using = FavorecidoDeserializer.class)
     @JsonInclude(content = Include.NON_NULL)	
     protected Favorecido favorecido;
-	
-    @JsonDeserialize(using = ContaDeserializer.class)
-    @JsonInclude(content = Include.NON_NULL)    
-    protected Conta contaLancamento ;
-    
- // chave de lancamento da conta 
-    protected String chaveBanco;
-    
-	// Nro de referencia REFNUM do arquivo OFX (Ex. Nro do cheque)  
-    protected String refBanco; 
 
-    @JsonDeserialize(using = ContaDeserializer.class)
-    @JsonInclude(content = Include.NON_NULL)
-    protected Conta contaTransferencia ;
 
     @JsonDeserialize(using = SubCategoriaDeserializer.class)
     @JsonInclude(content = Include.NON_NULL)    
@@ -90,91 +67,65 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrataAuto<ID> {
     protected int nroPrestacao=1;
     protected int nroInicialPrestacao=1 ;
     
-    /**
-     * Prestação atual do parcelamento
-     */
-    protected int prestacao;
-
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal total = BigDecimal.ZERO;
-    
-    @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal valor = BigDecimal.ZERO;
-    @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal valorPgto  = BigDecimal.ZERO;
-    
-    
-    @Getter
-    protected BigDecimal valorLanc  = BigDecimal.ZERO; 
-    
-    @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal saldo  = BigDecimal.ZERO;
-    @Transient
-    @JsonDeserialize(using = MoneyDeserializer.class) 
-	protected BigDecimal credito  = BigDecimal.ZERO;
-    @JsonDeserialize(using = MoneyDeserializer.class) 
-    @Transient
-	protected BigDecimal debito  = BigDecimal.ZERO;
-    
 
-   
-    @JsonDeserialize(using = NumericBooleanDeserializer.class)
-	protected boolean conciliado ;
-    
     /* Entrada em emprestimo */ 
     @JsonDeserialize(using = NumericBooleanDeserializer.class)
    	protected boolean entrada ;
     
-    
-//	private String prestacaoAtual;
-//	  
-    public AbstracLancamento() {    	
+  
+    public AbstracLancamento(DetalheLancamento detLanc) {    	
     	
     	this.dataDoc = LocalDate.now();
-    	this.dataVenc = LocalDate.now();   	
+ 	
     }
-
+   public AbstracLancamento() {    	
+    	
+    	this.dataDoc = LocalDate.now();
+ 	
+    }
 
    
     /*
      * Ao atualizar Data Doc atualiza data Vencimento
      */
     
-    public void setDataPgto(LocalDate dataPgto) {
-    	this.dataPgto = dataPgto; 
-    	ajustaDataRef();
-    }
-    protected void ajustaDataRef() {
-    	dataRef = (conciliado) ? dataPgto :  dataVenc; 
-	}
+//    public void setDataPgto(LocalDate dataPgto) {
+//    	this.dataPgto = dataPgto; 
+//    	ajustaDataRef();
+//    }
+//    protected void ajustaDataRef() {
+//    	dataRef = (conciliado) ? dataPgto :  dataVenc; 
+//	}
 
 	public void setLancamentoTotal( BigDecimal total) { 
     	this.total = acertarSinal(total); 
-    	this.valor = total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
+  //  	this.valor = total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
     
     
-	 public  String getPrestacaoAtual() {
-		 String sPrestacao; 
-		 sPrestacao = String.format("%02d",prestacao);
-		 sPrestacao = sPrestacao.concat("/");
-		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
-		 return sPrestacao; 
-	 }
-	 
+//	 public  String getPrestacaoAtual() {
+//		 String sPrestacao; 
+//		 sPrestacao = String.format("%02d",prestacao);
+//		 sPrestacao = sPrestacao.concat("/");
+//		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
+//		 return sPrestacao; 
+//	 }
+//	 
 		/*
 		 * Retorna o valor do lancamento 
 		 */
-		public BigDecimal getValorLanc() {
-			valorLanc = (conciliado) ? acertarSinal(valorPgto) : acertarSinal(valor); 
-			return valorLanc;
-		}
-		public BigDecimal getCredito() {
-			return credito = (isCredito()) ? getValorLanc() : BigDecimal.ZERO; 		
-		}
-		public BigDecimal getDebito() {
-			return debito = (isDebito()) ? getValorLanc().negate() : BigDecimal.ZERO; 		
-		}
+//		public BigDecimal getValorLanc() {
+//			valorLanc = (conciliado) ? acertarSinal(valorPgto) : acertarSinal(valor); 
+//			return valorLanc;
+//		}
+//		public BigDecimal getCredito() {
+//			return credito = (isCredito()) ? getValorLanc() : BigDecimal.ZERO; 		
+//		}
+//		public BigDecimal getDebito() {
+//			return debito = (isDebito()) ? getValorLanc().negate() : BigDecimal.ZERO; 		
+//		}
 //	    public void setConciliado ( boolean conciliado) {
 //	    	this.conciliado = conciliado; 
 //	    	ajustarDataRef(); 
@@ -216,22 +167,22 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrataAuto<ID> {
 	public boolean isPositivo (BigDecimal valor) {
 	  return (valor.compareTo(BigDecimal.ZERO) == 1); 	
 	}
-	public boolean isPositivo () {
-		  return (this.valor.compareTo(BigDecimal.ZERO) == 1); 	
-	}
+//	public boolean isPositivo () {
+//		  return (this.valor.compareTo(BigDecimal.ZERO) == 1); 	
+//	}
 
 	 
    
 	 
-	public BigDecimal calcularSaldo(BigDecimal saldoAnterior) {
-		
-		this.saldo = saldoAnterior.add(this.getCredito()).subtract(this.getDebito()); 
-		return this.saldo; 		
-	}
-	public BigDecimal acertarSaldo(BigDecimal saldo) {
-		this.saldo = saldo;
-		return  saldo.add(this.valor); 				
-	}
+//	public BigDecimal calcularSaldo(BigDecimal saldoAnterior) {
+//		
+//		this.saldo = saldoAnterior.add(this.getCredito()).subtract(this.getDebito()); 
+//		return this.saldo; 		
+//	}
+//	public BigDecimal acertarSaldo(BigDecimal saldo) {
+//		this.saldo = saldo;
+//		return  saldo.add(this.valor); 				
+//	}
 
 
 	
@@ -242,19 +193,19 @@ public abstract class AbstracLancamento<ID> extends EntidadeAbstrataAuto<ID> {
 			this.tipoLancamento = subCategoria.getTipoLancamento();
 	}
 
-	public boolean possuiContaLancanto() {
-		return this.contaLancamento != null;  
-	}
-   
-	public String getMesAnoLancamento() { 
-		String mesAno; 
-		if( dataVenc != null ) {
-			mesAno = String.format("%02d",dataVenc.getMonthValue()); 
-			mesAno = mesAno + dataVenc.getYear(); 
-			return mesAno;					
-		}
-		mesAno = String.valueOf(dataDoc.getMonthValue());
-		mesAno = mesAno + dataDoc.getYear(); 
-		return mesAno;
-	}
+//	public boolean possuiContaLancanto() {
+//		return this.contaLancamento != null;  
+//	}
+//   
+//	public String getMesAnoLancamento() { 
+//		String mesAno; 
+//		if( dataVenc != null ) {
+//			mesAno = String.format("%02d",dataVenc.getMonthValue()); 
+//			mesAno = mesAno + dataVenc.getYear(); 
+//			return mesAno;					
+//		}
+//		mesAno = String.valueOf(dataDoc.getMonthValue());
+//		mesAno = mesAno + dataDoc.getYear(); 
+//		return mesAno;
+//	}
 }

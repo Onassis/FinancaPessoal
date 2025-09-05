@@ -10,16 +10,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.fenix.abstrato.repositorio.GenericRepository;
+import br.com.fenix.abstrato.repositorio.JpaRepositoryAuditavel;
 
 
 @Repository
-public interface LancAuxRepositorio extends JpaRepository<LancAux,UUID> {
-	@Override
-	@Query("from LancAux o where o.criadoPor.id = ?#{ principal.id} order by o.Id")
-	public ArrayList<LancAux> findAll(); 
+public interface LancAuxRepositorio extends JpaRepositoryAuditavel<LancAux,UUID> {
+//	@Override
+//	@Query("from LancAux o where o.criadoPor.id = ?#{ principal.id} order by o.Id")
+//	public ArrayList<LancAux> findAll(); 
 	
-	@Modifying
-	@Query("delete from LancAux o where o.criadoPor.id = ?#{ principal.id}")
-	public void deleteAll(); 
-	 
+//	@Modifying
+//	@Query("delete from LancAux o where o.criadoPor.id = ?#{ principal.id}")
+//	public void deleteAll(); 
+//	 
 }
