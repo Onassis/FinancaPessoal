@@ -27,6 +27,7 @@ public class Debito extends Lancamento {
 		this.tipoOperacao = TipoOperacao.CP;
 		this.nroInicialPrestacao  = 1 ; 
 		this.nroPrestacao = 1;
+		this.total = dto.getValor();
 	}
 	public Debito(LancAux lancAux) {
 		super(lancAux);

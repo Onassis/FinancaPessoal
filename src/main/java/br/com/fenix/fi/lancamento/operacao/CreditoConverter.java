@@ -29,7 +29,7 @@ public class CreditoConverter implements Converter<Credito,LancamentoDTO> {
 
 		DetalheLancamento detalheLancamento = new DetalheLancamento().builder() 
 	 			.prestacao(1)
-	 			.valor(lancamento.getValorPrestacao()) 
+	 			.valor(dto.getValor()) 
 	 			.tipoLancamento(dto.getTipoLancamento())
 	 			.dataVenc(data)
 	 			.contaLancamento(dto.getContaLancamento())

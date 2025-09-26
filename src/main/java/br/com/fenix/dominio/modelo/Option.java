@@ -8,6 +8,9 @@ public  class Option {
     private String ajuda;
 
     public Option(UUID id, String ajuda) {
+    	if (id == null) {
+    		return;
+    	}
         this.id = id.toString();
         this.ajuda = ajuda;
     }
@@ -16,9 +19,14 @@ public  class Option {
         this.ajuda = ajuda;
     }
     public Option(Long id, String ajuda) {
+    	if (id == null) {
+    		return;
+    	}
+    		
         this.id = id.toString();
         this.ajuda = ajuda;
     }
+
     public Option(int id, int ajuda) {
         this.id = String.valueOf(id);
         this.ajuda = String.valueOf(ajuda);    		

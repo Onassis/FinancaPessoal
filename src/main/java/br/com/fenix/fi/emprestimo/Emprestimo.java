@@ -1,4 +1,4 @@
-package br.com.fenix.fi.lancamento.operacao;
+package br.com.fenix.fi.emprestimo;
 
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
@@ -10,35 +10,30 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("CD")
-public class Credito extends Lancamento {
+@DiscriminatorValue("EP")
+public class Emprestimo extends Lancamento {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public Credito() {
-		super(TipoOperacao.CR);
+	public Emprestimo() {
+		super(TipoOperacao.EP);
 	}
 	
-	public Credito(LancamentoDTO dto) {
+	public Emprestimo(LancamentoDTO dto  ) {
 		super(dto);
-		this.tipoOperacao = TipoOperacao.CP;
-		this.nroInicialPrestacao  = 1 ; 
-		this.nroPrestacao = 1;
-		this.total = dto.getValor();
+		this.tipoOperacao = TipoOperacao.EP;
+		this.total = dto.getTotal();
 	}
-	public Credito(LancAux lancAux) {
+	public Emprestimo(LancAux lancAux) {
 		super(lancAux);
-		this.tipoOperacao = TipoOperacao.CP;
-		this.nroInicialPrestacao  = 1 ; 
-		this.nroPrestacao = 1;
+		this.tipoOperacao = TipoOperacao.EP;		
 	}
 
 	@Override
 	public void addDatalheLancamento(DetalheLancamento detalheLac) {
-		detalheLac.setTipoLancamento(TipoLancamento.C);	
 		detalheLac.setLancamento(this); 
 		detalheLancamento.add(detalheLac);  		
 	}

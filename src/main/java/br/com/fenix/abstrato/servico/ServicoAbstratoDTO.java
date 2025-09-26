@@ -205,15 +205,12 @@ public abstract class ServicoAbstratoDTO< T   extends Persistable,
 //		EntityTransaction tx = geradorTransacao();
 //        T entidade=null;
 		try {				
-//			 tx.begin();	
 			ID id = (ID) dto.getId(); 
-//			 Optional<T>  entidadeOp = buscarPorId(id).orElseThrow();
 			 T entidade = buscarPorId(id).orElseThrow();
 			 getConverter().updateEntity(dto,entidade); 
 			 entidade = atualizar(entidade);
 			 depoisDeAlterar(entidade, dto);
 			 depoisDeSalvar(entidade);
-//			 tx.commit();
 		
 			 dto = getConverter().ToDto(entidade); 
 			return dto;

@@ -16,11 +16,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.lang.Nullable;
 
-import br.com.fenix.abstrato.base.EntidadeAuditavel;
-import br.com.fenix.abstrato.base.EntidadeAuditavelAuto;
+import br.com.fenix.abstrato.base.Auditavel;
+import br.com.fenix.dominio.converter.rest.NumericBooleanDeserializer;
 import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
+import br.com.fenix.dominio.uuid.GeneratedUuidV7;
 import br.com.fenix.fi.categoria.Categoria;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
@@ -35,20 +37,25 @@ import lombok.experimental.SuperBuilder;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
-@SuperBuilder
+
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Entity 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipoOperacao", discriminatorType = DiscriminatorType.STRING)
 @Table(name="lancamento", indexes = {@Index(name = "idx_usuario", columnList = "criado_por_id")})
-public  class Lancamento extends EntidadeAuditavelAuto<UUID> {
+public  class Lancamento extends Auditavel<UUID> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-   
+	
+	@Id @Nullable
+	@GeneratedUuidV7
+	@Column(updatable = false)
+	protected UUID  id;
+
     @Column(length = 2, nullable =  false,insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
 	protected TipoOperacao tipoOperacao;
@@ -68,9 +75,6 @@ public  class Lancamento extends EntidadeAuditavelAuto<UUID> {
     @Column(length = 80)
     protected String informacao;
 
-//    protected String observacao;
-    
- //   @Fetch(FetchMode.JOIN)
     @OneToMany(mappedBy = "lancamento", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true )    
     @Singular("detalheLancamento")
     protected final List<DetalheLancamento> detalheLancamento = new ArrayList<DetalheLancamento>();  ;    	
@@ -81,21 +85,19 @@ public  class Lancamento extends EntidadeAuditavelAuto<UUID> {
     protected int nroPrestacao;
     protected int nroInicialPrestacao;
     
-//    @Column(nullable = true)
-//    @Transient
-//    private boolean transferencia=false; 
-    
 	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
 	protected BigDecimal total;
-
-
-
+	
+	@JsonDeserialize(using = NumericBooleanDeserializer.class)
+	@Column(nullable = true)
+	protected boolean entrada = false;
+	
+	@JsonDeserialize(using = NumericBooleanDeserializer.class)
+	@Column(nullable = true)
+	protected boolean concluido = false;
 	
 	public Lancamento() {
 		super();
-//	    this.nroPrestacao = 1;
-//	    this.nroInicialPrestacao = 1;		
-	  //  detalheLancamento = new ArrayList<DetalheLancamento>() ;
 	}
     public Lancamento(LancAux lancAux) {
     	super();
@@ -133,7 +135,7 @@ public  class Lancamento extends EntidadeAuditavelAuto<UUID> {
     }
 	protected Lancamento(LancamentoDTO dto  ) {
 		super(); 
-		this.dataDoc = dto.dataDoc;  	    		
+		this.dataDoc = dto.dataVenc;  	    		
 	    this.nroInicialPrestacao = dto.nroInicialPrestacao; 
 		this.nroPrestacao = dto.nroPrestacao;
 	    this.informacao = dto.getInformacao(); 
@@ -141,7 +143,7 @@ public  class Lancamento extends EntidadeAuditavelAuto<UUID> {
     	this.subCategoria = dto.subCategoria;  
 	    this.favorecido = dto.favorecido;
 //        this.tipoOperacao(dto.tipoOperacao)
- 	   this.total = dto.total;
+// 	   this.total = dto.total;
 	    
 	}
 	
@@ -178,5 +180,13 @@ public  class Lancamento extends EntidadeAuditavelAuto<UUID> {
     public BigDecimal getValorPrestacao() {   
         return total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
+	@Override
+	public UUID getId() {
+		return id;
+	}
+	@Override
+	public int compareTo(UUID o) {
+		return id.compareTo(o);
+	}
 
 }

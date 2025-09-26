@@ -5,12 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import br.com.fenix.fi.modeloCategoria.ModeloCategoria;
-import br.com.fenix.fi.modeloCategoria.ModeloCategoriaRepositorio;
-import br.com.fenix.seguranca.usuario.*;
-import br.com.fenix.seguranca.usuario.Usuario.Role;
-
-
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +16,7 @@ public class DbInit implements CommandLineRunner {
 //	@Autowired
 //    private ModeloCategoriaRepositorio ModCadRepository;
  
-        
+	
 	@Autowired
     private PasswordEncoder passwordEncoder;
 	
@@ -34,10 +29,11 @@ public class DbInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
         
  //    	  Usuario onassis  = new Usuario("onassis.tavares@gmail.com", "Onassis", "Tavares" ,passwordEncoder.encode("senha") ); 
     	
-//    	System.out.println("Inicio");
+
     	
  //       Usuario onassis  = new Usuario("onassis.tavavares@gmail.com", "Onassis", "Tavares" ,passwordEncoder.encode("senha") ); 
 

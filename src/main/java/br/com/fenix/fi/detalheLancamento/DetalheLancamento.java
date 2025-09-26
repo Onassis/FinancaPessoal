@@ -134,7 +134,9 @@ public class DetalheLancamento extends EntidadeAuditavelAuto<UUID> {
 		super();		
 		valor = BigDecimal.ZERO;
 		prestacao = 1 ; 
-		conciliado = false; 		
+		conciliado = false; 	
+		dataVenc = LocalDate.now();
+		dataRef   = LocalDate.now();
 	}
 
 	
@@ -155,6 +157,7 @@ public class DetalheLancamento extends EntidadeAuditavelAuto<UUID> {
 		ajustarValor();
 		ajustarValorPgto();
 	}
+	
     public boolean isDebito() {
 		return this.tipoLancamento == TipoLancamento.D;
 	}
@@ -164,7 +167,7 @@ public class DetalheLancamento extends EntidadeAuditavelAuto<UUID> {
 	/*
 	 * Retorna o valor do lancamento 
 	 */
-	public BigDecimal getValorLanc() {
+	public BigDecimal getValorLanc() {		
 		valorLanc = (conciliado) ? valorPgto : valor; 
 		return Util.iniciaValor(valorLanc);
 	}
@@ -176,12 +179,17 @@ public class DetalheLancamento extends EntidadeAuditavelAuto<UUID> {
 	}
     public void setConciliado ( boolean conciliado) {
     	this.conciliado = conciliado; 
-    	ajustarDataRef(); 
+        if (!conciliado) {
+        	dataPgto = null ;
+        	valorPgto = BigDecimal.ZERO;
+        }
     }
 
 	public void ajustarDataRef() {
 		
 		dataRef = (conciliado) ? dataPgto : dataVenc; 
+		dataRef = (dataRef == null) ? dataVenc : dataRef;
+		
 		this.ano =  dataRef.getYear();
 		this.mes =  dataRef.getMonthValue() ;	
 	}
@@ -193,16 +201,13 @@ public class DetalheLancamento extends EntidadeAuditavelAuto<UUID> {
 	 * @return void  - 
 	 */	
 	public void setDataVenc(LocalDate dataVenc) {
-		if (dataVenc != null) {
+		if (dataVenc == null) {
 			return;
 		}
 		this.dataVenc = dataVenc;
 		ajustarDataRef();
 	}
 	public void setDataPgto(LocalDate dataPgto) {
-		if (dataPgto != null) {	
-			return;
-		}						
 		this.dataPgto = dataPgto;
 		ajustarDataRef();
 		

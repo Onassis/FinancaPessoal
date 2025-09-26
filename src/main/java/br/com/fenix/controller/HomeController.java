@@ -19,6 +19,8 @@ import br.com.fenix.dominio.enumerado.TipoConta;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.conta.ContaRepositorio;
 import br.com.fenix.fi.conta.ContaServico;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
+import br.com.fenix.fi.detalheLancamento.DetalheLancamentoRepositorio;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
 import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.seguranca.util.UtilSerguranca;
@@ -28,6 +30,9 @@ import br.com.fenix.seguranca.util.UtilSerguranca;
 public class HomeController {
     @Autowired
     ContaRepositorio contaRP; 
+    
+    @Autowired
+    DetalheLancamentoRepositorio detRp ;
     
 	public HomeController(ContaRepositorio contaRP) {
 		super();
@@ -42,6 +47,13 @@ public class HomeController {
 	@ModelAttribute("totalconta")
 	public double  TotalContas() {
 
+//		List<DetalheLancamento> dets = detRp.findUltimos10();
+//
+//		for (DetalheLancamento det : dets) {
+//            System.out.println(det);
+//        }
+
+		
 		double total = 0.0; 
 		
 		if (UtilSerguranca.currentUser().isPresent()) 

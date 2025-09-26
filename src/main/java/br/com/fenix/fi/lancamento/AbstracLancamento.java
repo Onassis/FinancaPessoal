@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,12 +22,14 @@ import br.com.fenix.dominio.converter.rest.FavorecidoDeserializer;
 import br.com.fenix.dominio.converter.rest.MoneyDeserializer;
 import br.com.fenix.dominio.converter.rest.NumericBooleanDeserializer;
 import br.com.fenix.dominio.converter.rest.SubCategoriaDeserializer;
+import br.com.fenix.dominio.converter.rest.UsuarioDeserializer;
 import br.com.fenix.dominio.enumerado.TipoLancamento;
 import br.com.fenix.dominio.enumerado.TipoOperacao;
 import br.com.fenix.fi.conta.Conta;
 import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
+import br.com.fenix.seguranca.usuario.Usuario;
 import br.com.fenix.util.Util;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -50,7 +53,13 @@ public abstract class AbstracLancamento<ID> extends AbstracDetLanc<ID> {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+//
+	protected UUID  idLancAux;
+	protected UUID  detalheLancamentoId;
+///	
+	protected Long  detalheDestinoId;
+	protected UUID  lancamentoId;
+	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
     protected LocalDate dataDoc;
     protected TipoLancamento tipoLancamento;
@@ -69,121 +78,115 @@ public abstract class AbstracLancamento<ID> extends AbstracDetLanc<ID> {
     
     @JsonDeserialize(using = MoneyDeserializer.class) 
 	protected BigDecimal total = BigDecimal.ZERO;
-
+    
+	@JsonDeserialize(using = NumericBooleanDeserializer.class)
+	protected boolean conciliado ;
+	
+	
     /* Entrada em emprestimo */ 
     @JsonDeserialize(using = NumericBooleanDeserializer.class)
    	protected boolean entrada ;
     
-  
+    protected String informacao;
+	protected TipoOperacao tipoOperacao;
+	@JsonDeserialize(using = UsuarioDeserializer.class)
+	protected Usuario criadoPor;
+	
     public AbstracLancamento(DetalheLancamento detLanc) {    	
     	
-    	this.dataDoc = LocalDate.now();
+
+    	Lancamento lancamento = detLanc.getLancamento();
+
+    	this.dataDoc = lancamento.dataDoc;
+    	this.lancamentoId = lancamento.getId(); 
+    	this.detalheLancamentoId = detLanc.getId();
+        this.nroPrestacao = lancamento.getNroPrestacao();
+        this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
+        this.dataDoc = lancamento.getDataDoc(); 
+        this.subCategoria  = lancamento.getSubCategoria(); 
+        
+        this.informacao = lancamento.getInformacao();
+        
+        this.conciliado = detLanc.isConciliado();
+        
+        
+        this.criadoPor = detLanc.getCriadoPor(); 
+
+        this.setLancamentoTotal(lancamento.getTotal().abs());
+        
+        this.valor = detLanc.getValor().abs();
+
+        this.valorPgto = detLanc.getValorPgto().abs();
+        
+        this.valorLanc = detLanc.getValorLanc();
+
+    	this.tipoOperacao = lancamento.getTipoOperacao();
+ 
+    	this.favorecido = lancamento.getFavorecido(); 
+    	
  	
+    }
+    public AbstracLancamento(Lancamento lancamento) {  
+    	super(); 
+     // 	this.id 		  = lancamento.getId(); 
+    	this.lancamentoId = lancamento.getId(); 
+        this.nroPrestacao = lancamento.getNroPrestacao();
+        this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
+        this.dataDoc = lancamento.getDataDoc(); 
+        this.subCategoria  = lancamento.getSubCategoria(); 
+        
+         this.informacao = lancamento.getInformacao();
+        
+        this.criadoPor = lancamento.getCriadoPor(); 
+
+        this.setLancamentoTotal(lancamento.getTotal());
+
+    	this.tipoOperacao = lancamento.getTipoOperacao();
+ 
+    	this.favorecido = lancamento.getFavorecido(); 
+    	  
+    	if  (lancamento.getDetalheLancamento().isEmpty() == false) {
+    		DetalheLancamento detLanc = lancamento.getDetalheLancamento().get(0);
+    		this.detalheLancamentoId = detLanc.getId();
+    		this.tipoLancamento = detLanc.getTipoLancamento(); 
+    		this.contaLancamento  = detLanc.getContaLancamento(); 
+    		this.contaTransferencia = detLanc.getContaTransferencia(); 
+    		this.valor	 = detLanc.getValor().abs();
+            this.dataVenc = detLanc.getDataVenc(); 
+            this.dataPgto = detLanc.getDataPgto();
+            this.valorPgto = detLanc.getValorPgto().abs();
+            this.valorLanc = detLanc.getValorLanc();
+            this.dataRef  = detLanc.getDataRef();
+            this.conciliado = detLanc.isConciliado();
+    	} 
     }
    public AbstracLancamento() {    	
-    	
-    	this.dataDoc = LocalDate.now();
- 	
+ 	   super();
     }
 
-   
-    /*
-     * Ao atualizar Data Doc atualiza data Vencimento
-     */
-    
-//    public void setDataPgto(LocalDate dataPgto) {
-//    	this.dataPgto = dataPgto; 
-//    	ajustaDataRef();
-//    }
-//    protected void ajustaDataRef() {
-//    	dataRef = (conciliado) ? dataPgto :  dataVenc; 
-//	}
+	public String getMesAnoLancamento() { 
+		String mesAno; 
+		if( dataVenc != null ) {
+			mesAno = String.format("%02d",dataVenc.getMonthValue()); 
+			mesAno = mesAno + dataVenc.getYear(); 
+			return mesAno;					
+		}
+		mesAno = String.valueOf(dataDoc.getMonthValue());
+		mesAno = mesAno + dataDoc.getYear(); 
+		return mesAno;
+	}
+	public  String getPrestacaoAtual() {
+		 String sPrestacao; 
+		 sPrestacao = String.format("%02d",prestacao);
+		 sPrestacao = sPrestacao.concat("/");
+		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
+		 return sPrestacao; 
+	 }
 
 	public void setLancamentoTotal( BigDecimal total) { 
     	this.total = acertarSinal(total); 
-  //  	this.valor = total.divide(new BigDecimal(nroPrestacao), 2, RoundingMode.HALF_UP);    	
     }
     
-    
-//	 public  String getPrestacaoAtual() {
-//		 String sPrestacao; 
-//		 sPrestacao = String.format("%02d",prestacao);
-//		 sPrestacao = sPrestacao.concat("/");
-//		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
-//		 return sPrestacao; 
-//	 }
-//	 
-		/*
-		 * Retorna o valor do lancamento 
-		 */
-//		public BigDecimal getValorLanc() {
-//			valorLanc = (conciliado) ? acertarSinal(valorPgto) : acertarSinal(valor); 
-//			return valorLanc;
-//		}
-//		public BigDecimal getCredito() {
-//			return credito = (isCredito()) ? getValorLanc() : BigDecimal.ZERO; 		
-//		}
-//		public BigDecimal getDebito() {
-//			return debito = (isDebito()) ? getValorLanc().negate() : BigDecimal.ZERO; 		
-//		}
-//	    public void setConciliado ( boolean conciliado) {
-//	    	this.conciliado = conciliado; 
-//	    	ajustarDataRef(); 
-//	    }
-//	 public BigDecimal getValorLanc() { 
-//		 if (conciliado)
-//			 return acertarSinal(valorPgto); 
-//		 return acertarSinal(valor);
-//	 }
-//		public BigDecimal getCredito() { 
-//			credito = BigDecimal.ZERO; 
-//			if (isCredito())
-//				credito =  this.valor.abs();
-//			
-//			return credito; 		
-//		}
-//		public BigDecimal getDebito() { 
-//			debito = BigDecimal.ZERO;
-//			if (isDebito()) 
-//				debito =  this.valor;
-//			
-//			return debito ; 		
-//		} 
-	 /*
-	  * Acerta o sinal conforme se Credito e Debito 
-	  * 
-	  * Debito =>  Negativo
-	  * Credito => Positivo 
-	  */
-	 public BigDecimal acertarSinal( BigDecimal valor) { 
-		 return  (isDebito()) ? valor.abs().negate() : valor.abs(); 	
-	 }
-	public boolean isDebito() {
-		return this.tipoLancamento == TipoLancamento.D;
-	}
-	public boolean isCredito() {
-		return this.tipoLancamento == TipoLancamento.C;
-	}
-	public boolean isPositivo (BigDecimal valor) {
-	  return (valor.compareTo(BigDecimal.ZERO) == 1); 	
-	}
-//	public boolean isPositivo () {
-//		  return (this.valor.compareTo(BigDecimal.ZERO) == 1); 	
-//	}
-
-	 
-   
-	 
-//	public BigDecimal calcularSaldo(BigDecimal saldoAnterior) {
-//		
-//		this.saldo = saldoAnterior.add(this.getCredito()).subtract(this.getDebito()); 
-//		return this.saldo; 		
-//	}
-//	public BigDecimal acertarSaldo(BigDecimal saldo) {
-//		this.saldo = saldo;
-//		return  saldo.add(this.valor); 				
-//	}
-
 
 	
 	public void setLancamentoSubCategoria(SubCategoria  subCategoria) { 
@@ -192,20 +195,6 @@ public abstract class AbstracLancamento<ID> extends AbstracDetLanc<ID> {
 		if (subCategoria != null) 
 			this.tipoLancamento = subCategoria.getTipoLancamento();
 	}
+	
 
-//	public boolean possuiContaLancanto() {
-//		return this.contaLancamento != null;  
-//	}
-//   
-//	public String getMesAnoLancamento() { 
-//		String mesAno; 
-//		if( dataVenc != null ) {
-//			mesAno = String.format("%02d",dataVenc.getMonthValue()); 
-//			mesAno = mesAno + dataVenc.getYear(); 
-//			return mesAno;					
-//		}
-//		mesAno = String.valueOf(dataDoc.getMonthValue());
-//		mesAno = mesAno + dataDoc.getYear(); 
-//		return mesAno;
-//	}
 }

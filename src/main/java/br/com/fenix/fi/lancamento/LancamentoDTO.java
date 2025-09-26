@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.springframework.data.domain.Persistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -31,118 +32,166 @@ import br.com.fenix.fi.favorecido.Favorecido;
 import br.com.fenix.fi.subCategoria.SubCategoria;
 import br.com.fenix.fi.upload.LancAux;
 import br.com.fenix.seguranca.usuario.Usuario;
+import jakarta.persistence.Column;
 import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
-public class LancamentoDTO extends AbstracLancamento<UUID>  implements Comparable<LancamentoDTO> {
+public class LancamentoDTO implements Comparable<UUID>,Persistable<UUID> {
 	
  
 	
 	/**
 	 * 
 	 */
+	
+	
+	
 	private static final long serialVersionUID = 1L;
-	
-	private UUID  idLancAux;
-	private UUID  detalheLancamentoId;
-	
-//	private Long  detalheDestinoId;
-	private UUID  lancamentoId;
-	
-	 
-	private String informacao;
 
-   
-	protected TipoOperacao tipoOperacao;
-	    
-	@JsonDeserialize(using = UsuarioDeserializer.class)
-    private Usuario criadoPor;
+	/*
+	 *  Campos de detalhe lancamento 
+	 */
+	//
+	protected UUID  idLancAux;
+	protected UUID  detalheLancamentoId;
+	protected UUID  lancamentoId;
+///	
+	protected Long  detalheDestinoId;
+	
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+    protected LocalDate dataDoc;
     
+	protected TipoLancamento tipoLancamento;
+	
+	protected TipoOperacao tipoOperacao;
+	
+	
+	@JsonDeserialize(using = FavorecidoDeserializer.class)
+    @JsonInclude(content = Include.NON_NULL)	
+    protected Favorecido favorecido;
+
+
+    @JsonDeserialize(using = SubCategoriaDeserializer.class)
+    @JsonInclude(content = Include.NON_NULL)    
+    protected SubCategoria subCategoria;
+      
+    protected int nroPrestacao=1;
+    protected int nroInicialPrestacao=1 ;
+    
+
+	// chave de lancamento da conta 
+	protected String chaveBanco;
+
+	// Nro de referencia REFNUM do arquivo OFX (Ex. Nro do cheque)  
+	protected String refBanco; 
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	protected LocalDate dataVenc;
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	protected LocalDate dataPgto;
+
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	protected LocalDate dataRef;
+
+	@Column(nullable = false)
+	private int ano;
+	@Column(nullable = false)
+	private int mes;
+
+	@JsonDeserialize(using = ContaDeserializer.class)
+	@JsonInclude(content = Include.NON_NULL)    
+	protected Conta contaLancamento ;
+	@JsonDeserialize(using = ContaDeserializer.class)
+	@JsonInclude(content = Include.NON_NULL)
+	protected Conta contaTransferencia ;
+	
+    protected String informacao;
+
+
+
+	/**
+	 * Prestação atual do parcelamento
+	 */
+	protected int prestacao;
+
+
+	@JsonDeserialize(using = MoneyDeserializer.class) 
+	protected BigDecimal valor = BigDecimal.ZERO;
+	@JsonDeserialize(using = MoneyDeserializer.class) 
+	protected BigDecimal valorPgto  = BigDecimal.ZERO;
+
+
+	@Getter    
+	protected BigDecimal valorLanc  = BigDecimal.ZERO; 
+
+	@JsonDeserialize(using = MoneyDeserializer.class) 
+	protected BigDecimal saldo  = BigDecimal.ZERO;
+	
+	@Column(nullable = false, columnDefinition = "DECIMAL(13,2) DEFAULT 0.00")
+	protected BigDecimal total;
+
+	@JsonDeserialize(using = NumericBooleanDeserializer.class)
+	protected boolean conciliado ;
+
+	@JsonDeserialize(using = NumericBooleanDeserializer.class)
+	protected boolean entrada ;
+
+	
 	  
     public LancamentoDTO() {    	
     	super();
     	this.dataDoc = LocalDate.now();
     	this.dataVenc = LocalDate.now();
+    	this.dataRef = LocalDate.now();
     	
     }
 
+    
     public LancamentoDTO(Lancamento lancamento) {    	
-    	super();
-    	this.id 		  = lancamento.getId(); 
-    	this.lancamentoId = lancamento.getId(); 
-        this.nroPrestacao = lancamento.getNroPrestacao();
-        this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
-        this.dataDoc = lancamento.getDataDoc(); 
-        this.subCategoria  = lancamento.getSubCategoria(); 
-        
-         this.informacao = lancamento.getInformacao();
-        
-        this.criadoPor = lancamento.getCriadoPor(); 
-
-        this.setLancamentoTotal(lancamento.getTotal());
-
-    	this.tipoOperacao = lancamento.getTipoOperacao();
- 
-    	this.favorecido = lancamento.getFavorecido(); 
-    	  
+    	super(); 
+    	setLancamento(lancamento);
     	if  (lancamento.getDetalheLancamento().isEmpty() == false) {
-    		DetalheLancamento detLanc = lancamento.getDetalheLancamento().get(0);
+    		setDetalheLancamento(lancamento.getDetalheLancamento().get(0));
+    	}	
+    }
+    public LancamentoDTO(DetalheLancamento detLanc) {    	
+        setLancamento(detLanc.getLancamento());
+        setDetalheLancamento(detLanc);
+    }
+
+    private void setDetalheLancamento (DetalheLancamento detLanc) {    	
     		this.detalheLancamentoId = detLanc.getId();
     		this.tipoLancamento = detLanc.getTipoLancamento(); 
     		this.contaLancamento  = detLanc.getContaLancamento(); 
     		this.contaTransferencia = detLanc.getContaTransferencia(); 
-    		this.valor	 = detLanc.getValor();
+    		this.valor	 = detLanc.getValor().abs();
+            this.valorPgto = detLanc.getValorPgto().abs();
+            this.valorLanc = detLanc.getValorLanc();
             this.dataVenc = detLanc.getDataVenc(); 
-            this.dataPgto = detLanc.getDataPgto();
-            this.valorPgto = detLanc.getValorPgto();
+            this.dataPgto = detLanc.getDataPgto();    
             this.dataRef  = detLanc.getDataRef();
             this.conciliado = detLanc.isConciliado();
-            this.ajustaDataRef();
-    	}      
-   }
-    public LancamentoDTO(DetalheLancamento detLanc) {    	
-    	super(detLanc);
-    	
-    	Lancamento lancamento = detLanc.getLancamento();
-    	
-    	this.id = detLanc.getId();
-    	
+            
+    	} 
+    private void setLancamento(Lancamento lancamento) {
     	this.lancamentoId = lancamento.getId(); 
         this.nroPrestacao = lancamento.getNroPrestacao();
         this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
         this.dataDoc = lancamento.getDataDoc(); 
-        this.subCategoria  = lancamento.getSubCategoria(); 
-        
+        this.total  = lancamento.getTotal();    	        
+        this.subCategoria  = lancamento.getSubCategoria();     	        
         this.informacao = lancamento.getInformacao();
-        
-        this.criadoPor = lancamento.getCriadoPor(); 
-
-        this.setLancamentoTotal(lancamento.getTotal());
-
     	this.tipoOperacao = lancamento.getTipoOperacao();
- 
     	this.favorecido = lancamento.getFavorecido(); 
-    	
-        //this.detalhe = new AbstracDetLanc(detLanc);
+    	this.entrada = lancamento.isEntrada();
 
-   		this.detalheLancamentoId = detLanc.getId();
-//    		this.detalheDestinoId = lancamento.getDetalheLancamento().get(0).getId();
- 
     }
-
-	@Override
-	public int compareTo(LancamentoDTO o) {
-
-		if ( this.equals(o) ) {  
-		   return 1;
-		 } 
-		
-		return  0;
-	}
-
    
 	public String getMesAnoLancamento() { 
 		String mesAno; 
@@ -162,5 +211,22 @@ public class LancamentoDTO extends AbstracLancamento<UUID>  implements Comparabl
 		 sPrestacao = sPrestacao.concat(String.format("%02d",nroPrestacao));
 		 return sPrestacao; 
 	 }
+
+	@Override
+	public UUID getId() {
+		UUID id = (idLancAux != null ) ? idLancAux : detalheLancamentoId;
+		id = (id != null) ? id :  lancamentoId;
+		return id;
+	}
+
+	@Override
+	public boolean isNew() {	
+		return getId() == null ;
+	}
+
+	@Override
+	public int compareTo(UUID o) {
+		return getId().compareTo(o); 	
+	}
 	
 }

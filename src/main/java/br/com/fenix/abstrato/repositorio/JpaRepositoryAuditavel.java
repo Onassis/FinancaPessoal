@@ -17,7 +17,7 @@ public interface JpaRepositoryAuditavel<T extends Persistable<ID>, ID>  extends 
 	
 
 	@Override
-    @Query("select p from #{#entityName}  p where p.criadoPor.id = ?#{ principal.id}")
+    @Query("select p from #{#entityName}  p where p.criadoPor.id  = ?#{ principal.id}")
 	List<T> findAll();
 
 	@Override

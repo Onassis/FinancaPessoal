@@ -24,9 +24,10 @@ public class DebitoConverter implements Converter<Debito,LancamentoDTO> {
 	@Override
 	public Debito ToEntity(LancamentoDTO dto) {
 		Debito lancamento = new Debito(dto); 
-		Conta conta = dto.getContaLancamento(); 
+		Conta conta = dto.getContaLancamento();
+		LocalDate data = conta.getDataFatura(dto.getDataVenc()); 
 		lancamento.setDataDoc(dto.getDataVenc());
-		LocalDate data = conta.getDataFatura(dto.getDataDoc()); 
+		
 
 		DetalheLancamento detalheLancamento = new DetalheLancamento().builder() 
 	 			.prestacao(1)	 		 

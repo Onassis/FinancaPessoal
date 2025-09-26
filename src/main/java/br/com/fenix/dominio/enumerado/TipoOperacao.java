@@ -11,7 +11,7 @@ import br.com.fenix.dominio.modelo.Option;
 public enum TipoOperacao {
 	CR("CR","Cartão de credito"),
 	CP("CP","Compra parcelada"),
-	CD("CR","Credito"),	
+	CD("CD","Credito"),	
 	DB("DB","Débito"),
 	EP("EP","Emprestimo"),
 	ES("ES","Estorno"),

@@ -34,6 +34,11 @@ public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<Det
 			+ " and d.dataRef between :dataInicio and :dataFim ")		
 	public List<DetalheLancamento> findByContaAndDataRefBetween (@Param("conta") Conta conta, @Param("dataInicio")  LocalDate dataInicio, @Param("dataFim") LocalDate dataFim); 
 
+	/**
+	 * SELECT * FROM sua_tabela WHERE data_criacao >= NOW() - INTERVAL '24 hours' 
+	 * ORDER BY data_criacao DESC;
+	 * SELECT * FROM sua_tabela ORDER BY id DESC LIMIT 1;
+	 */
 	
 /**
  * Consulta lancamentos em periodo   
@@ -44,6 +49,9 @@ public interface DetalheLancamentoRepositorio extends JpaRepositoryAuditavel<Det
 	@Query("from DetalheLancamento d JOIN FETCH d.lancamento where d.dataRef between :dataInicio and :dataFim   and d.criadoPor.id = ?#{ principal.id} order by d.dataVenc ")
 	List <DetalheLancamento> findAllBydataVenctoBetween( @Param("dataInicio")  LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
 
+	@Query("SELECT p FROM DetalheLancamento p ORDER BY p.dtCriacao DESC")
+	List<DetalheLancamento> findUltimos10();
+	
 //	@Query("from DetalheLancamento l where l.dataCompensacao is null and l.criadoPor.id = ?#{ principal.id} order by l.dataLancamento ")
 //	List <DetalheLancamento> findAllBydataCompensacaoIsNull();
 	

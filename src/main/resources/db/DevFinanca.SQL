@@ -18,15 +18,15 @@ SELECT a.conta_lancamento_id,
     to_date( concat(a.ano, to_char(a.mes, '00') , '01'),'YYYYMMDD') as dataSaldo,
     sum(
         CASE
-            WHEN a.tipo_lancamento::text = 'D'::text THEN a.valor
+            WHEN a.tipo_lancamento::text = 'D'::text THEN a.valor_pgto
             ELSE 0::numeric
         END) AS debito,
     sum(
         CASE
-            WHEN a.tipo_lancamento::text = 'C'::text THEN a.valor
+            WHEN a.tipo_lancamento::text = 'C'::text THEN a.valor_pgto
             ELSE 0::numeric
         END) AS credito,
-    sum(a.valor) AS total
+    sum(a.valor_pgto) AS total
    FROM detalhe_lancamento as a 
   WHERE a.conta_lancamento_id IS NOT NULL AND a.conciliado = true
   GROUP BY  a.conta_lancamento_id,
