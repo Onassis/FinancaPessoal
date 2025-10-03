@@ -44,7 +44,7 @@ import br.com.fenix.fi.subCategoria.SubCategoriaServico;
 
 @Controller
 @RequestMapping("/emprestimo")
-public class EmprestimoController extends 	ControleAbstratoDTO<Emprestimo,LancamentoDTO,UUID>  implements IControleDTO<Emprestimo,LancamentoDTO,UUID> {
+public class EmprestimoController extends 	ControleAbstratoDTO<Emprestimo,EmprestimoDTO,UUID>  implements IControleDTO<Emprestimo,EmprestimoDTO,UUID> {
 
 
 	@Autowired	

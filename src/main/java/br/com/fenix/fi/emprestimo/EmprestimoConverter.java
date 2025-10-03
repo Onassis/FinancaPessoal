@@ -16,19 +16,20 @@ import java.util.Optional;
 
 
 @Component
-public class EmprestimoConverter implements Converter<Emprestimo,LancamentoDTO> {
+public class EmprestimoConverter implements Converter<Emprestimo,EmprestimoDTO> {
 
 	@Override
-	public LancamentoDTO ToDto(Emprestimo entity) {
+	public EmprestimoDTO ToDto(Emprestimo entity) {
 		
-		return new LancamentoDTO(entity);
+		return new EmprestimoDTO(entity);
 	}
 
 	@Override
-	public Emprestimo ToEntity(LancamentoDTO dto) {
+	public Emprestimo ToEntity(EmprestimoDTO dto) {
 		DetalheLancamento detalheLancamento;
 		Emprestimo lancamento = new Emprestimo(dto); 
 		LocalDate data = dto.getDataVenc();
+		
 		if (!dto.isEntrada()) {
 			data = data.plusMonths(1);
 		}
@@ -53,7 +54,8 @@ public class EmprestimoConverter implements Converter<Emprestimo,LancamentoDTO> 
 				.build();
 		lancamento.addDatalheLancamento(detalheLancamento);
 		
-		for(int count=dto.getNroInicialPrestacao() ; count <= dto.getNroPrestacao(); count++){
+		for(int count=dto.getNroInicialPrestacao() ; count <= dto.getNroPrestacao(); count++){ 
+			
 			detalheLancamento = new DetalheLancamento().builder() 
 					.tipoLancamento(TipoLancamento.D)
 					.prestacao(count)
@@ -69,7 +71,7 @@ public class EmprestimoConverter implements Converter<Emprestimo,LancamentoDTO> 
 		return lancamento; 	
   }
 	@Override
-	public void updateEntity(LancamentoDTO dto, Emprestimo entity) {
+	public void updateEntity(EmprestimoDTO dto, Emprestimo entity) {
 	
 		      entity.setFavorecido(dto.getFavorecido()) ;
 		      entity.setSubCategoria(dto.getSubCategoria()); 

@@ -32,24 +32,17 @@ import br.com.fenix.fi.upload.LancAux;
 import jakarta.persistence.EntityManagerFactory;
 
 @Service
-public class EmprestimoServico  extends ServicoAbstratoDTO<Emprestimo,LancamentoDTO,UUID> implements IServicoDTO<Emprestimo,LancamentoDTO,UUID> { 
-
-
+public class EmprestimoServico  extends ServicoAbstratoDTO<Emprestimo,EmprestimoDTO,UUID> implements IServicoDTO<Emprestimo,EmprestimoDTO,UUID> { 
 
 	@Autowired
 	EmprestimoRepositorio emprestimoRP;
 	@Autowired
 	DetalheLancamentoRepositorio DtlancamentoRP;
-//	@Autowired
-//	SaldoContaRepositorio saldoRP;
+
 	@Autowired
 	SaldoServico saldoSC;
 	@Autowired
 	EmprestimoConverter converter;
-
-//	@Autowired
-//	private ModelMapper modelMapper;
-
 
 	public EmprestimoServico() {
 		super();
@@ -57,7 +50,6 @@ public class EmprestimoServico  extends ServicoAbstratoDTO<Emprestimo,Lancamento
 
 	@Override
 	public EmprestimoRepositorio getRp() {
-		// TODO Auto-generated method stub
 		return emprestimoRP;
 	}
 	@Override

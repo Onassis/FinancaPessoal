@@ -48,7 +48,7 @@
 							<th><i class="icon_cogs"></i> Ação</th>
 						</tr>		
 			<tbody>
-				<tr th:each="l : ${lancamentoDTO}">		 		
+				<tr th:each="l : ${emprestimoDTO}">		 		
 					<td th:text="${#temporals.format(l.dataDoc, 'dd/MM/yyyy')}">2017/08/14</td>
 					<td th:text="${l?.contaLancamento?.getApelido()}">Conta lancamento</td>	
 					<td th:text="${l?.informacao}">Informação</td> 					
@@ -56,7 +56,7 @@
 					<td th:text="${l?.total}">Total</td>	
 					<td th:text="${l?.valor}">Prestação</td>					
 					<td th:text="${l?.Favorecido?.getNome()}">Favorecido</td>
-					<td th:text="${#temporals.format(l.DataDoc, 'dd/MM/yyyy')}">2017/08/14</td>					 			
+					<td th:text="${#temporals.format(l?.DataDoc, 'dd/MM/yyyy')}">2017/08/14</td>					 			
 					<td th:text="${l?.conciliado}" align="center">Concialiado lancamento</td>	
 				    <td th:text="|R$ ${#numbers.formatDecimal(l?.total, 1, 'DEFAULT', 2, 'DEFAULT')}|" align="right"></td>	
 				    <td colspan="2" align="center">
@@ -68,7 +68,7 @@
 				 </tr>
 				 <tr>  
 				    <td colspan="6"> </td> 
-					<td colspan="6" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(lancamentoDTO.![ValorLanc]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
+					<td colspan="6" th:text="|R$ ${#numbers.formatDecimal(#aggregates.sum(emprestimoDTO.![total]) ?: 0 ,1, 'DEFAULT', 2, 'DEFAULT')}|" </td>        		
 				 </tr>  					    								
 			</tbody>
 		</div>

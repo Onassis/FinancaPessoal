@@ -184,7 +184,8 @@ public class LancamentoDTO implements Comparable<UUID>,Persistable<UUID> {
         this.nroPrestacao = lancamento.getNroPrestacao();
         this.nroInicialPrestacao = lancamento.getNroInicialPrestacao();
         this.dataDoc = lancamento.getDataDoc(); 
-        this.total  = lancamento.getTotal();    	        
+        this.total  = lancamento.getTotal();    	     
+        this.entrada = lancamento.isEntrada();
         this.subCategoria  = lancamento.getSubCategoria();     	        
         this.informacao = lancamento.getInformacao();
     	this.tipoOperacao = lancamento.getTipoOperacao();

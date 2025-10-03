@@ -6,6 +6,7 @@ import br.com.fenix.fi.detalheLancamento.DetalheLancamento;
 import br.com.fenix.fi.lancamento.Lancamento;
 import br.com.fenix.fi.lancamento.LancamentoDTO;
 import br.com.fenix.fi.upload.LancAux;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -17,6 +18,9 @@ public class Emprestimo extends Lancamento {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	@Column(nullable = true)
+	private double taxa = 0.0;
 	
 	public Emprestimo() {
 		super(TipoOperacao.EP);

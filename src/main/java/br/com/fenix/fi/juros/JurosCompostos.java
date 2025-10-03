@@ -1,111 +1,544 @@
 package br.com.fenix.fi.juros;
 
-import java.math.BigDecimal;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class JurosCompostos {
-   
+	private double  n = 0; 
+	private int  c = 0; //  Carencia
+	private int  casaDecimal=2; //    
+	private double i = 0.0; 
+	private double vp = 0.0; 
+	private double fv = 0.0; 
+	private double pmt = 0.0; 	
+	private boolean arrendonda = true; 
 	
-	private int  n=0; 
-	private double i= 0.0; 
-	private double vp= 0.0; 
-	private double fv= 0.0; 
-	private double pmt= 0.0; 	
+	private List<Amortizacao> amortizacao = new ArrayList<>();
+	
 	private TipoPgtoJuros tipoPgto = TipoPgtoJuros.PO; 
-	
-/*	FV: Future Value
-	PV: Present Value
-	NPV: Net Present Value
-	PMT: (Periodic) Payment
-*/	
+
+	public JurosCompostos() {
+		super();
+	}
+	public JurosCompostos(int n, double i, double vp, double fv, double pmt, TipoPgtoJuros tipoPgto) {
+		super();
+		this.n = n;
+		this.i = i;
+		this.vp = vp;
+		this.fv = fv;
+		this.pmt = pmt;
+		this.tipoPgto = tipoPgto;
+	}
+	private double Negativo (double valor ) {
+		return -1 * valor;
+	}
+// Logaritimo natural 	
+    private double ln (double exp) {
+    	return Math.log(exp);
+    }
+// Retorn numero absoluto    
+    private double abs (double exp) {
+    	return Math.abs(exp);
+    }
+ // Retorn numero absoluto    
+    private double potencia  (double exp , double d) {
+    	return Math.pow(exp , d);
+    }
+    
+    public double  ARRED(double v, int casaDecimal){
+    	double f = potencia ( 10, casaDecimal); 
+    	
+    	return Math.round((v * f) / f);  
+    }
+   
+    public double ARRED(double valor){
+    	
+    	double f = potencia ( 10, this.casaDecimal );     	
+    	if (arrendonda) {
+    		valor = Math.round(valor * f) / f;
+    	   return valor;
+    	}
+    	else 
+    	   return valor; 
+    }
+     
+
 	public void Clear() {
 		n   = 0; 
 		i   = 0.0; 
 		vp  = 0.0; 
 		fv  = 0.0; 
-		pmt = 0.0; 
-		tipoPgto = TipoPgtoJuros.PO;		
+		pmt = 0.0;
+		c = 0; //  Carencia 		
+		tipoPgto = TipoPgtoJuros.PO;	
+		amortizacao.clear();
+	}
+
+	/**
+     * Função do calula taxa de juros informada em percentual   
+     */ 
+	private double TAXA() {  
+		return ( this.i / 100 ) ;
+	}
+	/**
+     * Função do calula fator do juros informada em percentual   
+     */ 
+	private double Fator () { 
+		return ( TAXA() + 1 ) ;	
 	}
 	
-	private double Taxa() {
-	   return ( this.i / 100 ) ;	
+	/**
+	 * 
+     * Função do Fator do valor Atual  
+     * 
+     * Valor Presente  = VF * FVA();  
+     *  
+     */   		 
+	public double FVA () {	
+		return  potencia(Fator(), -1 * n ) ; 
 	}
-	private double Fator () {
-		   return ( Taxa() + 1 ) ;	
+	/**
+	 * 
+     * Função do Fator do valor Atual  
+     * 
+     * Valor Presente  = VF * FVA();  
+     *  
+     */   		 
+	  		 
+	public double FVA (double periodo) {	
+		return  potencia(Fator(), -1 * periodo) ; 
+	}
+	
+	public double FVA  (double periodo,double i) { 	
+			this.i =i;		
+			return  potencia(Fator(), -1 * periodo) ;
+	}
+	/**
+	 * 
+     * Função do Taxa do valor Atual  
+     *  
+     */   		 
+	
+/*	public double TVA () {	return  FVA() -1 ;	}		
+	
+	public double TVA (double periodo) { return  FVA(periodo) -1 ; 	}
+*/		
+	/**
+	 * 
+     * Função do Fator de valor Atual de serie uniformes   
+     * 
+     *  Valor Presente = pmt * FVA_PMT();  
+     *  
+     */   	
+		public double FVA_PMT() {   
+			return  TAC() / ( TAXA() * FAC() )  ; 	
 		}
-	// ------------------- Fator de Valor Atual -----------------------------	
-		public double FatorFuturo() {
-		    return  (  Math.pow( Fator() , n )   ) ;
+		/**
+		 * 
+	     * Função do Fator de valor Atual => Valor Presente 
+	     *  
+	     */   	
+		public double FVA_PMT(double periodo ) {  
+			return  TAC(periodo) / ( TAXA() * FAC(periodo) )  ; 	
 		}
-		public double FatorPresente() {
-		    return  (  Math.pow( Fator() , -1 * n )   ) ;
-		}
+
+	/**
+	 * 
+     * Calcula o Valor presente de series uniformes  
+     *  
+     */   
+	 public  double ValorPresente() {
 		
-		public double FatorPeriodo   (int periodo ) {
-		    return    ( 1 - Math.pow ( Fator() , -1*periodo ) ) /  Taxa()  ;
-	}
-	
-	public  double ValorFuturo() {
-		// TODO Auto-generated method stub
-
-        if  (tipoPgto == TipoPgtoJuros.AT) { 
-		    fv = (vp + pmt) *  FatorFuturo()  ;
-		}
-        else {
-    		fv = vp * FatorFuturo() ;         	
-        }
-		fv = fv	+ pmt *  ( FatorFuturo() - 1)  / Taxa();
-		
-		return fv;
-	}
-
-	
-	
-	public  double ValorPresente() {
-
-		// TODO Auto-generated method stub
-	     vp = fv * ValorPresente() ; 
-	     
-	     vp +=  pmt * ( ValorPresente() - 1) / Taxa() ;  
+	     vp = fv * FVA(n+c);
 	     if (tipoPgto == TipoPgtoJuros.AT) { 
-	         vp +=  pmt *  Fator(); 		
+	         vp +=  pmt * Fator()  * FVA_PMT();
+	     } 	         
+	     else
+	        {	        	 
+	        vp +=  pmt *  FVA_PMT();  		     
+	     }
+		vp = Negativo(vp);
+		return ARRED(vp);
+	}
+	
+	/**
+	 * 
+     * Função do Fator de Acumulacao Valor   
+     * 
+     * Valor Futuro = VP * FAC()   
+     *  
+     */   		 
+	 public double FAC() { 	
+		 return  potencia(Fator(), n); 
+	}
+	 
+//	 public double FAC(double periodo) { 
+//		 return  potencia(Fator(), periodo); 
+//	 }	
+	 
+	 public double FAC(double periodo,double i) { 
+			this.i =i;
+			return  potencia(Fator(), periodo); 		
+	}		 	
+	
+	 public double TAC() { 
+		return  FAC()-1; 	
+	}
+	
+	public double TAC(double periodo) { 
+		return  FAC(periodo) - 1 ; 	
+	}
+	public double FAC(double periodo) { 
+			return TAC(periodo) / i  ;
+	}
+	/*
+	 * ----------Fator de Recuperacao de Capital  ------------------------- 
+	 */
+//		public double FRC( ) {
+//			   return ( TAXA() * FAC()  * Taxa_FVA());  	
+//		}
+	 //----------Fator de Recuperacao de Capital  ------------------------- 
+//			public double FRC(double periodo ) {
+//				   return ( TAXA() * FAC(periodo)  * Taxa_FVA(periodo));  	
+//			}
+	// -------------------------- Fator de formação de capital ---------------------- 
+//		public double FFC() {
+//				return  TAXA() /  TCP() ;
+//		}
+		public double ffc(int periodo) {
+				return  TAXA() / TAC(periodo) ;
+		} 
+	/*
+	 *  -------------------------------- Calculo de valor futuro --------------------------------	
+	 */
+	public  double ValorFuturo() {
+//				 System.out.println(FAC());
+//				 fv = vp * FAC() ;
+//				 System.out.println(fv);
+//		     	 if  (tipoPgto == TipoPgtoJuros.AT) { 
+//		     	   	fv +=  pmt * FAC(1) * FFC();
+//		     	 } else { 
+//		 	    	   	fv +=  pmt *  FFC();      	    	  
+//		     	  }
+//		     	fv = Negativo(fv);
+//		     	
+				return ARRED(fv);
+	}
+			
+//----------FATOR DE ACUMULA��O DE CAPITAL - FAC -------------------------
+	/*	public double fac() { 
+			return TCP() / TAXA()  ;
+	}
+	public double FAC(double periodo) { 
+		return TAC(periodo) / i  ;
+	}
+*/	
+/*
+//----------Fator de Recuperacao de Capital  ------------------------- 
+	public double FRC( ) {
+		   return ( TAXA() * FAC()  * Taxa_FVA());  	
+	}
+ //----------Fator de Recuperacao de Capital  ------------------------- 
+		public double FRC(double periodo ) {
+			   return ( TAXA() * FAC(periodo)  * Taxa_FVA(periodo));  	
+		}
+// -------------------------- Fator de formação de capital ---------------------- 
+	public double FFC() {
+			return  TAXA() /  TCP() ;
+	}
+	public double ffc(int periodo) {
+			return  TAXA() / TAC(periodo) ;
+	} 	
+
+
+
+//------------------------------------------ Amortizacao ------------------------------------ // 	
+	public Amortizacao AMORTI (int periodo) {
+		Amortizacao amort = new Amortizacao(); 
+		
+	    double saldoDevedor = saldoDevedorAnterior() ;
+	    double vpAmort = 0;
+	    int pAmort = (int) (ARRED(this.n,0) - periodo); 
+	    
+	    amort.setPeriodo(periodo);
+	    
+	    if (periodo <= this.c)
+
+	    	amort.setSaldoDevedor(this.vp * FAC(periodo) );
+	    else {
+	    	 saldoDevedor = saldoDevedorAnterior() ;
 	    	 
+		     if (tipoPgto == TipoPgtoJuros.AT) { 
+		    	 vpAmort =  pmt * Fator()  *  FAT(pAmort);
+		     } 	         
+		     else
+		        {	        	 
+		    	 vpAmort =  pmt *  FAT(pAmort) * FAC(c);  		     
+		     }
+		     
+		    amort.setJuroMes(periodo); 
+		    amort.setPrestacao(ARRED(pmt)) ;
+            amort.setAmortizado(ARRED(vpAmort));
+        	amort.setSaldoDevedor(ARRED(saldoDevedor - vpAmort));
+//        	System.out.println(amort);
+	    }
+		
+			return amort;
+	}
+	public List<Amortizacao> Amortizacao() {
+		amortizacao.clear();
+
+//		Amortizacao armort ; 
+		for(int periodo=0; periodo <= (int) (n+c); periodo++)  { 
+			
+		   	System.out.println("periodo:" + periodo);
+		   	amortizacao.add( AMORTI(periodo) );		
+		}
+		
+		return amortizacao;
+		
+	}
+	public double saldoDevedorAnterior() {
+		if (amortizacao.isEmpty()) {
+			return this.vp; 
+		}
+		
+		return amortizacao.get( amortizacao.size() -1 ).getSaldoDevedor();
+	}	
+				
+	
+
+
+
+		
+// -------------------------------- Calculo de Prestacao  --------------------------------		
+		public  double calculaPMT() {
+			double fv1=0, prestacao=0; 			
+		 			
+			
+			if  (tipoPgto == TipoPgtoJuros.AT)  {
+// ------------------------ retira valor presente do valor futuro ---------------------			
+				fv1 = fv - vp * FAC() ; 
+				prestacao = fv1 * FVA(1) * FFC() ;	
+			}
+			else {
+// ------------------------ retira valor presente do valor futuro com carencia -----------------			
+				fv1 = fv - vp * FAC(n+c) ;
+				prestacao = fv1 * FFC() ;
+			}
+				
+			pmt = Negativo(prestacao);
+			return  ARRED(pmt) ; 
+		}
+
+		
+		
+
+
+
+// Testa a equuação da matematica financeira 	
+	public double valorLiquido(double i) {
+		 double vpAux =0; 
+		 
+		 this.i = i ; 
+		 
+		 vpAux = fv * FVA(n+c);
+	     if (tipoPgto == TipoPgtoJuros.AT) { 
+	    	 vpAux +=  pmt * Fator()  * FAT();
+	     } 	         
+	     else
+	        {	        	 
+	    	 vpAux +=  pmt *  FAT() * FVA(c);  		     
 	     }
 		
-		return vp;
-	}	
-	public  BigDecimal calculaPMT() {
-		// TODO Auto-generated method stub
+		return vp + vpAux;	
 		
-		
-		return null;
 	}
+		  
+	public  double calculaTaxa() {
+		final int MaxTen = 99;
+		int NroTentativa =0 ; 
+	    double taxaA = -99.99999999;
+	    double taxaB = 10030.01;
+	    double taxaC = 0.0 ;
+	    double A_FX = 0.0 ; 
+	    double B_FX = 0.0 ;
+	    double C_FX = 0.0 ;
+	    
+		this.i = 0;
+		
 	
-	public  BigDecimal calculaPRICE() {
-		// TODO Auto-generated method stub
-		
-		
-		return null;
-	}	
-	public  float calculaTaxa() {
-		// TODO Auto-generated method stub
-		
-		
-		return 0.0f;
-	}	
+		if (pmt == 0) { 			
+			i = potencia (fv/vp , 1/n) - 1; 
+		}
+		else {
 
-	public  int calculaPrazo() {
+			  while ( abs(taxaA - taxaB ) > 0.00000000001 ) { 
+				  NroTentativa++;
+				   A_FX = valorLiquido(taxaA) ; 
+				   B_FX = valorLiquido(taxaB) ; 
+				     
+				     if (A_FX == 0) 
+				        taxaB = taxaA ; 
+				     
+				     if (B_FX == 0) 
+				    	 taxaA = taxaB ;
+				// ----------------------------------------------------------------------
+				//  Testa a Raiz da Taxa
+				//  ==> Se Um dos FX de Taxa  for Zero ocorre erro
+				// ----------------------------------------------------------------------
 		
-		// TODO Auto-generated method stub
-		
-		return 0;
+ 				        taxaC = (taxaA + taxaB)  / 2 ;
+ 				        C_FX = valorLiquido(taxaC) ;
+ 				        
+				        if ( A_FX * C_FX > 0 ) 
+				            taxaA = taxaC;
+				        else
+				            taxaB = taxaC ;
+				            
+						  if (NroTentativa >= MaxTen) { 
+								    this.i =  0 ;
+								    return this.i;
+//						    raise EOperacao.Create (ErrMatFin) ;				        
+				     } 					
+			  }
+
+		this.i = ARRED(taxaA) ;
+		return this.i; 
+
+		}
+				
+		return i ;
 	}	
+	
+// ------------------------------- Funcoes do excel ------------------------------------------------------------ 	
+	public double  VF (double taxa, double nPer, double pgto , double vp, int tipoPgto) {
+    	Clear();
+    	this.i = taxa;
+    	this.n = nPer; 
+    	this.vp = vp ; 
+    	this.pmt  = pgto; 
+    	if (tipoPgto == 0 ) { 
+    		this.tipoPgto = TipoPgtoJuros.AT; 
+    	}
+    	return ValorFuturo(); 
+    }
+    public double NumerodePeriodo(double n, double i, double vp, double fv, double pmt, TipoPgtoJuros tipoPgto) {
+    		this.n = n;
+    		this.i = i;
+    		this.vp = vp;
+    		this.fv = fv;
+    		this.pmt = pmt;
+    		this.tipoPgto = tipoPgto;	
+    		return calculaPrazo();
+    }
+    public double  PGTO (double taxa, double nPer, double vp, double fv, int tipoPgto) {
+    	Clear();
+    	this.i = taxa;
+    	this.n = nPer; 
+    	this.vp = vp ; 
+    	this.fv = fv; 
+    	if (tipoPgto == 0 ) { 
+    		this.tipoPgto = TipoPgtoJuros.AT; 
+    	}
+    	return calculaPMT(); 
+    }
+
+	public  double calculaPrazo() {
+	    Double y;
+	    Double fator,taxa;
+	   
+	   fator= Fator(); 	
+	   taxa = TAXA();
+	   
+	   if (tipoPgto == TipoPgtoJuros.AT)  			   
+	      y =  fator * pmt;
+	   else
+	      y =  pmt;
+       Double vpLn   = ln( abs( vp * taxa + y) ); 
+       Double fvLn   = ln( abs(y - ( fv * taxa)));
+       Double taxaLn = ln( abs(fator));
+           
+
+       double prazo = 	( vpLn - fvLn)   / taxaLn  ;
+       
+//       double prazo = (   ln (  abs(vp * taxa + y) ) -  ln (abs(y - ( fv *  taxa)))
+ //              )/ ln (abs(fator));
+       
+       n = abs(Math.round(prazo));     
+       return n; 
+/*
+ * 
+ * /*	// Fator de acumulo de capital 	
+		public double Fac( ) { 	 
+			return ( fcp() / i)  ; 
+		}
+		
+// Fator de acumulo de capital 	
+	public double FCP( ) { 		
+		return ( potencia(Fator(), n) -1) / Taxa() ; 		
+	}
+// Fator de acumulo de capital 	
+	public double FCP(int periodo) { 		
+		return ( potencia(Fator(), periodo) -1) / (  Taxa() * Fator()) ;
+		
+	}	
+// Fator de recuperacao de capital 	
+	public double FPR(int periodo) {
+		return  Taxa() / ( potencia(Fator(), periodo) -1) ;
+	}
+
+*/
+
+ /* //------------------------------------------------------------------------
+// Calculo do Periodo por formula 
+//------------------------------------------------------------------------
+{   I := I / 100 ;
+   if (S = Antecipado) then
+      Y :=  (1 + I) * PMT
+   else
+      Y :=   PMT;
+
+     Aux_N  := (   LN (  Abs(PV * I + Y) ) -  LN (Abs(Y - ( FV *  I)))
+                 )/ LN (Abs( 1 + I));
+ }
+
+{ If ( FV <> 0 ) and ( PV <> 0 ) and ( I <> 0 ) and (PMT = 0)   then
+     Aux_N  := ( LN ( FV )  - LN ( PV )) / LN ( 1 + I )
+     { ----------------------------------------------------------------- }
+{ else  If ( PV <> 0 ) and ( I <> 0 ) and ( PMT <>  0 )
+     and ( S = Postecipado) then
+     Aux_N  := ( LN (PMT) - LN ( PMT - PV * I )) / LN ( 1 + I)
+      { ----------------------------------------------------------------- }
+{ else  If ( PV <> 0 ) and ( I <> 0 ) and ( PMT <>  0 )
+     and  ( S = Antecipado )  then
+     Aux_N  := (   LN (( PMT * (1 + I)))
+                 - LN (( (PMT *(1 + I)) - ( PV *  I) ))
+                 )/ LN ( 1 + I)
+     { ----------------------------------------------------------------- }
+ { else  If ( FV <> 0 ) and ( I <> 0 ) and ( PMT <>  0) and (PV = 0)
+      and ( S = Postecipado) then
+      Aux_N  :=  ( LN ( FV * I + PMT ) - LN(PMT) )  /   LN (1 + I)
+    { ----------------------------------------------------------------- }
+{  else  If ( FV <> 0 ) and ( I <> 0 ) and ( PMT <>  0)
+      and ( S = Antecipado) then
+      Aux_N  := (  LN (( (FV * I) + (PMT * (1 + I))  ))
+                  - LN(PMT * (1 + I))
+                 ) /  LN (1 + I)  ;
+      { ----------------------------------------------------------------- }          
+ */
+	
+
+	@Override
+	public String toString() {
+		return "JurosCompostos [n=" + n + ", c=" + c + ", i=" + i + ", vp=" + vp + ", fv=" + fv + ", pmt=" + pmt
+				+ ", tipoPgto=" + tipoPgto + "]";
+	}	
+	
+	
+	
 /*
  *   TipoPgto = (Postecipado,Antecipado);
     Mat = record
