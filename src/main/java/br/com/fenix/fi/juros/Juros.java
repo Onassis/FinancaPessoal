@@ -35,7 +35,22 @@ public class Juros {
     public enum PgtoTipo {
         PO, AN
     }
- 
+	/*
+	 *   retorna o numero arrendodado 
+	 */
+	public static BigDecimal arred  (Double exp, int nroDecimal ) {
+    	return new BigDecimal(exp).setScale(nroDecimal, RoundingMode.HALF_UP); 
+    }
+	public static BigDecimal arred  (BigDecimal exp, int nroDecimal ) {
+    	return exp.setScale(nroDecimal, RoundingMode.HALF_UP); 
+    }
+	public static BigDecimal arred2  (BigDecimal exp ) {
+    	return exp.setScale(2, RoundingMode.HALF_UP); 
+    }
+	public static BigDecimal arred2  (Double exp ) {
+    	return new BigDecimal(exp).setScale(2, RoundingMode.HALF_UP); 
+    }
+	
 	/*
 	 *   Calcula potencia de BigDecimal 
 	 */
@@ -46,7 +61,7 @@ public class Juros {
     	return BigDecimalCalculo.pow(exp , new BigDecimal(d));
     }
 	// Retorn numero absoluto    
-	public static BigDecimal log  (BigDecimal exp , BigDecimal d) {
+	public static BigDecimal log  (BigDecimal exp ) {
     	return BigDecimalCalculo.log10(exp);
     }
 	/**
@@ -58,10 +73,17 @@ public class Juros {
 				
 
 	}
+	public static BigDecimal Taxa(Double i)  {
+		var taxa = new BigDecimal(i);
+		return taxa.divide(CEM) ; 
+	}
 	/**
      * Função do calula fator do juros informada em percentual   
      */ 
 	public static BigDecimal Fator (BigDecimal i) { 
+		return  Taxa(i).add(BigDecimal.ONE) ; 	
+	}
+	public static BigDecimal Fator (Double i) { 
 		return  Taxa(i).add(BigDecimal.ONE) ; 	
 	}
     /*
@@ -70,6 +92,16 @@ public class Juros {
      * S = P * FPS(i,n)
      * FPS(i,n) = ( 1 + i )^n   
     */
+	public static BigDecimal FPS(Double i, long n  ) throws FinancialException {	
+		BigDecimal fps;
+		  try {			  
+			  fps =  potencia(Fator(i),new BigDecimal(n));
+		 
+		  } catch (ArithmeticException e) {
+	            throw new FinancialException("Error FPS: " + e.getMessage());
+	        }		  
+		  return fps;
+	}
 	public static BigDecimal FPS(BigDecimal i, long n  ) throws FinancialException {	
 		BigDecimal fps;
 		  try {			  
@@ -103,12 +135,25 @@ public class Juros {
 		return FPS(i,n).subtract(BigDecimal.ONE); 
 	}
 	
-	public static BigDecimal VF (BigDecimal VP, BigDecimal i, long n ) throws FinancialException {		
-		return VP.multiply(FPS(i,n)); 		
+	/*
+	 * Retorna o valor futuro ou montante 
+	 */
+	
+	public static BigDecimal VF (Double VP, Double i, long n ) throws FinancialException {	
+		var P = new BigDecimal(VP) ; 		
+		var S = P.multiply(FPS(i,n));		
+		return S; 		
+	}
+	public static BigDecimal VF (BigDecimal VP, BigDecimal i, long n ) throws FinancialException {	
+		var P = VP ; 		
+		var S = P.multiply(FPS(i,n));		
+		return S; 		
 	}
 	
 	public static BigDecimal VF (BigDecimal VP, BigDecimal i, BigDecimal n ) throws FinancialException {		
-		return VP.multiply(FPS(i,n)); 		
+		var P = VP ; 		
+		var S = P.multiply(FPS(i,n));		
+		return S; 		
 	}
 
     /*
@@ -117,6 +162,11 @@ public class Juros {
      * P  = S  * FSP(i,n) 
      * FSP(i,n) = ( 1 + i )^-n
      */
+	public static BigDecimal FSP(Double i, long n  ) throws FinancialException {
+		
+		return FPS(i,n * -1); 
+		
+	}
 	public static BigDecimal FSP(BigDecimal i, long n  ) throws FinancialException {
 		
 		return FPS(i,n * -1); 
@@ -126,8 +176,23 @@ public class Juros {
 		
 		return FPS(i,n.negate()); 
 	}	
-	public static BigDecimal VP (BigDecimal VF, BigDecimal i, long n ) throws FinancialException {		
-		return VF.multiply(FSP(i,n)); 		
+	/*
+	 * Retorna o valor presente 
+	 */
+	public static BigDecimal VP (Double VF, Double i, long n ) throws FinancialException {
+		var S = new BigDecimal(VF) ; 		
+		var P = S.multiply(FSP(i,n));		
+		return P; 		
+	}
+	public static BigDecimal VP (BigDecimal VF, BigDecimal i, long n ) throws FinancialException {
+		var S = VF ; 		
+		var P = S.multiply(FSP(i,n));		
+		return P; 		
+	}
+	public static BigDecimal VP (BigDecimal VF, BigDecimal i, BigDecimal n ) throws FinancialException {
+		var S = VF ; 		
+		var P = S.multiply(FSP(i,n));		
+		return P; 		
 	}
 
     /*
@@ -135,10 +200,32 @@ public class Juros {
      * log(	VF / VP ) / log ( 1 + i) 
      * 
      */
-	
-	public static BigDecimal periodo(BigDecimal VP, BigDecimal VF, BigDecimal i ) {
-		BigDecimal aux = (VF.divide(VP)); 		
-		return aux.divide(Fator(i)) ;		
+	public static BigDecimal periodo(double VP, double VF, double i ) throws FinancialException {
+		var S = new BigDecimal(VF);
+		var P = new BigDecimal(VP);
+		var taxa = new BigDecimal(i);
+		try {
+			return periodo(P,S,taxa);  
+		
+		} catch (ArithmeticException e) {
+          throw new FinancialException("periodo: " + e.getMessage());
+		}		  
+	}
+	public static BigDecimal periodo(BigDecimal VP, BigDecimal VF, BigDecimal i ) throws FinancialException {
+		var S = VF;
+		var P = VP; 		
+		try {			  
+			var aux = log(S.divide(P)); 
+			
+			var  logTaxa = log(Fator(i));
+			System.out.println("S/P " + aux) ;
+			System.out.println("logTaxa " + logTaxa) ;
+
+			var  n = aux.divide(logTaxa,6, RoundingMode.HALF_UP) ;
+			return n;	
+		} catch (ArithmeticException e) {
+          throw new FinancialException("periodo: " + e.getMessage());
+		}			
 	}
 	/*
 	 * SÉRIES PERIÓDICAS UNIFORMES
